@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,12 +16,15 @@ namespace ImmediateAccess
         /// </summary>
         static void Main(string[] args)
         {
+            Logger.Info(Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyTitleAttribute>().Title + ": v" + Assembly.GetExecutingAssembly().GetName().Version.ToString(), ConsoleColor.Yellow);
+            Logger.Info("Starting Service...");
             if (args.Length != 0)
             {
                 if (args.Contains("/debug"))
                 {
-                    //Main main = new Main();
-                    Console.ReadLine();
+                    ImmediateAccess.Start(args);
+                    Console.Read();
+                    ImmediateAccess.Stop();
                     return;
                 }
             }

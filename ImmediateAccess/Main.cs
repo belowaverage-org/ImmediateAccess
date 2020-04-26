@@ -16,13 +16,13 @@ namespace ImmediateAccess
         {
             InitializeComponent();
         }
-
         protected override void OnStart(string[] args)
         {
+            ImmediateAccess.Start(args);
         }
-
         protected override void OnStop()
         {
+            ImmediateAccess.Stop();
         }
     }
 }
