@@ -3,7 +3,7 @@
 
 ## About
 
-Immediate Access is a repalcement for Microsoft's Direct Access "Always On VPN" technology.
+Immediate Access is a replacement for Microsoft's Direct Access "Always On VPN" technology.
 This service behaves in the same manner as Microsoft's Direct Access, but instead of connecting via IPHTTPS or Teredo,
 the service will start a VPN connection of your choice. (Must be a Windows VPN profile: IPSec, SSTP, L2TP, PPTP...)
 
