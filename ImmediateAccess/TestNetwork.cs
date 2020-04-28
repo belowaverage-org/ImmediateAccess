@@ -18,9 +18,10 @@ namespace ImmediateAccess
             AlreadyTestingProbe = true;
             int pingTimeout = 1000;
             string probeAddress = "ad.belowaverage.org";
+            await VpnControl.Disconnect();
             try
             {
-                Logger.Info("Message sent to probe...");
+                Logger.Info("Pinging probe...");
                 PingReply reply = await Ping.SendPingAsync(probeAddress, pingTimeout);
                 
                 if (reply.Status == IPStatus.Success) result = true;
@@ -32,7 +33,7 @@ namespace ImmediateAccess
             }            
             if (result)
             {
-                Logger.Info("\"" + probeAddress + "\" is available.", ConsoleColor.Green);
+                Logger.Info("\"" + probeAddress + "\" is online.", ConsoleColor.Green);
             }
             else 
             {

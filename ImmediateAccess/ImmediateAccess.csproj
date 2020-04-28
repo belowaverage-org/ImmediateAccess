@@ -63,6 +63,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestNetwork.cs" />
+    <Compile Include="VpnControl.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ImmediateAccess.ico" />

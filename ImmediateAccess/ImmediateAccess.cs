@@ -14,6 +14,7 @@ namespace ImmediateAccess
         private static bool IsNetworkAvailable = false;
         public static async void Start(string[] Paremeters)
         {
+            IsNetworkAvailable = NetworkInterface.GetIsNetworkAvailable();
             Logger.Info("Testing probe availability...");
             await TestNetwork.IsProbeAvailable();
             Logger.Info("Registering event listeners...");
@@ -23,7 +24,7 @@ namespace ImmediateAccess
         }
         private static async void NetworkChange_NetworkAddressChanged(object sender, EventArgs e)
         {
-            Logger.Info("Network address has changed.");
+            Logger.Warning("Network address has changed.");
             if (IsNetworkAvailable)
             {
                 await TestNetwork.IsProbeAvailable();
