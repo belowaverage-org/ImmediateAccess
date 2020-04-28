@@ -18,7 +18,6 @@ namespace ImmediateAccess
             AlreadyTestingProbe = true;
             int pingTimeout = 1000;
             string probeAddress = "ad.belowaverage.org";
-            await VpnControl.Disconnect();
             try
             {
                 Logger.Info("Pinging probe...");

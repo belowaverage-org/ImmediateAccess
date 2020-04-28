@@ -10,6 +10,7 @@ namespace ImmediateAccess
 {
     class VpnControl
     {
+        public static RasDialProcess RasDialProcess = null;
         private static string RasDialExe = "rasdial.exe";
         private static string VpnProfileString = "Below Average AD - VPN";
         public static async Task Connect()
@@ -31,18 +32,18 @@ namespace ImmediateAccess
                 startInfo.UseShellExecute = false;
                 startInfo.RedirectStandardOutput = true;
                 startInfo.Arguments = Arguments;
-                RasDialProcess process = new RasDialProcess();
-                process.StartInfo = startInfo;
-                process.EnableRaisingEvents = true;
-                process.OutputDataReceived += Process_OutputDataReceived;
-                process.Start();
-                process.BeginOutputReadLine();
-                process.WaitForExit(10000);
-                if (!process.HasExited)
+                RasDialProcess = new RasDialProcess();
+                RasDialProcess.StartInfo = startInfo;
+                RasDialProcess.EnableRaisingEvents = true;
+                RasDialProcess.OutputDataReceived += Process_OutputDataReceived;
+                RasDialProcess.Start();
+                RasDialProcess.BeginOutputReadLine();
+                RasDialProcess.WaitForExit(10000);
+                if (!RasDialProcess.HasExited)
                 {
-                    process.Kill();
+                    RasDialProcess.Kill();
                 }
-                else if(process.SuccessFromRasDial)
+                else if(RasDialProcess.SuccessFromRasDial)
                 {
                     result = true;
                 }
@@ -54,6 +55,8 @@ namespace ImmediateAccess
                 {
                     Logger.Error("RasDial: Failure.");
                 }
+                RasDialProcess.Dispose();
+                RasDialProcess = null;
                 return result;
             });
         }
