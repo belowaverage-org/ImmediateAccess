@@ -5,12 +5,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Data.Common;
+using System.Net.NetworkInformation;
+using System.Security.Principal;
+//using System.ServiceProcess;
 
 namespace ImmediateAccess
 {
     class VpnControl
     {
         public static RasDialProcess RasDialProcess = null;
+        //private static ServiceController RasMan = new ServiceController("RasMan");
         private static string RasDialExe = "rasdial.exe";
         private static string VpnProfileString = "Below Average AD - VPN";
         public static async Task Connect()

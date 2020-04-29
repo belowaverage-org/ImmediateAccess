@@ -11,7 +11,7 @@ namespace ImmediateAccess
 {
     class ImmediateAccess
     {
-        public static bool CaptureEvents = true;
+        private static bool IsCurrentlyEnsuring = false;
         private static bool IsNetworkAvailable = false;
         public static async void Start(string[] Paremeters)
         {
@@ -25,36 +25,33 @@ namespace ImmediateAccess
         }
         private static async Task EnsureConnectionToIntranet()
         {
-            Logger.Info("Ensuring a connection to the intranet.");
-            if (!IsNetworkAvailable) 
-            {
-                Logger.Warning("No network available.");
-                return;
-            }
-            Logger.Info("Disabling network events...");
-            CaptureEvents = false;
+            if (IsCurrentlyEnsuring || !IsNetworkAvailable) return;
+            IsCurrentlyEnsuring = true;
+            bool success = false;
+            Logger.Info("Ensuring a connection to the intranet...");
             Logger.Info("Disconnecting to test probe...");
             await VpnControl.Disconnect();
-            Logger.Info("Pinging intranet probe...");
-            bool success = await TestNetwork.IsProbeAvailable();
+            success = await TestNetwork.IsProbeAvailable();
             if (success)
             {
-                Logger.Info("Already connected to intranet!", ConsoleColor.Green);
-                CaptureEvents = true;
-                Logger.Info("Enabling network events...");
+                IsCurrentlyEnsuring = false;
+                return;
+            }
+            success = await TestNetwork.IsVpnServerAccessible();
+            if (!success)
+            {
+                IsCurrentlyEnsuring = false;
                 return;
             }
             Logger.Warning("Intranet is not available! Mitigating...");
             await VpnControl.Connect();
             Logger.Info("Waiting 5 seconds for cooldown...");
             await Task.Delay(5000);
-            Logger.Info("Enabling network events...");
-            CaptureEvents = true;
+            IsCurrentlyEnsuring = false;
         }
         private static async void NetworkChange_NetworkAddressChanged(object sender, EventArgs e)
         {
             Logger.Info("Network change detected: IP Address.");
-            if (!CaptureEvents) return;
             await EnsureConnectionToIntranet();
         }
         private static void NetworkChange_NetworkAvailabilityChanged(object sender, NetworkAvailabilityEventArgs e)
@@ -67,12 +64,14 @@ namespace ImmediateAccess
             else
             {
                 Logger.Warning("Network is no longer available.");
+                /*
                 if (VpnControl.RasDialProcess != null)
                 {
                     Logger.Warning("RasDial should not be running, Killing...");
                     VpnControl.RasDialProcess.Kill();
                     Logger.Info("Killed.");
                 }
+                */
             }
         }
         public static void Stop()

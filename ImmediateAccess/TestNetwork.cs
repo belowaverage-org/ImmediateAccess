@@ -10,35 +10,59 @@ namespace ImmediateAccess
 {
     class TestNetwork
     {
-        private static bool AlreadyTestingProbe = false;
         private static Ping Ping = new Ping();
-        public static async Task<bool> IsProbeAvailable() {
+        public static async Task<bool> IsProbeAvailable()
+        {
             bool result = false;
-            if (AlreadyTestingProbe) return false;
-            AlreadyTestingProbe = true;
             int pingTimeout = 1000;
             string probeAddress = "ad.belowaverage.org";
             try
             {
                 Logger.Info("Pinging probe...");
                 PingReply reply = await Ping.SendPingAsync(probeAddress, pingTimeout);
-                
+
                 if (reply.Status == IPStatus.Success) result = true;
             }
             catch (Exception)
             {
                 Logger.Warning("Probe failed to respond in a timely manner...");
                 result = false;
-            }            
+            }
             if (result)
             {
                 Logger.Info("\"" + probeAddress + "\" is online.", ConsoleColor.Green);
             }
-            else 
+            else
             {
                 Logger.Warning("\"" + probeAddress + "\" is unavailable.");
             }
-            AlreadyTestingProbe = false;
+            return result;
+        }
+        public static async Task<bool> IsVpnServerAccessible()
+        {
+            bool result = false;
+            int pingTimeout = 1000;
+            string probeAddress = "ba-dz2.dz.belowaverage.org";
+            try
+            {
+                Logger.Info("Pinging VPN server...");
+                PingReply reply = await Ping.SendPingAsync(probeAddress, pingTimeout);
+
+                if (reply.Status == IPStatus.Success) result = true;
+            }
+            catch (Exception)
+            {
+                Logger.Warning("VPN server failed to respond in a timely manner...");
+                result = false;
+            }
+            if (result)
+            {
+                Logger.Info("\"" + probeAddress + "\" is online.", ConsoleColor.Green);
+            }
+            else
+            {
+                Logger.Warning("\"" + probeAddress + "\" is unavailable.");
+            }
             return result;
         }
     }
