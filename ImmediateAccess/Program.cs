@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.ServiceProcess;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ImmediateAccess
 {
@@ -25,6 +21,16 @@ namespace ImmediateAccess
                     ImmediateAccess.Start(args);
                     Console.Read();
                     ImmediateAccess.Stop();
+                    return;
+                }
+                if (args.Contains("/install"))
+                {
+                    Installer.Install();
+                    return;
+                }
+                if (args.Contains("/uninstall"))
+                {
+                    Installer.Uninstall();
                     return;
                 }
             }

@@ -7,7 +7,10 @@ using System.Diagnostics;
 using System.Data.Common;
 using System.Net.NetworkInformation;
 using System.Security.Principal;
-//using System.ServiceProcess;
+using System.Runtime.InteropServices;
+using System.Management;
+using System.ServiceProcess;
+using System.IO;
 
 namespace ImmediateAccess
 {
@@ -19,17 +22,33 @@ namespace ImmediateAccess
         private static string VpnProfileString = "Below Average AD - VPN";
         public static async Task Connect()
         {
-            Logger.Info("RasDial: Preparing to connect...", ConsoleColor.DarkCyan);
+            if (await IsConnected()) return;
+            Logger.Info("RasDial: Attempting to connect...", ConsoleColor.DarkCyan);
             await RasDial("\"" + VpnProfileString + "\"");
+            if (!await IsConnected())
+            {
+
+            }
         }
         public static async Task Disconnect()
         {
+            RasManRepair();
+            if (!await IsConnected()) return;
             Logger.Info("RasDial: Disconnecting from " + VpnProfileString + "...", ConsoleColor.DarkCyan);
             await RasDial("\"" + VpnProfileString + "\" /disconnect");
         }
-        private static Task<bool> RasDial(string Arguments)
+        public static async Task<bool> IsConnected()
         {
-            bool result = false;
+            Logger.Info("RasDial: Checking if already connected to VPN.", ConsoleColor.DarkCyan);
+            RasDialProcess rasDial = await RasDial();
+            return rasDial.VpnIsConnected;
+        }
+        public static void RasManRepair()
+        {
+            
+        }
+        private static Task<RasDialProcess> RasDial(string Arguments = "")
+        {
             return Task.Run(() => {
                 ProcessStartInfo startInfo = new ProcessStartInfo();
                 startInfo.FileName = RasDialExe;
@@ -39,7 +58,7 @@ namespace ImmediateAccess
                 RasDialProcess = new RasDialProcess();
                 RasDialProcess.StartInfo = startInfo;
                 RasDialProcess.EnableRaisingEvents = true;
-                RasDialProcess.OutputDataReceived += Process_OutputDataReceived;
+                RasDialProcess.OutputDataReceived += RasDialProcess_OutputDataReceived;
                 RasDialProcess.Start();
                 RasDialProcess.BeginOutputReadLine();
                 RasDialProcess.WaitForExit(10000);
@@ -47,11 +66,7 @@ namespace ImmediateAccess
                 {
                     RasDialProcess.Kill();
                 }
-                else if(RasDialProcess.SuccessFromRasDial)
-                {
-                    result = true;
-                }
-                if (result)
+                if (RasDialProcess.SuccessFromRasDial)
                 {
                     Logger.Info("RasDial: Success.", ConsoleColor.Green);
                 }
@@ -59,15 +74,17 @@ namespace ImmediateAccess
                 {
                     Logger.Error("RasDial: Failure.");
                 }
-                RasDialProcess.Dispose();
-                RasDialProcess = null;
-                return result;
+                return RasDialProcess;
             });
         }
-        private static void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)
+        private static void RasDialProcess_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
             RasDialProcess process = (RasDialProcess)sender;
             if (e.Data == null) return;
+            if (e.Data == VpnProfileString && process.StartInfo.Arguments == "")
+            {
+                process.VpnIsConnected = true;
+            }
             if (e.Data == "Command completed successfully.")
             {
                 process.SuccessFromRasDial = true;
@@ -79,5 +96,6 @@ namespace ImmediateAccess
     class RasDialProcess : Process
     {
         public bool SuccessFromRasDial = false;
+        public bool VpnIsConnected = false;
     }
 }
