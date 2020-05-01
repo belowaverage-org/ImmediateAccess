@@ -20,32 +20,27 @@ namespace ImmediateAccess
         //private static ServiceController RasMan = new ServiceController("RasMan");
         private static string RasDialExe = "rasdial.exe";
         private static string VpnProfileString = "Below Average AD - VPN";
-        public static async Task Connect()
+        public static async Task<bool> Connect()
         {
-            if (await IsConnected()) return;
+            if (await IsConnected()) return true;
             Logger.Info("RasDial: Attempting to connect...", ConsoleColor.DarkCyan);
             await RasDial("\"" + VpnProfileString + "\"");
-            if (!await IsConnected())
-            {
-
-            }
+            await Task.Delay(1000);
+            return await IsConnected();
         }
-        public static async Task Disconnect()
+        public static async Task<bool> Disconnect()
         {
-            RasManRepair();
-            if (!await IsConnected()) return;
+            if (!await IsConnected()) return true;
             Logger.Info("RasDial: Disconnecting from " + VpnProfileString + "...", ConsoleColor.DarkCyan);
             await RasDial("\"" + VpnProfileString + "\" /disconnect");
+            await Task.Delay(1000);
+            return !await IsConnected();
         }
         public static async Task<bool> IsConnected()
         {
-            Logger.Info("RasDial: Checking if already connected to VPN.", ConsoleColor.DarkCyan);
+            Logger.Info("RasDial: Checking if connected to VPN.", ConsoleColor.DarkCyan);
             RasDialProcess rasDial = await RasDial();
             return rasDial.VpnIsConnected;
-        }
-        public static void RasManRepair()
-        {
-            
         }
         private static Task<RasDialProcess> RasDial(string Arguments = "")
         {
