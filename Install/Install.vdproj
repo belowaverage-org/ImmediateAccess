@@ -15,12 +15,6 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_9510D259B1FD4099BFA10B51D5E04A53"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_B3A6E4E5DACC44F58249BCD591006FC4"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -166,26 +160,6 @@
         }
         "File"
         {
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9510D259B1FD4099BFA10B51D5E04A53"
-            {
-            "SourcePath" = "8:..\\ImmediateAccess\\ImmediateAccess.ico"
-            "TargetName" = "8:ImmediateAccess.ico"
-            "Tag" = "8:"
-            "Folder" = "8:_C5E061F36C26430F83F0893936388B8F"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
         }
         "FileType"
         {
@@ -221,7 +195,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Immediate Access"
         "ProductCode" = "8:{E91AEC08-2BA6-4494-96E2-B8EDCAB9DA37}"
-        "PackageCode" = "8:{0FE1FF2E-A370-4FB9-AAF7-2E50A1899BF0}"
+        "PackageCode" = "8:{AF5965AF-7143-44B5-ABD4-00D09B370DC7}"
         "UpgradeCode" = "8:{369529A5-9F12-47D6-9E8F-3046CE27FA9D}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -229,7 +203,7 @@
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
         "ProductVersion" = "8:0.0.0"
-        "Manufacturer" = "8:Below Average - Dylan Bickerstaff"
+        "Manufacturer" = "8:Below Average"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:https://belowaverage.org/contact"
         "Title" = "8:ImmediateAccess"
@@ -238,8 +212,8 @@
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:Immediate Access - Always On VPN - Below Average - Dylan Bickerstaff"
         "ARPURLINFOABOUT" = "8:https://belowaverage.org/"
-        "ARPPRODUCTICON" = "8:_9510D259B1FD4099BFA10B51D5E04A53"
-        "ARPIconIndex" = "3:0"
+        "ARPPRODUCTICON" = "8:_B3A6E4E5DACC44F58249BCD591006FC4"
+        "ARPIconIndex" = "3:32512"
         "SearchPath" = "8:"
         "UseSystemSearchPath" = "11:TRUE"
         "TargetPlatform" = "3:1"
@@ -271,6 +245,68 @@
                             "Transitive" = "11:FALSE"
                                 "Keys"
                                 {
+                                    "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_A1ED093B4B774407BA895F9B751D5B71"
+                                    {
+                                    "Name" = "8:ImmediateAccess"
+                                    "Condition" = "8:"
+                                    "AlwaysCreate" = "11:FALSE"
+                                    "DeleteAtUninstall" = "11:FALSE"
+                                    "Transitive" = "11:FALSE"
+                                        "Keys"
+                                        {
+                                        }
+                                        "Values"
+                                        {
+                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_1068FB9CF0654CD8BFF215ACDBDCA297"
+                                            {
+                                            "Name" = "8:VpnProfileList"
+                                            "Condition" = "8:"
+                                            "Transitive" = "11:FALSE"
+                                            "ValueTypes" = "3:1"
+                                            "Value" = "8:\"Profile 1\", \"Profile 2\""
+                                            }
+                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_2800CD7396614A1388A9C361499143B7"
+                                            {
+                                            "Name" = "8:ProbeTimeoutMS"
+                                            "Condition" = "8:"
+                                            "Transitive" = "11:FALSE"
+                                            "ValueTypes" = "3:3"
+                                            "Value" = "3:1000"
+                                            }
+                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_50649B7A871B45DD8441EB0E206EB110"
+                                            {
+                                            "Name" = "8:ProbeAttempts"
+                                            "Condition" = "8:"
+                                            "Transitive" = "11:FALSE"
+                                            "ValueTypes" = "3:3"
+                                            "Value" = "3:5"
+                                            }
+                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_7AA98FCE3BC447D5884E83B2F9D8935E"
+                                            {
+                                            "Name" = "8:ProbeIntervalMS"
+                                            "Condition" = "8:"
+                                            "Transitive" = "11:FALSE"
+                                            "ValueTypes" = "3:3"
+                                            "Value" = "3:500"
+                                            }
+                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_987B08C23ED24E24A9E495A84F0A92FE"
+                                            {
+                                            "Name" = "8:InternalProbe"
+                                            "Condition" = "8:"
+                                            "Transitive" = "11:FALSE"
+                                            "ValueTypes" = "3:1"
+                                            "Value" = "8:ad.contoso.com"
+                                            }
+                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_CF2E10E707254918B8D64C1BA4DD3460"
+                                            {
+                                            "Name" = "8:EventCooldownMS"
+                                            "Condition" = "8:"
+                                            "Transitive" = "11:FALSE"
+                                            "ValueTypes" = "3:3"
+                                            "Value" = "3:5000"
+                                            }
+                                        }
+                                    }
                                 }
                                 "Values"
                                 {
