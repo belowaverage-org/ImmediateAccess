@@ -7,7 +7,7 @@
   <resources>
     <stringTable>
       <string id="ImmediateAccess">Immediate Access</string>
-      <string id="ImmediateAccessVPN">Immediate Access - VPN Service</string>
+      <string id="ImmediateAccessVPN">Immediate Access</string>
       <string id="ImmediateAccessExplain">
 Internal Probe:
 ---------------
@@ -23,11 +23,30 @@ E.g: ( PhilidalphiaPA - VPN )
 
 If "Not Configured" or "Disabled", the Immediate Access service will shutdown and not run.
       </string>
-      <string id="ProbeTimeoutMS">Probe Timeout (Milliseconds)</string>
+      <string id="ProbeTimeoutMS">Probe Timeout</string>
       <string id="ProbeTimeoutMSExplain">
-Enter the time in milliseconds that the Immediate Access service will timeout when trying to reach the configured Internal Probe.
+Enter a time in milliseconds that the Immediate Access service will timeout when trying to reach the internal probe.
 
 If "Not Configured" or "Disabled", the value will be 1000.
+      </string>
+      <string id="ProbeAttempts">Probe Retry Attempts</string>
+      <string id="ProbeAttemptsExplain">
+Enter the number of times that Immediate Access service will try to reach the internal probe.
+
+If "Not Configured" or "Disabled", the value will be 5.
+      </string>
+      <string id="ProbeIntervalMS">Probe Interval</string>
+      <string id="ProbeIntervalMSExplain">
+Enter a delay in milliseconds that Immediate Access will wait before trying to reach the internal probe again.
+
+If "Not Configured" or "Disabled", the value will be 500.
+      </string>
+      <string id="EventCooldownMS">Event Cooldown</string>
+      <string id="EventCooldownMSExplain">
+Enter a delay in milliseconds that Immediate Access will wait after successfully dialing a VPN profile.
+This delay allows time for the VPN profile to assign IP addresses without causing Immediate Access to respond to a network change event.
+
+If "Not Configured" or "Disabled", the value will be 5000.
       </string>
     </stringTable>
     <presentationTable>
@@ -38,7 +57,16 @@ If "Not Configured" or "Disabled", the value will be 1000.
         <multiTextBox refId="VpnProfileList">VPN Profile List:</multiTextBox>
       </presentation>
       <presentation id="ProbeTimeoutMS">
-        <decimalTextBox refId="ProbeTimeoutMS">Milliseconds:</decimalTextBox>
+        <decimalTextBox refId="ProbeTimeoutMS" defaultValue="1000">Milliseconds:</decimalTextBox>
+      </presentation>
+      <presentation id="ProbeAttempts">
+        <decimalTextBox refId="ProbeAttempts" defaultValue="5">Attempts:</decimalTextBox>
+      </presentation>
+      <presentation id="ProbeIntervalMS">
+        <decimalTextBox refId="ProbeIntervalMS" defaultValue="500">Milliseconds:</decimalTextBox>
+      </presentation>
+      <presentation id="EventCooldownMS">
+        <decimalTextBox refId="EventCooldownMS" defaultValue="5000">Milliseconds:</decimalTextBox>
       </presentation>
     </presentationTable>
   </resources>
