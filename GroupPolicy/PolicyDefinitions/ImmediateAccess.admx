@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- (c) 2020 Below Average Org -->
+<policyDefinitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" revision="1.0" schemaVersion="1.0" xmlns="http://schemas.microsoft.com/GroupPolicy/2006/07/PolicyDefinitions">
+  <policyNamespaces>
+    <target prefix="immediateaccess" namespace="BelowAverage.Policies.ImmediateAccess" />
+    <using prefix="windows" namespace="Microsoft.Policies.Windows" />
+  </policyNamespaces>
+  <resources minRequiredRevision="1.0" />
+  <categories>
+    <category name="ImmediateAccess" displayName="$(string.ImmediateAccessVPN)">
+      <parentCategory ref="windows:Network" />
+    </category>
+  </categories>
+  <policies>
+    <policy name="ImmediateAccess" class="Machine" displayName="$(string.ImmediateAccess)" explainText="$(string.ImmediateAccessExplain)" presentation="$(presentation.ImmediateAccess)" key="Software\Policies\BelowAverage\ImmediateAccess">
+      <parentCategory ref="ImmediateAccess" />
+      <supportedOn ref="windows:SUPPORTED_Windows_10_0_NOSERVER" />
+      <elements>
+        <text id="InternalProbe" valueName="InternalProbe" required="true" />
+        <multiText id="VpnProfileList" valueName="VpnProfileList" required="true" />
+      </elements>
+    </policy>
+    <policy name="ProbeTimeoutMS" class="Machine" displayName="$(string.ProbeTimeoutMS)" explainText="$(string.ProbeTimeoutMSExplain)" presentation="$(presentation.ProbeTimeoutMS)" key="Software\Policies\BelowAverage\ImmediateAccess">
+      <parentCategory ref="ImmediateAccess" />
+      <supportedOn ref="windows:SUPPORTED_Windows_10_0_NOSERVER" />
+      <elements>
+        <decimal id="ProbeTimeoutMS" valueName="ProbeTimeoutMS" required="true" />
+      </elements>
+    </policy>
+  </policies>
+</policyDefinitions>

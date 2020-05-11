@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--  Copyright (C) Below Average Org. All rights reserved.  -->
+<policyDefinitionResources xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" revision="1.0" schemaVersion="1.0" xmlns="http://schemas.microsoft.com/GroupPolicy/2006/07/PolicyDefinitions">
+  <!-- displayName and description are not used. Not supported by current Group Policy tools. -->
+  <displayName>Immediate Access - VPN Service</displayName> 
+  <description>Immediate Access - VPN Service</description>
+  <resources>
+    <stringTable>
+      <string id="ImmediateAccess">Immediate Access</string>
+      <string id="ImmediateAccessVPN">Immediate Access - VPN Service</string>
+      <string id="ImmediateAccessExplain">
+Internal Probe:
+---------------
+Enter a URL, IP Address, or Hostname that the Immediate Access VPN service will use to determine if the comptuer is currently connected to the corporate network. The probe must only be accessible within the corporate network.
+
+E.g: ( https://probe.ad.contoso.com/ ) or ( ad.contoso.com ) or ( 10.0.0.1 )
+
+VPN Profile List:
+-----------------
+Enter a list of VPN profiles that Immediate Access VPN service will dial when the Internal Probe is not available. Seperate each entry by a return. (Enter in order of most priority to least priority)
+
+E.g: ( PhilidalphiaPA - VPN )
+
+If "Not Configured" or "Disabled", the Immediate Access service will shutdown and not run.
+      </string>
+      <string id="ProbeTimeoutMS">Probe Timeout (Milliseconds)</string>
+      <string id="ProbeTimeoutMSExplain">
+Enter the time in milliseconds that the Immediate Access service will timeout when trying to reach the configured Internal Probe.
+
+If "Not Configured" or "Disabled", the value will be 1000.
+      </string>
+    </stringTable>
+    <presentationTable>
+      <presentation id="ImmediateAccess">
+        <textBox refId="InternalProbe">
+          <label>Internal Probe (Hostname, URL, IP Address):</label>
+        </textBox>
+        <multiTextBox refId="VpnProfileList">VPN Profile List:</multiTextBox>
+      </presentation>
+      <presentation id="ProbeTimeoutMS">
+        <decimalTextBox refId="ProbeTimeoutMS">Milliseconds:</decimalTextBox>
+      </presentation>
+    </presentationTable>
+  </resources>
+</policyDefinitionResources>

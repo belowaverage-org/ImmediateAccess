@@ -7,7 +7,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImmediateAccess", "Immediat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RasManRepair", "RasManRepair\RasManRepair.csproj", "{49DCA507-23BC-4409-8042-7E9D636C7D77}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Install", "Install\Install.vdproj", "{D500B1FE-479A-437D-AF14-9EB57C325E02}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Installer", "Install\Install.vdproj", "{D500B1FE-479A-437D-AF14-9EB57C325E02}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PolicyDefinitions", "PolicyDefinitions", "{C45518BF-81CC-4F75-B36E-31DF9FE2DA3F}"
+	ProjectSection(SolutionItems) = preProject
+		GroupPolicy\PolicyDefinitions\ImmediateAccess.admx = GroupPolicy\PolicyDefinitions\ImmediateAccess.admx
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "en-US", "en-US", "{1F5F6FDA-D9DD-46DB-BAC9-EEDCC6AC1BE5}"
+	ProjectSection(SolutionItems) = preProject
+		GroupPolicy\PolicyDefinitions\en-US\ImmediateAccess.adml = GroupPolicy\PolicyDefinitions\en-US\ImmediateAccess.adml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,6 +38,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1F5F6FDA-D9DD-46DB-BAC9-EEDCC6AC1BE5} = {C45518BF-81CC-4F75-B36E-31DF9FE2DA3F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {864A18CB-6B86-47B1-8FEA-2200EA89ACF7}
