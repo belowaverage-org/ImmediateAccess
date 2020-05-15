@@ -1,16 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
-using System.Data.Common;
-using System.Net.NetworkInformation;
-using System.Security.Principal;
-using System.Runtime.InteropServices;
 using System.Management;
-using System.ServiceProcess;
-using System.IO;
 
 namespace ImmediateAccess
 {
@@ -19,7 +10,7 @@ namespace ImmediateAccess
         public static RasDialProcess RasDialProcess = null;
         //private static ServiceController RasMan = new ServiceController("RasMan");
         private static string RasDialExe = "rasdial.exe";
-        private static string VpnProfileString = "Below Average AD - VPN";
+        private static string VpnProfileString = "NorwalkOH - VPN";
         public static async Task<bool> Connect()
         {
             if (await IsConnected()) return true;
@@ -31,16 +22,22 @@ namespace ImmediateAccess
         public static async Task<bool> Disconnect()
         {
             if (!await IsConnected()) return true;
-            Logger.Info("RasDial: Disconnecting from " + VpnProfileString + "...", ConsoleColor.DarkCyan);
+            Logger.Info("RasDial: Disconnecting from VPN...", ConsoleColor.DarkCyan);
             await RasDial("\"" + VpnProfileString + "\" /disconnect");
             await Task.Delay(1000);
             return !await IsConnected();
         }
         public static async Task<bool> IsConnected()
         {
-            Logger.Info("RasDial: Checking if connected to VPN.", ConsoleColor.DarkCyan);
-            RasDialProcess rasDial = await RasDial();
-            return rasDial.VpnIsConnected;
+            Logger.Info("Checking if connected to VPN...");
+            ManagementObject mo = await VpnStatus.Get(VpnProfileString);
+            string status = (string)mo.GetPropertyValue("ConnectionStatus");
+            if(status == "Connected")
+            {
+                Logger.Info("Connected to VPN.");
+                return true;
+            }
+            return false;
         }
         private static Task<RasDialProcess> RasDial(string Arguments = "")
         {
@@ -76,10 +73,6 @@ namespace ImmediateAccess
         {
             RasDialProcess process = (RasDialProcess)sender;
             if (e.Data == null) return;
-            if (e.Data == VpnProfileString && process.StartInfo.Arguments == "")
-            {
-                process.VpnIsConnected = true;
-            }
             if (e.Data == "Command completed successfully.")
             {
                 process.SuccessFromRasDial = true;
@@ -88,9 +81,39 @@ namespace ImmediateAccess
             Logger.Info("RasDial: " + e.Data, ConsoleColor.DarkCyan);
         }
     }
+    class VpnStatus
+    {
+        public static Task<ManagementObject> Get(string VpnProfileName)
+        {
+            return Task.Run(() => {
+                try
+                {
+                    Logger.Info("Gathering VPN Profile Information...");
+                    ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM PS_VpnConnection");
+                    searcher.Scope.Path.ClassName = "PS_VpnConnection";
+                    searcher.Scope.Path.NamespacePath = @"Root\Microsoft\Windows\RemoteAccess\Client";
+                    ManagementObjectCollection profiles = searcher.Get();
+                    ManagementObject vpnProfile = null;
+                    foreach (ManagementObject profile in profiles)
+                    {
+                        if ((string)profile.GetPropertyValue("Name") == VpnProfileName)
+                        {
+                            vpnProfile = profile;
+                            break;
+                        }
+                    }
+                    return vpnProfile;
+                }
+                catch (Exception)
+                {
+                    Logger.Error("Error reading VPN Profile via WMI!");
+                    return null;
+                }
+            });
+        }
+    }
     class RasDialProcess : Process
     {
         public bool SuccessFromRasDial = false;
-        public bool VpnIsConnected = false;
     }
 }

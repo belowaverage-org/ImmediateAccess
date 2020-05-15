@@ -13,7 +13,7 @@ namespace ImmediateAccess
     {
         private static bool IsCurrentlyEnsuring = false;
         private static bool IsNetworkAvailable = false;
-        public static async void Start(string[] Paremeters)
+        public static async Task Start(string[] Paremeters)
         {
             Logger.Info("Observing network state...");
             IsNetworkAvailable = NetworkInterface.GetIsNetworkAvailable();
@@ -82,9 +82,9 @@ namespace ImmediateAccess
                 */
             }
         }
-        public static void Stop()
+        public static async Task Stop()
         {
-
+            //await VpnControl.Disconnect();
         }
     }
 }

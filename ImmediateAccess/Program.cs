@@ -18,19 +18,9 @@ namespace ImmediateAccess
             {
                 if (args.Contains("/debug"))
                 {
-                    ImmediateAccess.Start(args);
+                    ImmediateAccess.Start(args).Wait();
                     Console.Read();
-                    ImmediateAccess.Stop();
-                    return;
-                }
-                if (args.Contains("/install"))
-                {
-                    Installer.Install();
-                    return;
-                }
-                if (args.Contains("/uninstall"))
-                {
-                    Installer.Uninstall();
+                    ImmediateAccess.Stop().Wait();
                     return;
                 }
             }

@@ -27,6 +27,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_595F37730CC5A36BA928E99BAE63A7D5"
+        "OwnerKey" = "8:_B3A6E4E5DACC44F58249BCD591006FC4"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_B3A6E4E5DACC44F58249BCD591006FC4"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -35,6 +41,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_B3A6E4E5DACC44F58249BCD591006FC4"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_595F37730CC5A36BA928E99BAE63A7D5"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -104,48 +116,48 @@
     {
         "CustomAction"
         {
-            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_176EA430F77141CC9948705A17C7AA0D"
-            {
-            "Name" = "8:Uninstall"
-            "Condition" = "8:"
-            "Object" = "8:_B3A6E4E5DACC44F58249BCD591006FC4"
-            "FileType" = "3:2"
-            "InstallAction" = "3:4"
-            "Arguments" = "8:/uninstall"
-            "EntryPoint" = "8:"
-            "Sequence" = "3:1"
-            "Identifier" = "8:_C631A7B4_E75B_4BB8_BC8F_D1F1CC154F43"
-            "InstallerClass" = "11:FALSE"
-            "CustomActionData" = "8:"
-            "Run64Bit" = "11:TRUE"
-            }
-            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_5647B59EFEA249D5BE49E6B77BC3F9F7"
-            {
-            "Name" = "8:Uninstall"
-            "Condition" = "8:"
-            "Object" = "8:_B3A6E4E5DACC44F58249BCD591006FC4"
-            "FileType" = "3:2"
-            "InstallAction" = "3:3"
-            "Arguments" = "8:/uninstall"
-            "EntryPoint" = "8:"
-            "Sequence" = "3:1"
-            "Identifier" = "8:_332BD5A8_2A17_4AC1_854C_E3A319EC7AEF"
-            "InstallerClass" = "11:FALSE"
-            "CustomActionData" = "8:"
-            "Run64Bit" = "11:TRUE"
-            }
-            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_969F6379EE8E414CA169F94962BD76B2"
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_2043505578D74F2198EAC9826AE98A14"
             {
             "Name" = "8:Install"
             "Condition" = "8:"
             "Object" = "8:_B3A6E4E5DACC44F58249BCD591006FC4"
             "FileType" = "3:2"
             "InstallAction" = "3:1"
-            "Arguments" = "8:/install"
+            "Arguments" = "8:"
             "EntryPoint" = "8:"
             "Sequence" = "3:1"
-            "Identifier" = "8:_CF9FCE68_9216_4546_BC5D_DA6D3B1FA8DF"
-            "InstallerClass" = "11:FALSE"
+            "Identifier" = "8:_1C097AEB_A4D4_4ECB_8CB5_CCACA094310A"
+            "InstallerClass" = "11:TRUE"
+            "CustomActionData" = "8:"
+            "Run64Bit" = "11:TRUE"
+            }
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_859078B4CEF349269AF4ADA8A228C1E2"
+            {
+            "Name" = "8:Uninstall"
+            "Condition" = "8:"
+            "Object" = "8:_B3A6E4E5DACC44F58249BCD591006FC4"
+            "FileType" = "3:2"
+            "InstallAction" = "3:4"
+            "Arguments" = "8:"
+            "EntryPoint" = "8:"
+            "Sequence" = "3:1"
+            "Identifier" = "8:_750DD678_17ED_42F4_A7CC_8C596EBABA9A"
+            "InstallerClass" = "11:TRUE"
+            "CustomActionData" = "8:"
+            "Run64Bit" = "11:TRUE"
+            }
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_E343DA907C1A49429929A428552B2181"
+            {
+            "Name" = "8:Rollback"
+            "Condition" = "8:"
+            "Object" = "8:_B3A6E4E5DACC44F58249BCD591006FC4"
+            "FileType" = "3:2"
+            "InstallAction" = "3:3"
+            "Arguments" = "8:"
+            "EntryPoint" = "8:"
+            "Sequence" = "3:1"
+            "Identifier" = "8:_F5C52915_D8C3_40A3_9DCC_DD588EA0A773"
+            "InstallerClass" = "11:TRUE"
             "CustomActionData" = "8:"
             "Run64Bit" = "11:TRUE"
             }
@@ -210,6 +222,37 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_595F37730CC5A36BA928E99BAE63A7D5"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:System.Net.Http, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
+                "ScatterAssemblies"
+                {
+                    "_595F37730CC5A36BA928E99BAE63A7D5"
+                    {
+                    "Name" = "8:System.Net.Http.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:System.Net.Http.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_C5E061F36C26430F83F0893936388B8F"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:TRUE"
+            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
         }
@@ -280,7 +323,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Immediate Access"
         "ProductCode" = "8:{E91AEC08-2BA6-4494-96E2-B8EDCAB9DA37}"
-        "PackageCode" = "8:{014D93C8-E8D2-492E-9FE0-4B4B816A2163}"
+        "PackageCode" = "8:{8DA26D6F-EB5D-4AF2-9CD3-240193A1BF64}"
         "UpgradeCode" = "8:{369529A5-9F12-47D6-9E8F-3046CE27FA9D}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
