@@ -10,34 +10,48 @@ namespace ImmediateAccess
         public static RasDialProcess RasDialProcess = null;
         //private static ServiceController RasMan = new ServiceController("RasMan");
         private static string RasDialExe = "rasdial.exe";
-        private static string VpnProfileString = "NorwalkOH - VPN";
+        public static string SelectedVPNProfile = "";
         public static async Task<bool> Connect()
         {
-            if (await IsConnected()) return true;
+            if (await IsConnected() != null) return true;
             Logger.Info("RasDial: Attempting to connect...", ConsoleColor.DarkCyan);
-            await RasDial("\"" + VpnProfileString + "\"");
+            await RasDial("\"" + SelectedVPNProfile + "\"");
             await Task.Delay(1000);
-            return await IsConnected();
+            if(await IsConnected() != null) return true;
+            foreach (string vpnProfile in (string[])PolicyReader.Policies["VpnProfileList"])
+            {
+                SelectedVPNProfile = vpnProfile;
+                await RasDial("\"" + SelectedVPNProfile + "\"");
+                await Task.Delay(1000);
+                if (await IsConnected() != null) return true;
+            }
+            return false;
         }
         public static async Task<bool> Disconnect()
         {
-            if (!await IsConnected()) return true;
-            Logger.Info("RasDial: Disconnecting from VPN...", ConsoleColor.DarkCyan);
-            await RasDial("\"" + VpnProfileString + "\" /disconnect");
-            await Task.Delay(1000);
-            return !await IsConnected();
+            while (true)
+            {
+                string vpnProfile = await IsConnected();
+                if (vpnProfile == null) return true;
+                Logger.Info("RasDial: Disconnecting from VPN...", ConsoleColor.DarkCyan);
+                await RasDial("\"" + vpnProfile + "\" /disconnect");
+                await Task.Delay(1000);
+            }
         }
-        public static async Task<bool> IsConnected()
+        public static async Task<string> IsConnected()
         {
             Logger.Info("Checking if connected to VPN...");
-            ManagementObject mo = await VpnStatus.Get(VpnProfileString);
-            string status = (string)mo.GetPropertyValue("ConnectionStatus");
-            if(status == "Connected")
+            foreach (string vpnProfile in (string[])PolicyReader.Policies["VpnProfileList"])
             {
-                Logger.Info("Connected to VPN.");
-                return true;
+                ManagementObject mo = await VpnStatus.Get(vpnProfile);
+                string status = (string)mo.GetPropertyValue("ConnectionStatus");
+                if (status == "Connected")
+                {
+                    Logger.Info("Connected to VPN.");
+                    return vpnProfile;
+                }
             }
-            return false;
+            return null;
         }
         private static Task<RasDialProcess> RasDial(string Arguments = "")
         {

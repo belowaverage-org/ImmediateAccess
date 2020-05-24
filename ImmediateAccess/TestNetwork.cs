@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Net.Http;
 using System.Net.NetworkInformation;
+using System.Management;
 
 namespace ImmediateAccess
 {
@@ -15,8 +16,16 @@ namespace ImmediateAccess
         }
         public static async Task<bool> IsVpnServerAccessible()
         {
-            //Here is where a VPN profile will be choosen.
-            return await Ping("ba-dz2.dz.belowaverage.org");
+            foreach(string vpnProfile in (string[])PolicyReader.Policies["VpnProfileList"])
+            {
+                ManagementObject vpnStatus = await VpnStatus.Get(vpnProfile);
+                if (await Ping((string)vpnStatus.GetPropertyValue("ServerAddress")))
+                {
+                    VpnControl.SelectedVPNProfile = vpnProfile;
+                    return true;
+                }
+            }
+            return false;
         }
         private static async Task<bool> TestProbe(string HostOrURI)
         {
