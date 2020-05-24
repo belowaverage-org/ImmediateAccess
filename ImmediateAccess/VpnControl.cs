@@ -8,7 +8,6 @@ namespace ImmediateAccess
     class VpnControl
     {
         public static RasDialProcess RasDialProcess = null;
-        //private static ServiceController RasMan = new ServiceController("RasMan");
         private static string RasDialExe = "rasdial.exe";
         public static string SelectedVPNProfile = "";
         public static async Task<bool> Connect()
