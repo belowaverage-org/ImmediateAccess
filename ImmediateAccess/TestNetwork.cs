@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Net;
 using System.Net.Http;
 using System.Net.NetworkInformation;
 
@@ -11,17 +7,15 @@ namespace ImmediateAccess
 {
     class TestNetwork
     {
-        private static HttpClient HttpProvider = new HttpClient();
         private static Ping PingProvider = new Ping();
-        private static int pingCount = 5;
-        private static int pingTimeout = 1000;
-        private static int pingInterval = 500;
         public static async Task<bool> IsProbeAvailable()
         {
-            return await TestProbe("https://ad.belowaverage.org");
+            if (PolicyReader.Policies["InternalProbe"] == null) return false;
+            return await TestProbe((string)PolicyReader.Policies["InternalProbe"]);
         }
         public static async Task<bool> IsVpnServerAccessible()
         {
+            //Here is where a VPN profile will be choosen.
             return await Ping("ba-dz2.dz.belowaverage.org");
         }
         private static async Task<bool> TestProbe(string HostOrURI)
@@ -37,55 +31,52 @@ namespace ImmediateAccess
         }
         private static async Task<bool> HttpsRequest(string URI)
         {
-            Logger.Info("Probing: \"" + URI + "\"...");
-            try
+            HttpClient HttpProvider = new HttpClient();
+            int pingCount = (int)PolicyReader.Policies["ProbeAttempts"];
+            HttpProvider.Timeout = TimeSpan.FromMilliseconds((int)PolicyReader.Policies["ProbeTimeoutMS"]);
+            while (pingCount-- > 0)
             {
-                HttpResponseMessage response = await HttpProvider.GetAsync(URI);
-                if(response.IsSuccessStatusCode)
+                try
                 {
-                    Logger.Info("\"" + URI + "\" is online.", ConsoleColor.Green);
-                    return true;
+                    Logger.Info("Probing: \"" + URI + "\"...");
+                    HttpResponseMessage response = await HttpProvider.GetAsync(URI);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        Logger.Info("\"" + URI + "\" is online.", ConsoleColor.Green);
+                        return true;
+                    }
                 }
+                catch (Exception e)
+                {
+                    Logger.Error(e.Message);
+                    if (e.InnerException != null) Logger.Error(e.InnerException.Message);
+                }
+                await Task.Delay((int)PolicyReader.Policies["ProbeIntervalMS"]);
             }
-            catch (Exception e)
-            {
-                Logger.Error(e.Message);
-                if(e.InnerException != null) Logger.Error(e.InnerException.Message);
-                return false;
-            }
+            HttpProvider.Dispose();
             return false;
         }
         private static async Task<bool> Ping(string Host)
         {
-            bool result = false;
+            int pingCount = (int)PolicyReader.Policies["ProbeAttempts"];
             while (pingCount-- > 0)
             {
                 try
                 {
                     Logger.Info("Pinging: \"" + Host + "\"...");
-                    PingReply reply = await PingProvider.SendPingAsync(Host, pingTimeout);
+                    PingReply reply = await PingProvider.SendPingAsync(Host, (int)PolicyReader.Policies["ProbeTimeoutMS"]);
                     if (reply.Status == IPStatus.Success)
                     {
-                        result = true;
-                        break;
+                        return true;
                     }
                 }
                 catch (Exception)
                 {
                     Logger.Warning("Probe failed to respond in a timely manner...");
-                    result = false;
                 }
-                await Task.Delay(pingInterval);
+                await Task.Delay((int)PolicyReader.Policies["ProbeIntervalMS"]);
             }
-            if (result)
-            {
-                Logger.Info("\"" + Host + "\" is online.", ConsoleColor.Green);
-            }
-            else
-            {
-                Logger.Warning("\"" + Host + "\" is unavailable.");
-            }
-            return result;
+            return false;
         }
     }
 }

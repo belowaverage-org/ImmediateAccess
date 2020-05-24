@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Timers;
 using System.Net.NetworkInformation;
 
 namespace ImmediateAccess
@@ -15,6 +10,7 @@ namespace ImmediateAccess
         private static bool IsNetworkAvailable = false;
         public static async Task Start(string[] Paremeters)
         {
+            PolicyReader.ReadPolicies();
             Logger.Info("Observing network state...");
             IsNetworkAvailable = NetworkInterface.GetIsNetworkAvailable();
             await EnsureConnectionToIntranet();
@@ -52,8 +48,8 @@ namespace ImmediateAccess
                 Logger.Warning("Couldn't connect to VPN for some reason. Trying again in 5 seconds...");
                 await Task.Delay(5000);
             }
-            Logger.Info("Waiting 5 seconds for cooldown...");
-            await Task.Delay(5000);
+            Logger.Info("Waiting " + ((int)PolicyReader.Policies["EventCooldownMS"] / 1000 ) + " second(s) for cooldown...");
+            await Task.Delay((int)PolicyReader.Policies["EventCooldownMS"]);
             Logger.Info("Done.");
             IsCurrentlyEnsuring = false;
         }
