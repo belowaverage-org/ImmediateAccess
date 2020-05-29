@@ -25,7 +25,7 @@ namespace ImmediateAccess
             IsCurrentlyEnsuring = true;
             bool success = false;
             Logger.Info("Ensuring a connection to the intranet...");
-            await VpnControl.Disconnect();
+            //await VpnControl.Disconnect();
             success = await TestNetwork.IsProbeAvailable();
             if (success)
             {
