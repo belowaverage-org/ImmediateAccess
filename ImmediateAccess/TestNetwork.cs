@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
-using System.Net.Http;
 using System.Net.NetworkInformation;
 using System.Management;
 using System.Net.Sockets;
 using System.Net.Security;
 using System.Net;
-using System.Text;
 using System.IO;
+using System.Collections.Generic;
 
 namespace ImmediateAccess
 {
@@ -17,7 +16,7 @@ namespace ImmediateAccess
         public static async Task<bool> IsProbeAvailable()
         {
             if (PolicyReader.Policies["InternalProbe"] == null) return false;
-            return await TestProbe((string)PolicyReader.Policies["InternalProbe"]);
+            return await TestProbe();
         }
         public static async Task<bool> IsVpnServerAccessible()
         {
@@ -32,24 +31,31 @@ namespace ImmediateAccess
             }
             return false;
         }
-        private static async Task<bool> TestProbe(string HostOrURI)
+        private static async Task<bool> TestProbe(bool AllowVPNTraversal = false)
         {
-            if(Uri.TryCreate(HostOrURI, UriKind.Absolute, out Uri ProbeURI))
+            if (AllowVPNTraversal)
             {
-                return await HttpRequest(ProbeURI);
+                return await HttpRequest(new Uri((string)PolicyReader.Policies["InternalProbe"]));
             }
             else
             {
-                return await Ping(HostOrURI);
+                List<Task<bool>> tasks = new List<Task<bool>>();
+                foreach(IPAddress ip in GetAllIPAddresses(false))
+                {
+                    tasks.Add(HttpRequest(new Uri((string)PolicyReader.Policies["InternalProbe"]), ip));
+                }
+                await Task.WhenAll(tasks.ToArray());
             }
+            return true;
         }
         private static Task<bool> HttpRequest(Uri URI, IPAddress Bind = null)
         {
             if (URI.Scheme != Uri.UriSchemeHttp && URI.Scheme != Uri.UriSchemeHttps) return Task.FromResult(false);
-            return Task.Run(() => { 
+            return Task.Run(() => {
+                string head = "Probe " + Task.CurrentId + ": ";
                 try
                 {
-                    Logger.Info("Probe: Testing probe...", ConsoleColor.DarkYellow);
+                    Logger.Info(head + "Testing probe...", ConsoleColor.DarkYellow);
                     Socket socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
                     if (Bind != null)
                     {
@@ -57,37 +63,37 @@ namespace ImmediateAccess
                         socket.Bind(ep);
                     }
                     socket.Connect(URI.Host, URI.Port);
-                    Logger.Info("Probe: Connected! Negotiating...", ConsoleColor.DarkYellow);
+                    Logger.Info(head + "Connected! Negotiating...", ConsoleColor.DarkYellow);
                     Stream stream;
                     if (URI.Scheme == Uri.UriSchemeHttp)
                     {
-                        Logger.Info("Probe: Using HTTP.", ConsoleColor.DarkYellow);
+                        Logger.Info(head + "Using HTTP.", ConsoleColor.DarkYellow);
                         stream = new NetworkStream(socket, true);
                     }
                     else
                     {
-                        Logger.Info("Probe: Using HTTPS.", ConsoleColor.DarkYellow);
+                        Logger.Info(head + "Using HTTPS.", ConsoleColor.DarkYellow);
                         NetworkStream ns = new NetworkStream(socket, true);
                         stream = new SslStream(ns, false);
                         ((SslStream)stream).AuthenticateAsClient(URI.Host);
                     }
-                    Logger.Info("Probe: Sending request...", ConsoleColor.DarkYellow);
+                    Logger.Info(head + "Sending request...", ConsoleColor.DarkYellow);
                     StreamReader sr = new StreamReader(stream);
                     StreamWriter sw = new StreamWriter(stream);
                     sw.Write("GET / HTTP/1.1\r\nHost: " + URI.Host + "\r\nConnection: Close\r\n\r\n");
                     sw.Flush();
-                    Logger.Info("Probe: Waiting for response...", ConsoleColor.DarkYellow);
+                    Logger.Info(head + "Waiting for response...", ConsoleColor.DarkYellow);
                     string response = sr.ReadToEnd();
                     foreach (string line in response.Split('\n'))
                     {
-                        Logger.Info("Probe:  - " + line, ConsoleColor.DarkYellow);
+                        Logger.Info(head + " - " + line, ConsoleColor.DarkYellow);
                     }
-                    Logger.Info("Probe: Success!", ConsoleColor.DarkYellow);
+                    Logger.Info(head + "Success!", ConsoleColor.DarkYellow);
                     return true;
                 }
                 catch (Exception e)
                 {
-                    Logger.Error("Probe: " + e.Message);
+                    Logger.Error(head + e.Message);
                     return false;
                 }
             });
@@ -113,6 +119,24 @@ namespace ImmediateAccess
                 await Task.Delay((int)PolicyReader.Policies["ProbeIntervalMS"]);
             }
             return false;
+        }
+        private static IPAddress[] GetAllIPAddresses(bool IncludeGpoVpnProfiles = false)
+        {
+            List<IPAddress> ipList = new List<IPAddress>();
+            foreach(NetworkInterface iface in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                if(!IncludeGpoVpnProfiles)
+                {
+                    List<string> profiles = new List<string>((string[])PolicyReader.Policies["VpnProfileList"]);
+                    if (iface.NetworkInterfaceType == NetworkInterfaceType.Ppp && profiles.Contains(iface.Description)) break;
+                }
+                IPInterfaceProperties ipProps = iface.GetIPProperties();
+                foreach(UnicastIPAddressInformation ip in ipProps.UnicastAddresses)
+                {
+                    ipList.Add(ip.Address);
+                }
+            }
+            return ipList.ToArray();
         }
     }
 }
