@@ -7,6 +7,7 @@ using System.Net.Sockets;
 using System.Net.Security;
 using System.Net;
 using System.Text;
+using System.IO;
 
 namespace ImmediateAccess
 {
@@ -35,79 +36,62 @@ namespace ImmediateAccess
         {
             if(Uri.TryCreate(HostOrURI, UriKind.Absolute, out Uri ProbeURI))
             {
-                return await HttpsRequest(HostOrURI);
+                return await HttpRequest(ProbeURI);
             }
             else
             {
                 return await Ping(HostOrURI);
             }
         }
-        /*private static async Task<bool> HttpsRequest(string URI)
+        private static Task<bool> HttpRequest(Uri URI, IPAddress Bind = null)
         {
-            HttpClient HttpProvider = new HttpClient();
-            int pingCount = (int)PolicyReader.Policies["ProbeAttempts"];
-            HttpProvider.Timeout = TimeSpan.FromMilliseconds((int)PolicyReader.Policies["ProbeTimeoutMS"]);
-            while (pingCount-- > 0)
-            {
+            if (URI.Scheme != Uri.UriSchemeHttp && URI.Scheme != Uri.UriSchemeHttps) return Task.FromResult(false);
+            return Task.Run(() => { 
                 try
                 {
-                    Logger.Info("Probing: \"" + URI + "\"...");
-                    HttpResponseMessage response = await HttpProvider.GetAsync(URI);
-                    if (response.IsSuccessStatusCode)
+                    Logger.Info("Probe: Testing probe...", ConsoleColor.DarkYellow);
+                    Socket socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
+                    if (Bind != null)
                     {
-                        Logger.Info("\"" + URI + "\" is online.", ConsoleColor.Green);
-                        return true;
+                        EndPoint ep = new IPEndPoint(Bind, 0);
+                        socket.Bind(ep);
                     }
+                    socket.Connect(URI.Host, URI.Port);
+                    Logger.Info("Probe: Connected! Negotiating...", ConsoleColor.DarkYellow);
+                    Stream stream;
+                    if (URI.Scheme == Uri.UriSchemeHttp)
+                    {
+                        Logger.Info("Probe: Using HTTP.", ConsoleColor.DarkYellow);
+                        stream = new NetworkStream(socket, true);
+                    }
+                    else
+                    {
+                        Logger.Info("Probe: Using HTTPS.", ConsoleColor.DarkYellow);
+                        NetworkStream ns = new NetworkStream(socket, true);
+                        stream = new SslStream(ns, false);
+                        ((SslStream)stream).AuthenticateAsClient(URI.Host);
+                    }
+                    Logger.Info("Probe: Sending request...", ConsoleColor.DarkYellow);
+                    StreamReader sr = new StreamReader(stream);
+                    StreamWriter sw = new StreamWriter(stream);
+                    sw.Write("GET / HTTP/1.1\r\nHost: " + URI.Host + "\r\nConnection: Close\r\n\r\n");
+                    sw.Flush();
+                    Logger.Info("Probe: Waiting for response...", ConsoleColor.DarkYellow);
+                    string response = sr.ReadToEnd();
+                    foreach (string line in response.Split('\n'))
+                    {
+                        Logger.Info("Probe:  - " + line, ConsoleColor.DarkYellow);
+                    }
+                    Logger.Info("Probe: Success!", ConsoleColor.DarkYellow);
+                    return true;
                 }
                 catch (Exception e)
                 {
-                    Logger.Error(e.Message);
-                    if (e.InnerException != null) Logger.Error(e.InnerException.Message);
+                    Logger.Error("Probe: " + e.Message);
+                    return false;
                 }
-                await Task.Delay((int)PolicyReader.Policies["ProbeIntervalMS"]);
-            }
-            HttpProvider.Dispose();
-            return false;
-        }*/
-        private static async Task<bool> HttpsRequest(string URI) //Needs Cleaned Up, but otherwise works.
-        {
-            Socket socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
-            EndPoint ep = new IPEndPoint(IPAddress.Parse("10.2.1.31"), 0);
-            socket.Bind(ep);
-            socket.Connect(IPAddress.Parse("10.0.1.0"), 443);
-            NetworkStream stream = new NetworkStream(socket, true);
-            SslStream ssl = new SslStream(stream, false);
-            ssl.AuthenticateAsClient("immediateaccessprobe.ad.belowaverage.org");
-            string data = "GET / HTTP/1.1\r\nHost: immediateaccessprobe.ad.belowaverage.org\r\n\r\n";
-            byte[] senBuffer = Encoding.UTF8.GetBytes(data);
-            ssl.Write(senBuffer, 0, data.Length);
-            string response = "";
-            byte[] recBuffer = new byte[500];
-            while (ssl.Read(recBuffer, 0, 500) != 0)
-            {
-                response += Encoding.UTF8.GetString(recBuffer);
-                if (recBuffer[499] == 0x0) break;
-                recBuffer = new byte[500];
-            }
-            return true;
+            });
         }
-        /*private static async Task<bool> HttpRequest(string URI)
-        {
-            Socket socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
-            socket.Connect(IPAddress.Parse("10.0.1.0"), 80);
-            string data = "GET / HTTP/1.1\r\nHost: 10.0.1.0\r\n\r\n";
-            byte[] senBuffer = Encoding.UTF8.GetBytes(data);
-            socket.Send(senBuffer);
-            string response = "";
-            byte[] recBuffer = new byte[500];
-            while (socket.Receive(recBuffer, 500, SocketFlags.None) != 0)
-            {
-                response += Encoding.UTF8.GetString(recBuffer);
-                if (recBuffer[499] == 0x0) break;
-                recBuffer = new byte[500];
-            }
-            return true;
-        }*/
         private static async Task<bool> Ping(string Host)
         {
             int pingCount = (int)PolicyReader.Policies["ProbeAttempts"];
