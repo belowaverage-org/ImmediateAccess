@@ -35,7 +35,7 @@ namespace ImmediateAccess
         private static async Task<bool> TestProbeExludeVPN()
         {
             Logger.Info("Probe: Testing probe from all adapters excluding VPN...", ConsoleColor.Blue);
-            CancellationTokenSource cts = new CancellationTokenSource();
+            CancellationTokenSource cts = new CancellationTokenSource(); //MAX TIME SPENT CAN GO HERE!
             List<Task<bool>> taskList = new List<Task<bool>>();
             foreach(IPAddress ip in GetAllIPAddresses(false))
             {
