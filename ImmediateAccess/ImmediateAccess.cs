@@ -23,35 +23,29 @@ namespace ImmediateAccess
         {
             if (IsCurrentlyEnsuring || !IsNetworkAvailable) return;
             IsCurrentlyEnsuring = true;
-            bool success = false;
-            Logger.Info("Ensuring a connection to the intranet...");
-            //await VpnControl.Disconnect();
-            success = await TestNetwork.IsProbeAvailable();
-            if (success)
+            if (await TestNetwork.IsProbeAvailable())
             {
                 IsCurrentlyEnsuring = false;
+                await VpnControl.Disconnect();
                 return;
             }
-            success = await TestNetwork.IsVpnServerAccessible();
-            if (!success)
-            {
-                IsCurrentlyEnsuring = false;
-                return;
-            }
-            Logger.Warning("Intranet is not available! Mitigating...");
+            if (await VpnControl.IsConnected() != null) return;
             while (true)
             {
-                if(await VpnControl.Connect())
+                if (!await TestNetwork.IsVpnServerAccessible())
                 {
-                    break;
+                    IsCurrentlyEnsuring = false;
+                    return;
+                }
+                if (await VpnControl.Connect())
+                {
+                    IsCurrentlyEnsuring = false;
+                    _ = EnsureConnectionToIntranet();
+                    return;
                 }
                 Logger.Warning("Couldn't connect to VPN for some reason. Trying again in 5 seconds...");
                 await Task.Delay(5000);
             }
-            Logger.Info("Waiting " + ((int)PolicyReader.Policies["EventCooldownMS"] / 1000 ) + " second(s) for cooldown...");
-            await Task.Delay((int)PolicyReader.Policies["EventCooldownMS"]);
-            Logger.Info("Done.");
-            IsCurrentlyEnsuring = false;
         }
         private static async void NetworkChange_NetworkAddressChanged(object sender, EventArgs e)
         {

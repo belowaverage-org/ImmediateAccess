@@ -17,7 +17,7 @@ namespace ImmediateAccess
         public static async Task<bool> IsProbeAvailable()
         {
             if (PolicyReader.Policies["InternalProbe"] == null) return false;
-            return await TestProbeExludeVPN();
+            return await TestProbeFrom(GetAllIPAddresses());
         }
         public static async Task<bool> IsVpnServerAccessible()
         {
@@ -32,12 +32,12 @@ namespace ImmediateAccess
             }
             return false;
         }
-        private static async Task<bool> TestProbeExludeVPN()
+        private static async Task<bool> TestProbeFrom(IPAddress[] Bind)
         {
             Logger.Info("Probe: Testing probe from all adapters excluding VPN...", ConsoleColor.Blue);
             CancellationTokenSource cts = new CancellationTokenSource(); //MAX TIME SPENT CAN GO HERE!
             List<Task<bool>> taskList = new List<Task<bool>>();
-            foreach(IPAddress ip in GetAllIPAddresses(false))
+            foreach(IPAddress ip in Bind)
             {
                 taskList.Add(TestProbe(ip, cts.Token));
             }
@@ -77,9 +77,11 @@ namespace ImmediateAccess
                 string head = "Probe " + Task.CurrentId + ": ";
                 try
                 {
+                    int timeout = 3000;
                     if (Cancellation.IsCancellationRequested) return false;
                     Logger.Info(head + "Testing probe on: " + Bind.ToString() + "...", ConsoleColor.DarkYellow);
                     Socket socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
+                    socket.ReceiveTimeout = socket.SendTimeout = timeout;
                     if (Bind != null)
                     {
                         EndPoint ep = new IPEndPoint(Bind, 0);
@@ -87,33 +89,13 @@ namespace ImmediateAccess
                     }
                     socket.Connect(URI.Host, URI.Port);
                     if (Cancellation.IsCancellationRequested) return false;
-                    Logger.Info(head + "Connected! Negotiating...", ConsoleColor.DarkYellow);
-                    Stream stream;
-                    if (URI.Scheme == Uri.UriSchemeHttp)
-                    {
-                        Logger.Info(head + "Using HTTP.", ConsoleColor.DarkYellow);
-                        stream = new NetworkStream(socket, true);
-                    }
-                    else
-                    {
-                        Logger.Info(head + "Using HTTPS.", ConsoleColor.DarkYellow);
-                        NetworkStream ns = new NetworkStream(socket, true);
-                        stream = new SslStream(ns, false);
-                        ((SslStream)stream).AuthenticateAsClient(URI.Host);
-                    }
+                    Logger.Info(head + "Connected! Checking certificate...", ConsoleColor.DarkYellow);
+                    NetworkStream ns = new NetworkStream(socket, true);
+                    ns.ReadTimeout = ns.WriteTimeout = timeout;
+                    SslStream ss = new SslStream(ns, false);
+                    ss.ReadTimeout = ss.WriteTimeout = timeout;
+                    ss.AuthenticateAsClient(URI.Host);
                     if (Cancellation.IsCancellationRequested) return false;
-                    Logger.Info(head + "Sending request...", ConsoleColor.DarkYellow);
-                    StreamReader sr = new StreamReader(stream);
-                    StreamWriter sw = new StreamWriter(stream);
-                    sw.Write("GET / HTTP/1.1\r\nHost: " + URI.Host + "\r\nConnection: Close\r\n\r\n");
-                    sw.Flush();
-                    if (Cancellation.IsCancellationRequested) return false;
-                    Logger.Info(head + "Waiting for response...", ConsoleColor.DarkYellow);
-                    string response = sr.ReadToEnd();
-                    foreach (string line in response.Split('\n'))
-                    {
-                        Logger.Info(head + " - " + line, ConsoleColor.DarkYellow);
-                    }
                     Logger.Info(head + "Success!", ConsoleColor.DarkYellow);
                     return true;
                 }

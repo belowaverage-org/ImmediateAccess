@@ -39,14 +39,12 @@ namespace ImmediateAccess
         }
         public static async Task<string> IsConnected()
         {
-            Logger.Info("Checking if connected to VPN...");
             foreach (string vpnProfile in (string[])PolicyReader.Policies["VpnProfileList"])
             {
                 ManagementObject mo = await VpnStatus.Get(vpnProfile);
                 string status = (string)mo.GetPropertyValue("ConnectionStatus");
                 if (status == "Connected")
                 {
-                    Logger.Info("Connected to VPN.");
                     return vpnProfile;
                 }
             }
@@ -101,7 +99,6 @@ namespace ImmediateAccess
             return Task.Run(() => {
                 try
                 {
-                    Logger.Info("Gathering VPN Profile Information...");
                     ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM PS_VpnConnection");
                     searcher.Scope.Path.ClassName = "PS_VpnConnection";
                     searcher.Scope.Path.NamespacePath = @"Root\Microsoft\Windows\RemoteAccess\Client";
@@ -117,9 +114,9 @@ namespace ImmediateAccess
                     }
                     return vpnProfile;
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    Logger.Error("Error reading VPN Profile via WMI!");
+                    Logger.Error("Error reading VPN Profile via WMI: " + e.Message);
                     return null;
                 }
             });
