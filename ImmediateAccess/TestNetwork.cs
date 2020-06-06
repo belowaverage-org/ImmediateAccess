@@ -36,31 +36,24 @@ namespace ImmediateAccess
         {
             Logger.Info("Probe: Testing probe from all adapters excluding VPN...", ConsoleColor.Blue);
             CancellationTokenSource cts = new CancellationTokenSource(); //MAX TIME SPENT CAN GO HERE!
-            List<Task<bool>> taskList = new List<Task<bool>>();
+            List<Task<bool>> tasks = new List<Task<bool>>();
             foreach(IPAddress ip in Bind)
             {
-                taskList.Add(TestProbe(ip, cts.Token));
+                tasks.Add(TestProbe(ip, cts.Token));
             }
-            Task<bool>[] tasks = taskList.ToArray();
-            while (true)
+            while (tasks.Count != 0)
             {
-                await Task.WhenAny(tasks);
-                bool allComplete = true;
-                foreach (Task<bool> task in tasks)
+                Task<bool> task = await Task.WhenAny(tasks);
+                if(await task)
                 {
-                    if(task.IsCompleted && task.Result)
-                    {
-                        Logger.Info("Probe: Online!", ConsoleColor.Blue);
-                        cts.Cancel();
-                        return true;
-                    }
-                    if(!task.IsCompleted)
-                    {
-                        allComplete = false;
-                        continue;
-                    }
+                    Logger.Info("Probe: Online!", ConsoleColor.Blue);
+                    cts.Cancel();
+                    return true;
                 }
-                if (allComplete) break;
+                else
+                {
+                    tasks.Remove(task);
+                }
             }
             Logger.Info("Probe: Probe not available!", ConsoleColor.Blue);
             return false;
@@ -77,23 +70,25 @@ namespace ImmediateAccess
                 string head = "Probe " + Task.CurrentId + ": ";
                 try
                 {
-                    int timeout = 3000;
+                    int timeout = 10000;
                     if (Cancellation.IsCancellationRequested) return false;
                     Logger.Info(head + "Testing probe on: " + Bind.ToString() + "...", ConsoleColor.DarkYellow);
                     Socket socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
-                    socket.ReceiveTimeout = socket.SendTimeout = timeout;
                     if (Bind != null)
                     {
                         EndPoint ep = new IPEndPoint(Bind, 0);
                         socket.Bind(ep);
                     }
-                    socket.Connect(URI.Host, URI.Port);
+                    socket.ConnectAsync(URI.Host, URI.Port).Wait(timeout);
+                    if(!socket.Connected)
+                    {
+                        socket.Disconnect(false);
+                        return false;
+                    }
                     if (Cancellation.IsCancellationRequested) return false;
                     Logger.Info(head + "Connected! Checking certificate...", ConsoleColor.DarkYellow);
                     NetworkStream ns = new NetworkStream(socket, true);
-                    ns.ReadTimeout = ns.WriteTimeout = timeout;
                     SslStream ss = new SslStream(ns, false);
-                    ss.ReadTimeout = ss.WriteTimeout = timeout;
                     ss.AuthenticateAsClient(URI.Host);
                     if (Cancellation.IsCancellationRequested) return false;
                     Logger.Info(head + "Success!", ConsoleColor.DarkYellow);
@@ -102,7 +97,14 @@ namespace ImmediateAccess
                 catch (Exception e)
                 {
                     if (Cancellation.IsCancellationRequested) return false;
-                    Logger.Error(head + e.Message);
+                    if (e.InnerException != null)
+                    {
+                        Logger.Error(head + e.InnerException.Message);
+                    }
+                    else
+                    {
+                        Logger.Error(head + e.Message);
+                    }
                     return false;
                 }
             });

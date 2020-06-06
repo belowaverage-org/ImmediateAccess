@@ -29,7 +29,11 @@ namespace ImmediateAccess
                 await VpnControl.Disconnect();
                 return;
             }
-            if (await VpnControl.IsConnected() != null) return;
+            if (await VpnControl.IsConnected() != null)
+            {
+                IsCurrentlyEnsuring = false;
+                return;
+            }
             while (true)
             {
                 if (!await TestNetwork.IsVpnServerAccessible())
