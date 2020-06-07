@@ -5,7 +5,6 @@ using System.Management;
 using System.Net.Sockets;
 using System.Net.Security;
 using System.Net;
-using System.IO;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -70,7 +69,6 @@ namespace ImmediateAccess
                 string head = "Probe " + Task.CurrentId + ": ";
                 try
                 {
-                    int timeout = 10000;
                     if (Cancellation.IsCancellationRequested) return false;
                     Logger.Info(head + "Testing probe on: " + Bind.ToString() + "...", ConsoleColor.DarkYellow);
                     Socket socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
@@ -79,10 +77,9 @@ namespace ImmediateAccess
                         EndPoint ep = new IPEndPoint(Bind, 0);
                         socket.Bind(ep);
                     }
-                    socket.ConnectAsync(URI.Host, URI.Port).Wait(timeout);
+                    socket.ConnectAsync(URI.Host, URI.Port).Wait((int)PolicyReader.Policies["ProbeTimeoutMS"]);
                     if(!socket.Connected)
                     {
-                        socket.Disconnect(false);
                         return false;
                     }
                     if (Cancellation.IsCancellationRequested) return false;
@@ -111,7 +108,7 @@ namespace ImmediateAccess
         }
         private static async Task<bool> Ping(string Host)
         {
-            int pingCount = (int)PolicyReader.Policies["ProbeAttempts"];
+            int pingCount = 1; // (int)PolicyReader.Policies["ProbeAttempts"];
             while (pingCount-- > 0)
             {
                 try
