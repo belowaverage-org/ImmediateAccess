@@ -29,6 +29,20 @@ Enter a time in seconds that the Immediate Access service will timeout when tryi
 
 If "Not Configured" or "Disabled", the value will be 10.
       </string>
+      <string id="NetEventCooldownS">Network Event Cooldown Timer</string>
+      <string id="NetEventCooldownSExplain">
+Enter a time in seconds that the Immediate Access service will wait after the last network change event. (E.G: IP Address changed)
+After a network event, Immediate Access will start testing the network to see if the Internal Probe is available.
+This option will create a delay between when Immediate Access will start the probe test, and the last network change event.
+
+If "Not Configured" or "Disabled", the value will be 3.
+      </string>
+      <string id="HealthCheckIntervalS">Health Check Interval</string>
+      <string id="HealthCheckIntervalSExplain">
+Enter a time in seconds that the Immediate Access service will test for the Internal Probe on an interval.
+
+If "Not Configured" or "Disabled", the value will be 300.
+      </string>
     </stringTable>
     <presentationTable>
       <presentation id="ImmediateAccess">
@@ -39,6 +53,12 @@ If "Not Configured" or "Disabled", the value will be 10.
       </presentation>
       <presentation id="ProbeTimeoutS">
         <decimalTextBox refId="ProbeTimeoutS" defaultValue="10">Seconds:</decimalTextBox>
+      </presentation>
+      <presentation id="NetEventCooldownS">
+        <decimalTextBox refId="NetEventCooldownS" defaultValue="3">Seconds:</decimalTextBox>
+      </presentation>
+      <presentation id="HealthCheckIntervalS">
+        <decimalTextBox refId="HealthCheckIntervalS" defaultValue="300">Seconds:</decimalTextBox>
       </presentation>
     </presentationTable>
   </resources>

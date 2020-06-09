@@ -27,5 +27,19 @@
         <decimal id="ProbeTimeoutS" valueName="ProbeTimeoutS" maxValue="60" required="true" />
       </elements>
     </policy>
+    <policy name="NetEventCooldownS" class="Machine" displayName="$(string.NetEventCooldownS)" explainText="$(string.NetEventCooldownSExplain)" presentation="$(presentation.NetEventCooldownS)" key="Software\Policies\Below Average\Immediate Access">
+      <parentCategory ref="ImmediateAccess" />
+      <supportedOn ref="windows:SUPPORTED_Windows_10_0_NOSERVER" />
+      <elements>
+        <decimal id="NetEventCooldownS" valueName="NetEventCooldownS" maxValue="30" required="true" />
+      </elements>
+    </policy>
+    <policy name="HealthCheckIntervalS" class="Machine" displayName="$(string.HealthCheckIntervalS)" explainText="$(string.HealthCheckIntervalSExplain)" presentation="$(presentation.HealthCheckIntervalS)" key="Software\Policies\Below Average\Immediate Access">
+      <parentCategory ref="ImmediateAccess" />
+      <supportedOn ref="windows:SUPPORTED_Windows_10_0_NOSERVER" />
+      <elements>
+        <decimal id="HealthCheckIntervalS" valueName="HealthCheckIntervalS" required="true" />
+      </elements>
+    </policy>
   </policies>
 </policyDefinitions>

@@ -10,7 +10,9 @@ namespace ImmediateAccess
         {
             { "InternalProbe", null },
             { "VpnProfileList", null },
-            { "ProbeTimeoutS", 10 }
+            { "ProbeTimeoutS", 10 },
+            { "NetEventCooldownS", 3 },
+            { "HealthCheckIntervalS", 300 }
         };
         public static Dictionary<string, object> Policies = new Dictionary<string, object>();
         public static void ReadPolicies()

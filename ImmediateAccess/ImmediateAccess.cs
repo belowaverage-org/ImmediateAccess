@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using System.Net.NetworkInformation;
 using System.Timers;
-using System.Diagnostics.Eventing.Reader;
 using System.Threading;
 using Timer = System.Timers.Timer;
 
