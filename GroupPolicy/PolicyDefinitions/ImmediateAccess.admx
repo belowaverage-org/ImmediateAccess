@@ -20,32 +20,11 @@
         <multiText id="VpnProfileList" valueName="VpnProfileList" required="true" />
       </elements>
     </policy>
-    <policy name="ProbeTimeoutMS" class="Machine" displayName="$(string.ProbeTimeoutMS)" explainText="$(string.ProbeTimeoutMSExplain)" presentation="$(presentation.ProbeTimeoutMS)" key="Software\Policies\Below Average\Immediate Access">
+    <policy name="ProbeTimeoutS" class="Machine" displayName="$(string.ProbeTimeoutS)" explainText="$(string.ProbeTimeoutSExplain)" presentation="$(presentation.ProbeTimeoutS)" key="Software\Policies\Below Average\Immediate Access">
       <parentCategory ref="ImmediateAccess" />
       <supportedOn ref="windows:SUPPORTED_Windows_10_0_NOSERVER" />
       <elements>
-        <decimal id="ProbeTimeoutMS" valueName="ProbeTimeoutMS" required="true" />
-      </elements>
-    </policy>
-    <policy name="ProbeAttempts" class="Machine" displayName="$(string.ProbeAttempts)" explainText="$(string.ProbeAttemptsExplain)" presentation="$(presentation.ProbeAttempts)" key="Software\Policies\Below Average\Immediate Access">
-      <parentCategory ref="ImmediateAccess" />
-      <supportedOn ref="windows:SUPPORTED_Windows_10_0_NOSERVER" />
-      <elements>
-        <decimal id="ProbeAttempts" valueName="ProbeAttempts" required="true" />
-      </elements>
-    </policy>
-    <policy name="ProbeIntervalMS" class="Machine" displayName="$(string.ProbeIntervalMS)" explainText="$(string.ProbeIntervalMSExplain)" presentation="$(presentation.ProbeIntervalMS)" key="Software\Policies\Below Average\Immediate Access">
-      <parentCategory ref="ImmediateAccess" />
-      <supportedOn ref="windows:SUPPORTED_Windows_10_0_NOSERVER" />
-      <elements>
-        <decimal id="ProbeIntervalMS" valueName="ProbeIntervalMS" required="true" />
-      </elements>
-    </policy>
-    <policy name="EventCooldownMS" class="Machine" displayName="$(string.EventCooldownMS)" explainText="$(string.EventCooldownMSExplain)" presentation="$(presentation.EventCooldownMS)" key="Software\Policies\Below Average\Immediate Access">
-      <parentCategory ref="ImmediateAccess" />
-      <supportedOn ref="windows:SUPPORTED_Windows_10_0_NOSERVER" />
-      <elements>
-        <decimal id="EventCooldownMS" valueName="EventCooldownMS" required="true" />
+        <decimal id="ProbeTimeoutS" valueName="ProbeTimeoutS" maxValue="60" required="true" />
       </elements>
     </policy>
   </policies>

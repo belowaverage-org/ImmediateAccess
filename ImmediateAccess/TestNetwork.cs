@@ -77,7 +77,7 @@ namespace ImmediateAccess
                         EndPoint ep = new IPEndPoint(Bind, 0);
                         socket.Bind(ep);
                     }
-                    socket.ConnectAsync(URI.Host, URI.Port).Wait((int)PolicyReader.Policies["ProbeTimeoutMS"]);
+                    socket.ConnectAsync(URI.Host, URI.Port).Wait((int)PolicyReader.Policies["ProbeTimeoutS"] * 1000);
                     if(!socket.Connected)
                     {
                         return false;
@@ -108,13 +108,13 @@ namespace ImmediateAccess
         }
         private static async Task<bool> Ping(string Host)
         {
-            int pingCount = 1; // (int)PolicyReader.Policies["ProbeAttempts"];
+            int pingCount = 1; //REMOVE
             while (pingCount-- > 0)
             {
                 try
                 {
                     Logger.Info("Pinging: \"" + Host + "\"...");
-                    PingReply reply = await PingProvider.SendPingAsync(Host, (int)PolicyReader.Policies["ProbeTimeoutMS"]);
+                    PingReply reply = await PingProvider.SendPingAsync(Host, (int)PolicyReader.Policies["ProbeTimeoutS"] * 1000);
                     if (reply.Status == IPStatus.Success)
                     {
                         return true;
@@ -124,7 +124,7 @@ namespace ImmediateAccess
                 {
                     Logger.Warning("Probe failed to respond in a timely manner...");
                 }
-                await Task.Delay((int)PolicyReader.Policies["ProbeIntervalMS"]);
+                await Task.Delay((int)PolicyReader.Policies["ProbeIntervalS"] + 1000);
             }
             return false;
         }
