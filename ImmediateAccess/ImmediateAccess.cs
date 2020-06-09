@@ -1,60 +1,86 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Net.NetworkInformation;
+using System.Timers;
+using System.Diagnostics.Eventing.Reader;
+using System.Threading;
+using Timer = System.Timers.Timer;
 
 namespace ImmediateAccess
 {
     class ImmediateAccess
     {
+
         private static bool IsCurrentlyEnsuring = false;
         private static bool IsNetworkAvailable = false;
+        private static CancellationTokenSource EnsuranceCancel = new CancellationTokenSource();
+        private static Timer NetEventCoolTimer = new Timer(3000); //CREATE POLICY FOR THIS BAD BOY
         public static async Task Start(string[] Paremeters)
         {
+            NetEventCoolTimer.AutoReset = false;
             PolicyReader.ReadPolicies();
             Logger.Info("Observing network state...");
             IsNetworkAvailable = NetworkInterface.GetIsNetworkAvailable();
             await EnsureConnectionToIntranet();
             Logger.Info("Registering event listeners...");
+            NetEventCoolTimer.Elapsed += NetEventCoolTimer_Elapsed;
             NetworkChange.NetworkAvailabilityChanged += NetworkChange_NetworkAvailabilityChanged;
             NetworkChange.NetworkAddressChanged += NetworkChange_NetworkAddressChanged;
             Logger.Info("Service is ready.", ConsoleColor.Green);
         }
+        private async static void NetEventCoolTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            await EnsureConnectionToIntranet();
+        }
         private static async Task EnsureConnectionToIntranet()
         {
-            if (IsCurrentlyEnsuring || !IsNetworkAvailable) return;
-            IsCurrentlyEnsuring = true;
-            if (await TestNetwork.IsProbeAvailable())
+            try
             {
-                IsCurrentlyEnsuring = false;
-                await VpnControl.Disconnect();
-                return;
-            }
-            if (await VpnControl.IsConnected() != null)
-            {
-                IsCurrentlyEnsuring = false;
-                return;
-            }
-            while (true)
-            {
-                if (!await TestNetwork.IsVpnServerAccessible())
+                if (IsCurrentlyEnsuring || !IsNetworkAvailable) return;
+                EnsuranceCancel = new CancellationTokenSource();
+                IsCurrentlyEnsuring = true;
+                if (await TestNetwork.IsProbeAvailable())
+                {
+                    IsCurrentlyEnsuring = false;
+                    await VpnControl.Disconnect();
+                    return;
+                }
+                if (await VpnControl.IsConnected() != null)
                 {
                     IsCurrentlyEnsuring = false;
                     return;
                 }
-                if (await VpnControl.Connect())
+                EnsuranceCancel.Token.ThrowIfCancellationRequested();
+                while (true)
                 {
-                    IsCurrentlyEnsuring = false;
-                    _ = EnsureConnectionToIntranet();
-                    return;
+                    EnsuranceCancel.Token.ThrowIfCancellationRequested();
+                    if (!await TestNetwork.IsVpnServerAccessible())
+                    {
+                        IsCurrentlyEnsuring = false;
+                        return;
+                    }
+                    if (await VpnControl.Connect(EnsuranceCancel.Token))
+                    {
+                        IsCurrentlyEnsuring = false;
+                        _ = EnsureConnectionToIntranet();
+                        return;
+                    }
+                    Logger.Warning("Couldn't connect to VPN for some reason. Trying again in 5 seconds...");
+                    await Task.Delay(5000);
                 }
-                Logger.Warning("Couldn't connect to VPN for some reason. Trying again in 5 seconds...");
-                await Task.Delay(5000);
+            }
+            catch(OperationCanceledException)
+            {
+                IsCurrentlyEnsuring = false;
+                _ = EnsureConnectionToIntranet();
             }
         }
-        private static async void NetworkChange_NetworkAddressChanged(object sender, EventArgs e)
+        private static void NetworkChange_NetworkAddressChanged(object sender, EventArgs e)
         {
             Logger.Info("Network change detected: IP Address.");
-            await EnsureConnectionToIntranet();
+            EnsuranceCancel.Cancel();
+            NetEventCoolTimer.Stop();
+            NetEventCoolTimer.Start();
         }
         private static void NetworkChange_NetworkAvailabilityChanged(object sender, NetworkAvailabilityEventArgs e)
         {

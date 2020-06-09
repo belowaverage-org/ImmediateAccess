@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Management;
+using System.Threading;
 
 namespace ImmediateAccess
 {
@@ -10,15 +11,17 @@ namespace ImmediateAccess
         public static RasDialProcess RasDialProcess = null;
         private static string RasDialExe = "rasdial.exe";
         public static string SelectedVPNProfile = "";
-        public static async Task<bool> Connect()
+        public static async Task<bool> Connect(CancellationToken CancellationToken)
         {
             if (await IsConnected() != null) return true;
             Logger.Info("RasDial: Attempting to connect...", ConsoleColor.DarkCyan);
             await RasDial("\"" + SelectedVPNProfile + "\"");
+            CancellationToken.ThrowIfCancellationRequested();
             await Task.Delay(1000);
-            if(await IsConnected() != null) return true;
+            if (await IsConnected() != null) return true;
             foreach (string vpnProfile in (string[])PolicyReader.Policies["VpnProfileList"])
             {
+                CancellationToken.ThrowIfCancellationRequested();
                 SelectedVPNProfile = vpnProfile;
                 await RasDial("\"" + SelectedVPNProfile + "\"");
                 await Task.Delay(1000);

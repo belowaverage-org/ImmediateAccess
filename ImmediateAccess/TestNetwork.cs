@@ -12,7 +12,6 @@ namespace ImmediateAccess
 {
     class TestNetwork
     {
-        private static Ping PingProvider = new Ping();
         public static async Task<bool> IsProbeAvailable()
         {
             if (PolicyReader.Policies["InternalProbe"] == null) return false;
@@ -108,23 +107,16 @@ namespace ImmediateAccess
         }
         private static async Task<bool> Ping(string Host)
         {
-            int pingCount = 1; //REMOVE
-            while (pingCount-- > 0)
+            try
             {
-                try
-                {
-                    Logger.Info("Pinging: \"" + Host + "\"...");
-                    PingReply reply = await PingProvider.SendPingAsync(Host, (int)PolicyReader.Policies["ProbeTimeoutS"] * 1000);
-                    if (reply.Status == IPStatus.Success)
-                    {
-                        return true;
-                    }
-                }
-                catch (Exception)
-                {
-                    Logger.Warning("Probe failed to respond in a timely manner...");
-                }
-                await Task.Delay((int)PolicyReader.Policies["ProbeIntervalS"] + 1000);
+                Logger.Info("Pinging: \"" + Host + "\"...");
+                Ping ping = new Ping();
+                await ping.SendPingAsync(Host, 10000);
+                return true;
+            }
+            catch (Exception e)
+            {
+                Logger.Warning("Ping: " + e.Message);
             }
             return false;
         }
