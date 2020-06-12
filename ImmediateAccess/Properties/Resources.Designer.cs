@@ -64,9 +64,6 @@ namespace ImmediateAccess.Properties {
         ///   Looks up a localized string similar to Windows Registry Editor Version 5.00
         ///
         ///[HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\ImmediateAccess]
-        ///&quot;Type&quot;=dword:00000010
-        ///&quot;Start&quot;=dword:00000002
-        ///&quot;ErrorControl&quot;=dword:00000001
         ///&quot;ObjectName&quot;=&quot;NT AUTHORITY\\NetworkService&quot;
         ///&quot;FailureActions&quot;=hex:00,00,00,00,00,00,00,00,00,00,00,00,03,00,00,00,14,00,00,\
         ///  00,01,00,00,00,60,ea,00,00,01,00,00,00,60,ea,00,00,01,00,00,00,60,ea,00,00.
