@@ -12,7 +12,8 @@ namespace ImmediateAccess
             { "VpnProfileList", null },
             { "ProbeTimeoutS", 10 },
             { "NetEventCooldownS", 3 },
-            { "HealthCheckIntervalS", 300 }
+            { "HealthCheckIntervalS", 300 },
+            { "VpnServerPingTimeoutMS", 1500 }
         };
         public static Dictionary<string, object> Policies = new Dictionary<string, object>();
         public static void ReadPolicies()

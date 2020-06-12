@@ -17,14 +17,14 @@ namespace ImmediateAccess
             Logger.Info("RasDial: Attempting to connect...", ConsoleColor.DarkCyan);
             await RasDial("\"" + SelectedVPNProfile + "\"");
             CancellationToken.ThrowIfCancellationRequested();
-            await Task.Delay(1000);
+            await Task.Delay(100);
             if (await IsConnected() != null) return true;
             foreach (string vpnProfile in (string[])PolicyReader.Policies["VpnProfileList"])
             {
                 CancellationToken.ThrowIfCancellationRequested();
                 SelectedVPNProfile = vpnProfile;
                 await RasDial("\"" + SelectedVPNProfile + "\"");
-                await Task.Delay(1000);
+                await Task.Delay(100);
                 if (await IsConnected() != null) return true;
             }
             return false;
@@ -37,7 +37,7 @@ namespace ImmediateAccess
                 if (vpnProfile == null) return true;
                 Logger.Info("RasDial: Disconnecting from VPN...", ConsoleColor.DarkCyan);
                 await RasDial("\"" + vpnProfile + "\" /disconnect");
-                await Task.Delay(1000);
+                await Task.Delay(100);
             }
         }
         public static async Task<string> IsConnected()

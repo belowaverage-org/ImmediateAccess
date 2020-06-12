@@ -13,11 +13,12 @@ namespace ImmediateAccess
         private static bool IsCurrentlyEnsuring = false;
         private static bool IsNetworkAvailable = false;
         private static CancellationTokenSource EnsuranceCancel = new CancellationTokenSource();
-        private static Timer NetEventCoolTimer = new Timer(3000); //CREATE POLICY FOR THIS BAD BOY
+        private static Timer NetEventCoolTimer = new Timer();
         public static async Task Start(string[] Paremeters)
         {
             NetEventCoolTimer.AutoReset = false;
             PolicyReader.ReadPolicies();
+            NetEventCoolTimer.Interval = (int)PolicyReader.Policies["NetEventCooldownS"] * 1000;
             Logger.Info("Observing network state...");
             IsNetworkAvailable = NetworkInterface.GetIsNetworkAvailable();
             await EnsureConnectionToIntranet();

@@ -22,7 +22,9 @@ namespace ImmediateAccess
             foreach(string vpnProfile in (string[])PolicyReader.Policies["VpnProfileList"])
             {
                 ManagementObject vpnStatus = await VpnStatus.Get(vpnProfile);
-                if (await Ping((string)vpnStatus.GetPropertyValue("ServerAddress")))
+                Task<bool> ping = VpnServerPing((string)vpnStatus.GetPropertyValue("ServerAddress"));
+                bool finished = ping.Wait((int)PolicyReader.Policies["VpnServerPingTimeoutMS"]);
+                if (finished && await ping)
                 {
                     VpnControl.SelectedVPNProfile = vpnProfile;
                     return true;
@@ -44,7 +46,7 @@ namespace ImmediateAccess
                 Task<bool> task = await Task.WhenAny(tasks);
                 if(await task)
                 {
-                    Logger.Info("Probe: Online!", ConsoleColor.Blue);
+                    Logger.Info("Probe: Success.", ConsoleColor.Blue);
                     cts.Cancel();
                     return true;
                 }
@@ -105,14 +107,20 @@ namespace ImmediateAccess
                 }
             });
         }
-        private static async Task<bool> Ping(string Host)
+        private static async Task<bool> VpnServerPing(string Host)
         {
             try
             {
-                Logger.Info("Pinging: \"" + Host + "\"...");
+                Logger.Info("Ping: \"" + Host + "\"...");
                 Ping ping = new Ping();
-                await ping.SendPingAsync(Host, 10000);
-                return true;
+                PingReply reply = await ping.SendPingAsync(Host, (int)PolicyReader.Policies["VpnServerPingTimeoutMS"]);
+                if (reply.Status == IPStatus.Success)
+                {
+                    Logger.Info("Ping: Success.", ConsoleColor.Green);
+                    return true;
+                }
+                Logger.Warning("Ping: Timeout.");
+                return false;
             }
             catch (Exception e)
             {
