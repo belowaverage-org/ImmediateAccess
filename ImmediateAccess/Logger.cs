@@ -25,6 +25,7 @@ namespace ImmediateAccess
         public static void Info(string Message, ConsoleColor Color)
         {
             ss.Wait();
+            Console.ForegroundColor = ConsoleColor.DarkGray;
             Console.Write(DateTime.Now.ToString() + "> ");
             Console.ForegroundColor = Color;
             Console.WriteLine(Message);

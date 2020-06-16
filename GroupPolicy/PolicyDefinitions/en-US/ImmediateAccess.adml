@@ -43,6 +43,18 @@ Enter a time in seconds that the Immediate Access service will test for the Inte
 
 If "Not Configured" or "Disabled", the value will be 300.
       </string>
+      <string id="VpnServerPingTimeoutMS">Vpn Server Ping Timeout</string>
+      <string id="VpnServerPingTimeoutMSExplain">
+Enter a timeout in milliseconds for when Immediate Access pings a VPN server.
+
+If "Not Configured" or "Disabled", the value will be 1500.
+      </string>
+      <string id="VpnServerConnectAttempts">Vpn Server Connect Attempts</string>
+      <string id="VpnServerConnectAttemptsExplain">
+Enter the ammount of attempts Immediate Access will make to connect to a VPN profile.
+
+If "Not Configured" or "Disabled", the value will be 3.
+      </string>
     </stringTable>
     <presentationTable>
       <presentation id="ImmediateAccess">
@@ -59,6 +71,12 @@ If "Not Configured" or "Disabled", the value will be 300.
       </presentation>
       <presentation id="HealthCheckIntervalS">
         <decimalTextBox refId="HealthCheckIntervalS" defaultValue="300">Seconds:</decimalTextBox>
+      </presentation>
+      <presentation id="VpnServerPingTimeoutMS">
+        <decimalTextBox refId="VpnServerPingTimeoutMS" defaultValue="1500">Milliseconds:</decimalTextBox>
+      </presentation>
+      <presentation id="VpnServerConnectAttempts">
+        <decimalTextBox refId="VpnServerConnectAttempts" defaultValue="3">Attempts:</decimalTextBox>
       </presentation>
     </presentationTable>
   </resources>

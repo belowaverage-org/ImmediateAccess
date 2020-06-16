@@ -13,7 +13,8 @@ namespace ImmediateAccess
             { "ProbeTimeoutS", 10 },
             { "NetEventCooldownS", 3 },
             { "HealthCheckIntervalS", 300 },
-            { "VpnServerPingTimeoutMS", 1500 }
+            { "VpnServerPingTimeoutMS", 1500 },
+            { "VpnServerConnectAttempts", 3 }
         };
         public static Dictionary<string, object> Policies = new Dictionary<string, object>();
         public static void ReadPolicies()
@@ -32,24 +33,22 @@ namespace ImmediateAccess
             }
             foreach (KeyValuePair<string, object> defaultPolicy in DefaultPolicies)
             {
-                try
+                object value =  iak.GetValue(defaultPolicy.Key);
+                if(value == null)
                 {
-                    object value =  iak.GetValue(defaultPolicy.Key);
-                    Logger.Info("GPO: " + defaultPolicy.Key + ": " + value + ".", ConsoleColor.Magenta);
-                    if (value.GetType() == typeof(string[]))
-                    {
-                        foreach(string subValue in (string[])value)
-                        {
-                            Logger.Info("GPO:  - " + subValue, ConsoleColor.Magenta);
-                        }
-                    }
-                    Policies.Add(defaultPolicy.Key, value);
-                }
-                catch (Exception)
-                {
-                    Logger.Info("GPO: Policy \"" + defaultPolicy.Key + "\" is not set, using default value: " + defaultPolicy.Value + ".", ConsoleColor.Magenta);
+                    Logger.Info("GPO: " + defaultPolicy.Key + ": " + defaultPolicy.Value + ". (Not Set)", ConsoleColor.Magenta);
                     Policies.Add(defaultPolicy.Key, defaultPolicy.Value);
+                    continue;
                 }
+                Logger.Info("GPO: " + defaultPolicy.Key + ": " + value + ".", ConsoleColor.Magenta);
+                if (value.GetType() == typeof(string[]))
+                {
+                    foreach(string subValue in (string[])value)
+                    {
+                        Logger.Info("GPO:  - " + subValue, ConsoleColor.Magenta);
+                    }
+                }
+                Policies.Add(defaultPolicy.Key, value);
             }
             if(iak != null) iak.Dispose();
             Logger.Info("GPO: Done!", ConsoleColor.Magenta);

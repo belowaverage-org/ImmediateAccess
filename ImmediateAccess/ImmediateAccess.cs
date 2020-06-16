@@ -51,10 +51,11 @@ namespace ImmediateAccess
                     return;
                 }
                 EnsuranceCancel.Token.ThrowIfCancellationRequested();
-                while (true)
+                int attempts = (int)PolicyReader.Policies["VpnServerConnectAttempts"];
+                while (attempts-- > 0)
                 {
                     EnsuranceCancel.Token.ThrowIfCancellationRequested();
-                    if (!await TestNetwork.IsVpnServerAccessible())
+                    if (!await TestNetwork.SelectOnlineVpnProfile())
                     {
                         IsCurrentlyEnsuring = false;
                         return;
@@ -65,8 +66,11 @@ namespace ImmediateAccess
                         _ = EnsureConnectionToIntranet();
                         return;
                     }
-                    Logger.Warning("Couldn't connect to VPN for some reason. Trying again in 5 seconds...");
-                    await Task.Delay(5000);
+                    if (attempts > 0)
+                    {
+                        Logger.Warning("Couldn't connect to VPN for some reason. Trying again in 5 seconds...");
+                        await Task.Delay(5000);
+                    }
                 }
             }
             catch(OperationCanceledException)
@@ -92,19 +96,12 @@ namespace ImmediateAccess
             else
             {
                 Logger.Warning("Network is no longer available.");
-                /*
-                if (VpnControl.RasDialProcess != null)
-                {
-                    Logger.Warning("RasDial should not be running, Killing...");
-                    VpnControl.RasDialProcess.Kill();
-                    Logger.Info("Killed.");
-                }
-                */
+                EnsuranceCancel.Cancel();
             }
         }
         public static async Task Stop()
         {
-            //await VpnControl.Disconnect();
+            await VpnControl.Disconnect();
         }
     }
 }

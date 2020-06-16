@@ -41,5 +41,19 @@
         <decimal id="HealthCheckIntervalS" valueName="HealthCheckIntervalS" required="true" />
       </elements>
     </policy>
+    <policy name="VpnServerPingTimeoutMS" class="Machine" displayName="$(string.VpnServerPingTimeoutMS)" explainText="$(string.VpnServerPingTimeoutMSExplain)" presentation="$(presentation.VpnServerPingTimeoutMS)" key="Software\Policies\Below Average\Immediate Access">
+      <parentCategory ref="ImmediateAccess" />
+      <supportedOn ref="windows:SUPPORTED_Windows_10_0_NOSERVER" />
+      <elements>
+        <decimal id="VpnServerPingTimeoutMS" valueName="VpnServerPingTimeoutMS" required="true" />
+      </elements>
+    </policy>
+    <policy name="VpnServerConnectAttempts" class="Machine" displayName="$(string.VpnServerConnectAttempts)" explainText="$(string.VpnServerConnectAttemptsExplain)" presentation="$(presentation.VpnServerConnectAttempts)" key="Software\Policies\Below Average\Immediate Access">
+      <parentCategory ref="ImmediateAccess" />
+      <supportedOn ref="windows:SUPPORTED_Windows_10_0_NOSERVER" />
+      <elements>
+        <decimal id="VpnServerConnectAttempts" valueName="VpnServerConnectAttempts" required="true" />
+      </elements>
+    </policy>
   </policies>
 </policyDefinitions>

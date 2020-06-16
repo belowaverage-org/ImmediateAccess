@@ -17,7 +17,7 @@ namespace ImmediateAccess
             if (PolicyReader.Policies["InternalProbe"] == null) return false;
             return await TestProbeFrom(GetAllIPAddresses());
         }
-        public static async Task<bool> IsVpnServerAccessible()
+        public static async Task<bool> SelectOnlineVpnProfile()
         {
             foreach(string vpnProfile in (string[])PolicyReader.Policies["VpnProfileList"])
             {
