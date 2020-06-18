@@ -81,9 +81,9 @@ namespace ImmediateAccess
         private static void UpdatePolicy()
         {
             PolicyReader.ReadPolicies();
-            HealthCheckTimer.Interval = (int)PolicyReader.Policies["NetEventCooldownS"] * 1000;
+            HealthCheckTimer.Interval = (int)PolicyReader.Policies["HealthCheckIntervalS"] * 1000;
             HealthCheckTimer.Start();
-            NetEventCoolTimer.Interval = (int)PolicyReader.Policies["HealthCheckIntervalS"] * 1000;
+            NetEventCoolTimer.Interval = (int)PolicyReader.Policies["NetEventCooldownS"] * 1000;
             NetEventCoolTimer.Stop();
         }
         private static bool IsServiceEnabled()
