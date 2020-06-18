@@ -18,7 +18,7 @@ namespace ImmediateAccess
             {
                 if (args.Contains("/debug"))
                 {
-                    ImmediateAccess.Start(args).Wait();
+                    ImmediateAccess.Start(args);
                     Console.Read();
                     ImmediateAccess.Stop().Wait();
                     return;

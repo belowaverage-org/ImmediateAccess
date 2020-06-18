@@ -10,7 +10,7 @@ namespace ImmediateAccess
         }
         protected override void OnStart(string[] args)
         {
-            ImmediateAccess.Start(args).Wait();
+            ImmediateAccess.Start(args);
         }
         protected override void OnStop()
         {

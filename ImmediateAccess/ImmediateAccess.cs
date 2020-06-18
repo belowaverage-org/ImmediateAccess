@@ -9,34 +9,33 @@ namespace ImmediateAccess
 {
     class ImmediateAccess
     {
-
         private static bool IsCurrentlyEnsuring = false;
         private static bool IsNetworkAvailable = false;
         private static CancellationTokenSource EnsuranceCancel = new CancellationTokenSource();
         private static Timer NetEventCoolTimer = new Timer();
-        public static async Task Start(string[] Paremeters)
+        private static Timer HealthCheckTimer = new Timer();
+        public static void Start(string[] Paremeters)
         {
-            NetEventCoolTimer.AutoReset = false;
-            PolicyReader.ReadPolicies();
-            NetEventCoolTimer.Interval = (int)PolicyReader.Policies["NetEventCooldownS"] * 1000;
             Logger.Info("Observing network state...");
             IsNetworkAvailable = NetworkInterface.GetIsNetworkAvailable();
-            await EnsureConnectionToIntranet();
             Logger.Info("Registering event listeners...");
+            HealthCheckTimer.Elapsed += HealthCheckTimer_Elapsed;
             NetEventCoolTimer.Elapsed += NetEventCoolTimer_Elapsed;
             NetworkChange.NetworkAvailabilityChanged += NetworkChange_NetworkAvailabilityChanged;
             NetworkChange.NetworkAddressChanged += NetworkChange_NetworkAddressChanged;
             Logger.Info("Service is ready.", ConsoleColor.Green);
+            _ = EnsureConnectionToIntranet();
         }
-        private async static void NetEventCoolTimer_Elapsed(object sender, ElapsedEventArgs e)
+        public static async Task Stop()
         {
-            await EnsureConnectionToIntranet();
+            HealthCheckTimer.Enabled = NetEventCoolTimer.Enabled = false;
+            await VpnControl.Disconnect();
         }
         private static async Task EnsureConnectionToIntranet()
         {
             try
             {
-                if (IsCurrentlyEnsuring || !IsNetworkAvailable) return;
+                if (IsCurrentlyEnsuring || !IsNetworkAvailable || !IsServiceEnabled()) return;
                 EnsuranceCancel = new CancellationTokenSource();
                 IsCurrentlyEnsuring = true;
                 if (await TestNetwork.IsProbeAvailable())
@@ -79,6 +78,27 @@ namespace ImmediateAccess
                 _ = EnsureConnectionToIntranet();
             }
         }
+        private static void UpdatePolicy()
+        {
+            PolicyReader.ReadPolicies();
+            HealthCheckTimer.Interval = (int)PolicyReader.Policies["NetEventCooldownS"] * 1000;
+            HealthCheckTimer.Start();
+            NetEventCoolTimer.Interval = (int)PolicyReader.Policies["HealthCheckIntervalS"] * 1000;
+            NetEventCoolTimer.Stop();
+        }
+        private static bool IsServiceEnabled()
+        {
+            UpdatePolicy();
+            string probeConf = (string)PolicyReader.Policies["InternalProbe"];
+            string[] profiConf = (string[])PolicyReader.Policies["VpnProfileList"];
+            if (
+                probeConf == null ||
+                profiConf == null ||
+                probeConf == "" ||
+                profiConf.Length == 0
+            ) return false;
+            return true;
+        }
         private static void NetworkChange_NetworkAddressChanged(object sender, EventArgs e)
         {
             Logger.Info("Network change detected: IP Address.");
@@ -99,9 +119,14 @@ namespace ImmediateAccess
                 EnsuranceCancel.Cancel();
             }
         }
-        public static async Task Stop()
+        private static async void HealthCheckTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            await VpnControl.Disconnect();
+            await EnsureConnectionToIntranet();
+        }
+        private static async void NetEventCoolTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            NetEventCoolTimer.Stop();
+            await EnsureConnectionToIntranet();
         }
     }
 }
