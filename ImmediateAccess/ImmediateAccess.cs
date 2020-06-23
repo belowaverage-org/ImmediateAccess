@@ -4,18 +4,21 @@ using System.Net.NetworkInformation;
 using System.Timers;
 using System.Threading;
 using Timer = System.Timers.Timer;
+using System.Linq;
 
 namespace ImmediateAccess
 {
     class ImmediateAccess
     {
+        public static bool IsDebugMode = true;
         private static bool IsCurrentlyEnsuring = false;
         private static bool IsNetworkAvailable = false;
         private static CancellationTokenSource EnsuranceCancel = new CancellationTokenSource();
         private static Timer NetEventCoolTimer = new Timer();
         private static Timer HealthCheckTimer = new Timer();
-        public static void Start(string[] Paremeters)
+        public static void Start(string[] args)
         {
+            IsDebugMode = args.Contains("/debug");
             Logger.Info("Observing network state...");
             IsNetworkAvailable = NetworkInterface.GetIsNetworkAvailable();
             Logger.Info("Registering event listeners...");
@@ -28,6 +31,7 @@ namespace ImmediateAccess
         }
         public static async Task Stop()
         {
+            Logger.Info("Service is stopping...");
             HealthCheckTimer.Enabled = NetEventCoolTimer.Enabled = false;
             await VpnControl.Disconnect();
         }
@@ -72,7 +76,7 @@ namespace ImmediateAccess
                     }
                 }
             }
-            catch(OperationCanceledException)
+            catch (OperationCanceledException)
             {
                 IsCurrentlyEnsuring = false;
                 _ = EnsureConnectionToIntranet();
@@ -101,7 +105,7 @@ namespace ImmediateAccess
         }
         private static void NetworkChange_NetworkAddressChanged(object sender, EventArgs e)
         {
-            Logger.Info("Network change detected: IP Address.");
+            Logger.Info("Event: Network changed!");
             EnsuranceCancel.Cancel();
             NetEventCoolTimer.Stop();
             NetEventCoolTimer.Start();
@@ -121,6 +125,7 @@ namespace ImmediateAccess
         }
         private static async void HealthCheckTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
+            Logger.Info("Health check timer lapsed!");
             await EnsureConnectionToIntranet();
         }
         private static async void NetEventCoolTimer_Elapsed(object sender, ElapsedEventArgs e)

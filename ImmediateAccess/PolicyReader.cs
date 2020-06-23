@@ -33,8 +33,9 @@ namespace ImmediateAccess
             }
             foreach (KeyValuePair<string, object> defaultPolicy in DefaultPolicies)
             {
-                object value =  iak.GetValue(defaultPolicy.Key);
-                if(value == null)
+                object value = null;
+                if (iak != null) value = iak.GetValue(defaultPolicy.Key);
+                if (value == null)
                 {
                     Logger.Info("GPO: " + defaultPolicy.Key + ": " + defaultPolicy.Value + ". (Not Set)", ConsoleColor.Magenta);
                     Policies.Add(defaultPolicy.Key, defaultPolicy.Value);
@@ -43,14 +44,14 @@ namespace ImmediateAccess
                 Logger.Info("GPO: " + defaultPolicy.Key + ": " + value + ".", ConsoleColor.Magenta);
                 if (value.GetType() == typeof(string[]))
                 {
-                    foreach(string subValue in (string[])value)
+                    foreach (string subValue in (string[])value)
                     {
                         Logger.Info("GPO:  - " + subValue, ConsoleColor.Magenta);
                     }
                 }
                 Policies.Add(defaultPolicy.Key, value);
             }
-            if(iak != null) iak.Dispose();
+            if (iak != null) iak.Dispose();
             Logger.Info("GPO: Done!", ConsoleColor.Magenta);
         }
     }

@@ -42,15 +42,18 @@ namespace ImmediateAccess
         }
         public static async Task<string> IsConnected()
         {
+            Logger.Info("Checking if connected to VPN already...");
             foreach (string vpnProfile in (string[])PolicyReader.Policies["VpnProfileList"])
             {
                 ManagementObject mo = await VpnStatus.Get(vpnProfile);
                 string status = (string)mo.GetPropertyValue("ConnectionStatus");
                 if (status == "Connected")
                 {
+                    Logger.Info("Already connected to VPN.");
                     return vpnProfile;
                 }
             }
+            Logger.Info("Not connected to VPN.");
             return null;
         }
         private static Task<RasDialProcess> RasDial(string Arguments = "")

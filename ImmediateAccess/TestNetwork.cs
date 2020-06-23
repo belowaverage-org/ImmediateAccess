@@ -19,13 +19,15 @@ namespace ImmediateAccess
         }
         public static async Task<bool> SelectOnlineVpnProfile()
         {
-            foreach(string vpnProfile in (string[])PolicyReader.Policies["VpnProfileList"])
+            Logger.Info("Selecting optimal VPN profile...");
+            foreach (string vpnProfile in (string[])PolicyReader.Policies["VpnProfileList"])
             {
                 ManagementObject vpnStatus = await VpnStatus.Get(vpnProfile);
                 Task<bool> ping = VpnServerPing((string)vpnStatus.GetPropertyValue("ServerAddress"));
                 bool finished = ping.Wait((int)PolicyReader.Policies["VpnServerPingTimeoutMS"]);
                 if (finished && await ping)
                 {
+                    Logger.Info("Selected: " + vpnProfile + ".");
                     VpnControl.SelectedVPNProfile = vpnProfile;
                     return true;
                 }
@@ -35,16 +37,16 @@ namespace ImmediateAccess
         private static async Task<bool> TestProbeFrom(IPAddress[] Bind)
         {
             Logger.Info("Probe: Testing probe from all adapters excluding VPN...", ConsoleColor.Blue);
-            CancellationTokenSource cts = new CancellationTokenSource(); //MAX TIME SPENT CAN GO HERE!
+            CancellationTokenSource cts = new CancellationTokenSource();
             List<Task<bool>> tasks = new List<Task<bool>>();
-            foreach(IPAddress ip in Bind)
+            foreach (IPAddress ip in Bind)
             {
                 tasks.Add(TestProbe(ip, cts.Token));
             }
             while (tasks.Count != 0)
             {
                 Task<bool> task = await Task.WhenAny(tasks);
-                if(await task)
+                if (await task)
                 {
                     Logger.Info("Probe: Success.", ConsoleColor.Blue);
                     cts.Cancel();
@@ -64,7 +66,7 @@ namespace ImmediateAccess
         }
         private static Task<bool> HttpRequest(Uri URI, IPAddress Bind = null, CancellationToken Cancellation = new CancellationToken())
         {
-            if(Cancellation.IsCancellationRequested) return Task.FromResult(false);
+            if (Cancellation.IsCancellationRequested) return Task.FromResult(false);
             if (URI.Scheme != Uri.UriSchemeHttp && URI.Scheme != Uri.UriSchemeHttps) return Task.FromResult(false);
             return Task.Run(() => {
                 string head = "Probe " + Task.CurrentId + ": ";
@@ -79,7 +81,7 @@ namespace ImmediateAccess
                         socket.Bind(ep);
                     }
                     socket.ConnectAsync(URI.Host, URI.Port).Wait((int)PolicyReader.Policies["ProbeTimeoutS"] * 1000);
-                    if(!socket.Connected)
+                    if (!socket.Connected)
                     {
                         return false;
                     }
@@ -131,15 +133,15 @@ namespace ImmediateAccess
         private static IPAddress[] GetAllIPAddresses(bool IncludeGpoVpnProfiles = false)
         {
             List<IPAddress> ipList = new List<IPAddress>();
-            foreach(NetworkInterface iface in NetworkInterface.GetAllNetworkInterfaces())
+            foreach (NetworkInterface iface in NetworkInterface.GetAllNetworkInterfaces())
             {
-                if(!IncludeGpoVpnProfiles)
+                if (!IncludeGpoVpnProfiles)
                 {
                     List<string> profiles = new List<string>((string[])PolicyReader.Policies["VpnProfileList"]);
                     if (iface.NetworkInterfaceType == NetworkInterfaceType.Ppp && profiles.Contains(iface.Description)) break;
                 }
                 IPInterfaceProperties ipProps = iface.GetIPProperties();
-                foreach(UnicastIPAddressInformation ip in ipProps.UnicastAddresses)
+                foreach (UnicastIPAddressInformation ip in ipProps.UnicastAddresses)
                 {
                     ipList.Add(ip.Address);
                 }

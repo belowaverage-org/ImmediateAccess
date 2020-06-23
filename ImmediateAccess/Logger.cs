@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace ImmediateAccess
 {
@@ -24,6 +20,7 @@ namespace ImmediateAccess
         }
         public static void Info(string Message, ConsoleColor Color)
         {
+            if (!ImmediateAccess.IsDebugMode) return;
             ss.Wait();
             Console.ForegroundColor = ConsoleColor.DarkGray;
             Console.Write(DateTime.Now.ToString() + "> ");
