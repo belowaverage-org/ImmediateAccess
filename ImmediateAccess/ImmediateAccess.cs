@@ -16,6 +16,10 @@ namespace ImmediateAccess
         private static CancellationTokenSource EnsuranceCancel = new CancellationTokenSource();
         private static Timer NetEventCoolTimer = new Timer();
         private static Timer HealthCheckTimer = new Timer();
+        /// <summary>
+        /// This method is the second entry point to Immediate Access. It sets up the timers, and invokes an initial connect check.
+        /// </summary>
+        /// <param name="args">String[]: An array of parameters. Currently, only "/debug" is supported.</param>
         public static void Start(string[] args)
         {
             IsDebugMode = args.Contains("/debug");
@@ -29,12 +33,22 @@ namespace ImmediateAccess
             Logger.Info("Service is ready.", ConsoleColor.Green);
             _ = EnsureConnectionToIntranet();
         }
+        /// <summary>
+        /// This method fires when the Immediate Access service is stopping, before allowing the service to stop
+        /// this method will first disconnect the managed VPN profiles.
+        /// </summary>
+        /// <returns>Task: To allow this method to run asyncronously.</returns>
         public static async Task Stop()
         {
             Logger.Info("Service is stopping...");
             HealthCheckTimer.Enabled = NetEventCoolTimer.Enabled = false;
             await VpnControl.Disconnect();
         }
+        /// <summary>
+        /// This method contains the main logic for the Immediate Access service. In a nutshell, this method tests if the probe is available, and if it is not,
+        /// selects and then connects to a VPN profile.
+        /// </summary>
+        /// <returns>Task: to enable threading of this method to allow for canceling.</returns>
         private static async Task EnsureConnectionToIntranet()
         {
             try
@@ -82,6 +96,9 @@ namespace ImmediateAccess
                 _ = EnsureConnectionToIntranet();
             }
         }
+        /// <summary>
+        /// This method invokes the GPO reader, and then sets Immediate Access's internal timers.
+        /// </summary>
         private static void UpdatePolicy()
         {
             PolicyReader.ReadPolicies();
@@ -90,6 +107,10 @@ namespace ImmediateAccess
             NetEventCoolTimer.Interval = (int)PolicyReader.Policies["NetEventCooldownS"] * 1000;
             NetEventCoolTimer.Stop();
         }
+        /// <summary>
+        /// This method determines if the GPO to enable Immediate Access is defined.
+        /// </summary>
+        /// <returns>Boolean: True if service should be enabled, and false if not.</returns>
         private static bool IsServiceEnabled()
         {
             UpdatePolicy();
@@ -103,6 +124,9 @@ namespace ImmediateAccess
             ) return false;
             return true;
         }
+        /// <summary>
+        /// This event fires whenever an IP address changes on any system network adapter.
+        /// </summary>
         private static void NetworkChange_NetworkAddressChanged(object sender, EventArgs e)
         {
             Logger.Info("Event: Network changed!");
@@ -110,6 +134,9 @@ namespace ImmediateAccess
             NetEventCoolTimer.Stop();
             NetEventCoolTimer.Start();
         }
+        /// <summary>
+        /// This event fires whenever all network adapters loose network connectivity (link) and fires when any network adapter re-gains a link.
+        /// </summary>
         private static void NetworkChange_NetworkAvailabilityChanged(object sender, NetworkAvailabilityEventArgs e)
         {
             IsNetworkAvailable = e.IsAvailable;
@@ -123,11 +150,19 @@ namespace ImmediateAccess
                 EnsuranceCancel.Cancel();
             }
         }
+        /// <summary>
+        /// This event fires on an interval with the purpose of invoking the EnsureConnectionToIntranet() method
+        /// as a catch-all if other events failed to detect the system in an offline state (away from probe / not on VPN).
+        /// </summary>
         private static async void HealthCheckTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             Logger.Info("Health check timer lapsed!");
             await EnsureConnectionToIntranet();
         }
+        /// <summary>
+        /// This event fires whenever the Net Event Cooldown Timer lapses. The net event cooldown timer prevents multiple
+        /// IP address change events from firing the EnsureConnectionToIntranet() in rapid succession.
+        /// </summary>
         private static async void NetEventCoolTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             NetEventCoolTimer.Stop();
