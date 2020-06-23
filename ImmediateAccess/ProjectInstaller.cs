@@ -11,6 +11,9 @@ namespace ImmediateAccess
         {
             InitializeComponent();
         }
+        /// <summary>
+        /// This method starts the service after being installed.
+        /// </summary>
         protected override void OnAfterInstall(IDictionary savedState)
         {
             ServiceController sc = new ServiceController("ImmediateAccess");

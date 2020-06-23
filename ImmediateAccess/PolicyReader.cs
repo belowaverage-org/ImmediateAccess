@@ -6,6 +6,10 @@ namespace ImmediateAccess
 {
     class PolicyReader
     {
+        /// <summary>
+        /// A dictionary containing default GPO policy settings. Immediate Access will fall-back
+        /// to these settings if it fails to find defined settings in GPO.
+        /// </summary>
         private static Dictionary<string, object> DefaultPolicies = new Dictionary<string, object>()
         {
             { "InternalProbe", null },
@@ -16,7 +20,13 @@ namespace ImmediateAccess
             { "VpnServerPingTimeoutMS", 1500 },
             { "VpnServerConnectAttempts", 3 }
         };
+        /// <summary>
+        /// A dictionary containing default / defined GPO policy settings depending on weather or not the policies were ever defined.
+        /// </summary>
         public static Dictionary<string, object> Policies = new Dictionary<string, object>();
+        /// <summary>
+        /// This method merges the default policies and configured policies in GPO into the "Policies" dictionary.
+        /// </summary>
         public static void ReadPolicies()
         {
             Logger.Info("GPO: Reading Policies...", ConsoleColor.Magenta);

@@ -12,11 +12,19 @@ namespace ImmediateAccess
 {
     class TestNetwork
     {
+        /// <summary>
+        /// This method checks if an Internal Probe is defined in GPO before testing the probe.
+        /// </summary>
+        /// <returns>Task: Bool: Returns true if the probe is available.</returns>
         public static async Task<bool> IsProbeAvailable()
         {
             if (PolicyReader.Policies["InternalProbe"] == null) return false;
             return await TestProbeFrom(GetAllIPAddresses());
         }
+        /// <summary>
+        /// This method pings all GPO defined VPN profiles, and selects -- in GPO defined order -- the first profile to respond to a ping.
+        /// </summary>
+        /// <returns>Task: Bool: True if any profile responds, false if all profiles are offline.</returns>
         public static async Task<bool> SelectOnlineVpnProfile()
         {
             Logger.Info("Selecting optimal VPN profile...");
@@ -34,6 +42,12 @@ namespace ImmediateAccess
             }
             return false;
         }
+        /// <summary>
+        /// This method runs multiple TestProbe methods (tasks) at once and if any return true the rest will be cancled and true will be returned
+        /// by this method. Otherwise, this method waits for a GPO defined time before canceling all other tasks.
+        /// </summary>
+        /// <param name="Bind">IPAddress: The bind IPAddress.</param>
+        /// <returns>Task: Bool: The result of the first TestProbe method to finish true, or false after a timeout.</returns>
         private static async Task<bool> TestProbeFrom(IPAddress[] Bind)
         {
             Logger.Info("Probe: Testing probe from all adapters excluding VPN...", ConsoleColor.Blue);
@@ -60,10 +74,23 @@ namespace ImmediateAccess
             Logger.Info("Probe: Probe not available!", ConsoleColor.Blue);
             return false;
         }
+        /// <summary>
+        /// This method calls the HttpRequest method with the Internal Probe defined from GPO.
+        /// </summary>
+        /// <param name="Bind">IPAddress: The bind IPAddress.</param>
+        /// <param name="Cancellation">CancellationToken: The token used to stop this method safely.</param>
+        /// <returns>Task: Bool: Returns true if successful.</returns>
         private static async Task<bool> TestProbe(IPAddress Bind = null, CancellationToken Cancellation = new CancellationToken())
         {
             return await HttpRequest(new Uri((string)PolicyReader.Policies["InternalProbe"]), Bind, Cancellation);
         }
+        /// <summary>
+        /// This method sends an HTTP(S) request to the internal probe, and if the certificates are trusted and up to snuff, returns true.
+        /// </summary>
+        /// <param name="URI">Uri: The URI to send the request.</param>
+        /// <param name="Bind">IPAddress: The bind IPAddress.</param>
+        /// <param name="Cancellation">CancellationToken: The token used to stop this method safely.</param>
+        /// <returns>Task: Bool: Returns true if successful.</returns>
         private static Task<bool> HttpRequest(Uri URI, IPAddress Bind = null, CancellationToken Cancellation = new CancellationToken())
         {
             if (Cancellation.IsCancellationRequested) return Task.FromResult(false);
@@ -109,6 +136,11 @@ namespace ImmediateAccess
                 }
             });
         }
+        /// <summary>
+        /// This method pings the VPN servers and returns the result of the ping.
+        /// </summary>
+        /// <param name="Host">String: the host to ping.</param>
+        /// <returns>Task: Bool: If true, the ping was successful. </returns>
         private static async Task<bool> VpnServerPing(string Host)
         {
             try
@@ -130,6 +162,11 @@ namespace ImmediateAccess
             }
             return false;
         }
+        /// <summary>
+        /// This method retrieves all network adapter IP addresses from the system. (Optionally including the GPO defined VPN profiles)
+        /// </summary>
+        /// <param name="IncludeGpoVpnProfiles">Bool: Should the retrieved IPs contain the VPN profile IP addresses?</param>
+        /// <returns>IPAddress[]: An array of IPAddress objects.</returns>
         private static IPAddress[] GetAllIPAddresses(bool IncludeGpoVpnProfiles = false)
         {
             List<IPAddress> ipList = new List<IPAddress>();
