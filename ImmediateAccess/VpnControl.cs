@@ -11,6 +11,12 @@ namespace ImmediateAccess
         public static RasDialProcess RasDialProcess = null;
         private static string RasDialExe = "rasdial.exe";
         public static string SelectedVPNProfile = "";
+        /// <summary>
+        /// This method connects to the selected VPN profile, if there is a failure, it will connect to any managed VPN profile
+        /// in GPO defined order.
+        /// </summary>
+        /// <param name="CancellationToken">CancellationToken: Used to cancel this method if desired.</param>
+        /// <returns>Task: Bool: Returns true if connected, and false if everything fails.</returns>
         public static async Task<bool> Connect(CancellationToken CancellationToken)
         {
             if (await IsConnected() != null) return true;
@@ -29,6 +35,10 @@ namespace ImmediateAccess
             }
             return false;
         }
+        /// <summary>
+        /// This method disconnects any managed VPN profile if one is currently connnected.
+        /// </summary>
+        /// <returns>Task: Bool: Always returns true.</returns>
         public static async Task<bool> Disconnect()
         {
             while (true)
@@ -40,6 +50,10 @@ namespace ImmediateAccess
                 await Task.Delay(100);
             }
         }
+        /// <summary>
+        /// This method checks if any managed VPN profile is connected.
+        /// </summary>
+        /// <returns>Task: String: Returns the VPN profile name if it is connected, otherwise null.</returns>
         public static async Task<string> IsConnected()
         {
             Logger.Info("Checking if connected to VPN already...");
@@ -56,6 +70,11 @@ namespace ImmediateAccess
             Logger.Info("Not connected to VPN.");
             return null;
         }
+        /// <summary>
+        /// This method runs the RasDial executable with the specified arguments.
+        /// </summary>
+        /// <param name="Arguments">String: a string of arguments to pass to RasDial.exe</param>
+        /// <returns>Task: RasDialProcess: Returns the stopped / resulting RasDial process.</returns>
         private static Task<RasDialProcess> RasDial(string Arguments = "")
         {
             return Task.Run(() => {
@@ -86,6 +105,9 @@ namespace ImmediateAccess
                 return RasDialProcess;
             });
         }
+        /// <summary>
+        /// This event fires whenever the RasDial process outputs data from the main console.
+        /// </summary>
         private static void RasDialProcess_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
             RasDialProcess process = (RasDialProcess)sender;
@@ -100,6 +122,11 @@ namespace ImmediateAccess
     }
     class VpnStatus
     {
+        /// <summary>
+        /// This method returns a management object of the VPN client.
+        /// </summary>
+        /// <param name="VpnProfileName">String: The VPN profile to select in the query.</param>
+        /// <returns>Task: ManagementObject: The MO of the VPN profile.</returns>
         public static Task<ManagementObject> Get(string VpnProfileName)
         {
             return Task.Run(() => {
@@ -128,6 +155,9 @@ namespace ImmediateAccess
             });
         }
     }
+    /// <summary>
+    /// An extension of the Process class to add an additional property.
+    /// </summary>
     class RasDialProcess : Process
     {
         public bool SuccessFromRasDial = false;
