@@ -19,6 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "en-US", "en-US", "{1F5F6FDA
 		GroupPolicy\PolicyDefinitions\en-US\ImmediateAccess.adml = GroupPolicy\PolicyDefinitions\en-US\ImmediateAccess.adml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImmediateAccessTray", "ImmediateAccessTray\ImmediateAccessTray.csproj", "{ADA0536E-04C3-471E-B822-1A68F203F4F7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{49DCA507-23BC-4409-8042-7E9D636C7D77}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D500B1FE-479A-437D-AF14-9EB57C325E02}.Debug|Any CPU.ActiveCfg = Debug
 		{D500B1FE-479A-437D-AF14-9EB57C325E02}.Release|Any CPU.ActiveCfg = Release
+		{ADA0536E-04C3-471E-B822-1A68F203F4F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADA0536E-04C3-471E-B822-1A68F203F4F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADA0536E-04C3-471E-B822-1A68F203F4F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADA0536E-04C3-471E-B822-1A68F203F4F7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

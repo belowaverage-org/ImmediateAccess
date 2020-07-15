@@ -1,0 +1,15 @@
+﻿using System.Reflection;
+using System.Runtime.InteropServices;
+[assembly: AssemblyTitle("Immediate Access - Tray")]
+[assembly: AssemblyDescription("Immediate Access is a replacement for Microsoft's Direct Access \"Always On VPN\" technology. This service behaves in the same manner as Microsoft's Direct Access, but instead of connecting via IPHTTPS or Teredo, the service will start a VPN connection of your choice. (Must be a Windows VPN profile: IPSec, SSTP, L2TP, PPTP...)")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("Dylan Bickerstaff")]
+[assembly: AssemblyProduct("Immediate Access - Tray")]
+[assembly: AssemblyCopyright("Copyright © 2020")]
+[assembly: AssemblyTrademark("Dylan bickerstaff")]
+[assembly: AssemblyCulture("")]
+[assembly: AssemblyMetadata("Website", "https://github.com/belowaverage-org/ImmediateAccess")]
+[assembly: ComVisible(false)]
+[assembly: Guid("ada0536e-04c3-471e-b822-1a68f203f4f7")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]
