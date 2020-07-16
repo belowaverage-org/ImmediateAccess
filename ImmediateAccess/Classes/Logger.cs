@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.IO.Pipes;
 using System.Threading;
 
 namespace ImmediateAccess
@@ -39,10 +41,15 @@ namespace ImmediateAccess
             if (!ImmediateAccess.IsDebugMode) return;
             ss.Wait();
             Console.ForegroundColor = ConsoleColor.DarkGray;
-            Console.Write(DateTime.Now.ToString() + "> ");
+            string head = DateTime.Now.ToString() + "> ";
+            Console.Write(head);
+            Pipe.Write(head);
             Console.ForegroundColor = Color;
+            Pipe.ForegroundColor = Color;
             Console.WriteLine(Message);
+            Pipe.WriteLine(Message);
             Console.ResetColor();
+            Pipe.ResetColor();
             ss.Release();
         }
     }

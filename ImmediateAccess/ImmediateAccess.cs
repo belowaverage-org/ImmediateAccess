@@ -23,6 +23,7 @@ namespace ImmediateAccess
         public static void Start(string[] args)
         {
             IsDebugMode = args.Contains("/debug");
+            Pipe.Setup();
             Logger.Info("Observing network state...");
             IsNetworkAvailable = NetworkInterface.GetIsNetworkAvailable();
             Logger.Info("Registering event listeners...");

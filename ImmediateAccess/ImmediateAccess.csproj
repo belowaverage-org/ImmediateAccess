@@ -52,15 +52,16 @@
     <Reference Include="System.ServiceProcess" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\Pipe.cs" />
     <Compile Include="ImmediateAccess.cs" />
-    <Compile Include="Logger.cs" />
+    <Compile Include="Classes\Logger.cs" />
     <Compile Include="Main.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Main.Designer.cs">
       <DependentUpon>Main.cs</DependentUpon>
     </Compile>
-    <Compile Include="PolicyReader.cs" />
+    <Compile Include="Classes\PolicyReader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProjectInstaller.cs">
       <SubType>Component</SubType>
@@ -74,8 +75,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="TestNetwork.cs" />
-    <Compile Include="VpnControl.cs" />
+    <Compile Include="Classes\TestNetwork.cs" />
+    <Compile Include="Classes\VpnControl.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ProjectInstaller.resx">

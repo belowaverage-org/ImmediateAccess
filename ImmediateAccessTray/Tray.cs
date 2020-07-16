@@ -11,11 +11,15 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Windows.Forms;
 using System.ServiceProcess;
+using System.IO.Pipes;
+using System.IO;
 
 namespace ImmediateAccessTray
 {
     public partial class Tray : Form
     {
+        private NamedPipeClientStream pipe = null;
+        private StreamReader sr = null;
         private ServiceController IAS = null;
         public Tray()
         {
@@ -28,6 +32,7 @@ namespace ImmediateAccessTray
         }
         private async void btnToggleService_Click(object sender, EventArgs e)
         {
+            btnToggleService.Enabled = false;
             await Task.Run(() => {
                 RefreshServiceStatus();
                 if (IAS.Status == ServiceControllerStatus.Running)
@@ -44,9 +49,13 @@ namespace ImmediateAccessTray
                 }
                 RefreshServiceStatus();
             });
+            btnToggleService.Enabled = true;
         }
         private void Tray_Load(object sender, EventArgs e)
         {
+            pipe = new NamedPipeClientStream(".", "ImmediateAccess", PipeDirection.In);
+            pipe.Connect();
+            sr = new StreamReader(pipe);
             IAS = new ServiceController("ImmediateAccess");
             Assembly selfAssem = Assembly.GetExecutingAssembly();
             lblVersion.Text = selfAssem.GetCustomAttribute<AssemblyFileVersionAttribute>().Version;
@@ -54,6 +63,19 @@ namespace ImmediateAccessTray
             lblWebsite.Text = selfAssem.GetCustomAttribute<AssemblyMetadataAttribute>().Value;
             tbDescription.Text = selfAssem.GetCustomAttribute<AssemblyDescriptionAttribute>().Description;
             RefreshServiceStatus();
+            _ = LogPipeLoop();
+        }
+        private Task LogPipeLoop()
+        {
+            return Task.Run(() => {
+                while(true)
+                {
+                    string log = sr.ReadLine();
+                    Invoke(new Action(() => {
+                        rtbLogs.Text = rtbLogs.Text + log + "\r\n";
+                    }));
+                }
+            });
         }
         private Action DelegateRefreshServiceStatus = new Action(() =>
         {
@@ -83,9 +105,9 @@ namespace ImmediateAccessTray
         });
         private void RefreshServiceStatus()
         {
-            if (lblServiceStatus.InvokeRequired)
+            if (InvokeRequired)
             {
-                lblServiceStatus.Invoke(DelegateRefreshServiceStatus);
+                Invoke(DelegateRefreshServiceStatus);
             }
             else
             {
