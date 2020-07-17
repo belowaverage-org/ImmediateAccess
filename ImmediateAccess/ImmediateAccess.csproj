@@ -52,7 +52,7 @@
     <Reference Include="System.ServiceProcess" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\Pipe.cs" />
+    <Compile Include="Classes\mConsole.cs" />
     <Compile Include="ImmediateAccess.cs" />
     <Compile Include="Classes\Logger.cs" />
     <Compile Include="Main.cs">

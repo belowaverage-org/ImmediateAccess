@@ -36,6 +36,7 @@
             this.lblServStatus = new System.Windows.Forms.Label();
             this.btnToggleService = new System.Windows.Forms.Button();
             this.tpLogs = new System.Windows.Forms.TabPage();
+            this.rtbLogs = new System.Windows.Forms.RichTextBox();
             this.tpAbout = new System.Windows.Forms.TabPage();
             this.tlpAbout = new System.Windows.Forms.TableLayoutPanel();
             this.lblVersionTitle = new System.Windows.Forms.Label();
@@ -47,7 +48,6 @@
             this.lblVersion = new System.Windows.Forms.Label();
             this.pbLogo = new System.Windows.Forms.PictureBox();
             this.lblTitle = new System.Windows.Forms.Label();
-            this.rtbLogs = new System.Windows.Forms.RichTextBox();
             this.tabControl.SuspendLayout();
             this.tpStatus.SuspendLayout();
             this.tlpStatus.SuspendLayout();
@@ -72,6 +72,7 @@
             this.tabControl.SelectedIndex = 0;
             this.tabControl.Size = new System.Drawing.Size(1060, 418);
             this.tabControl.TabIndex = 0;
+            this.tabControl.SelectedIndexChanged += new System.EventHandler(this.tabControl_SelectedIndexChanged);
             // 
             // tpStatus
             // 
@@ -165,6 +166,18 @@
             this.tpLogs.TabIndex = 1;
             this.tpLogs.Text = "Logs";
             this.tpLogs.UseVisualStyleBackColor = true;
+            // 
+            // rtbLogs
+            // 
+            this.rtbLogs.BackColor = System.Drawing.Color.Black;
+            this.rtbLogs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.rtbLogs.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rtbLogs.ForeColor = System.Drawing.Color.White;
+            this.rtbLogs.Location = new System.Drawing.Point(6, 6);
+            this.rtbLogs.Name = "rtbLogs";
+            this.rtbLogs.Size = new System.Drawing.Size(1040, 365);
+            this.rtbLogs.TabIndex = 0;
+            this.rtbLogs.Text = "";
             // 
             // tpAbout
             // 
@@ -311,18 +324,6 @@
             this.lblTitle.TabIndex = 2;
             this.lblTitle.Text = "Immediate Access";
             this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // rtbLogs
-            // 
-            this.rtbLogs.BackColor = System.Drawing.Color.Black;
-            this.rtbLogs.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.rtbLogs.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rtbLogs.ForeColor = System.Drawing.Color.White;
-            this.rtbLogs.Location = new System.Drawing.Point(6, 6);
-            this.rtbLogs.Name = "rtbLogs";
-            this.rtbLogs.Size = new System.Drawing.Size(1040, 365);
-            this.rtbLogs.TabIndex = 0;
-            this.rtbLogs.Text = "";
             // 
             // Tray
             // 

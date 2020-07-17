@@ -13,14 +13,17 @@ using System.Windows.Forms;
 using System.ServiceProcess;
 using System.IO.Pipes;
 using System.IO;
+using System.IO.MemoryMappedFiles;
+using System.Threading;
 
 namespace ImmediateAccessTray
 {
     public partial class Tray : Form
     {
-        private NamedPipeClientStream pipe = null;
-        private StreamReader sr = null;
-        private ServiceController IAS = null;
+        private MemoryMappedFile mConsole;
+        private MemoryMappedViewStream mConsoleStream;
+        private StreamReader mConsoleReader;
+        private ServiceController IAS;
         public Tray()
         {
             InitializeComponent();
@@ -53,9 +56,6 @@ namespace ImmediateAccessTray
         }
         private void Tray_Load(object sender, EventArgs e)
         {
-            pipe = new NamedPipeClientStream(".", "ImmediateAccess", PipeDirection.In);
-            pipe.Connect();
-            sr = new StreamReader(pipe);
             IAS = new ServiceController("ImmediateAccess");
             Assembly selfAssem = Assembly.GetExecutingAssembly();
             lblVersion.Text = selfAssem.GetCustomAttribute<AssemblyFileVersionAttribute>().Version;
@@ -63,16 +63,31 @@ namespace ImmediateAccessTray
             lblWebsite.Text = selfAssem.GetCustomAttribute<AssemblyMetadataAttribute>().Value;
             tbDescription.Text = selfAssem.GetCustomAttribute<AssemblyDescriptionAttribute>().Description;
             RefreshServiceStatus();
-            _ = LogPipeLoop();
+            _ = mConsoleReadLoop();
         }
-        private Task LogPipeLoop()
+        private void SetupMConsole()
+        {
+            Task.Run(() => {
+                mConsole = MemoryMappedFile.OpenExisting("ImmediateAccessConsole");
+                mConsoleStream = mConsole.CreateViewStream();
+                mConsoleReader = new StreamReader(mConsoleStream);
+            });
+        }
+        private Task mConsoleReadLoop()
         {
             return Task.Run(() => {
                 while(true)
                 {
-                    string log = sr.ReadLine();
+                    Thread.Sleep(100);
+                    if (mConsoleReader == null) continue;
+                    //mConsoleStream = mConsole.CreateViewStream(0, 0);
+                    //mConsoleReader = new StreamReader(mConsoleStream);
+                    mConsoleStream.Position = 0;
+                    string log = mConsoleReader.ReadToEnd();
                     Invoke(new Action(() => {
-                        rtbLogs.Text = rtbLogs.Text + log + "\r\n";
+                        rtbLogs.Text = log;
+                        rtbLogs.Select(rtbLogs.Text.Length, 0);
+                        rtbLogs.ScrollToCaret();
                     }));
                 }
             });
@@ -112,6 +127,17 @@ namespace ImmediateAccessTray
             else
             {
                 DelegateRefreshServiceStatus.Invoke();
+            }
+        }
+        private void tabControl_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (tabControl.SelectedTab == tpLogs)
+            {
+                SetupMConsole();
+            }
+            else
+            {
+                
             }
         }
     }

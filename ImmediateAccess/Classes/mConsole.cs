@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.IO.Pipes;
+using System.IO.MemoryMappedFiles;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -8,37 +9,42 @@ namespace ImmediateAccess
 {
     class Pipe
     {
-        public static NamedPipeServerStream RawPipe;
-        public static StreamWriter Writer;
+        //public static NamedPipeServerStream RawPipe;
+        private static StreamWriter Writer;
+        private static MemoryMappedFile mConsole;
+        private static MemoryMappedViewStream mConsoleStream;
         private static ConsoleColor cc = ConsoleColor.White;
         /// <summary>
-        /// This method Starts the Pipe.
+        /// This method sets up the virtual memory console.
         /// </summary>
         public static void Setup()
         {
-            Task.Run(() => {
-                RawPipe = new NamedPipeServerStream("ImmediateAccess", PipeDirection.Out, 1, PipeTransmissionMode.Byte);
-                Writer = new StreamWriter(RawPipe);
-                Logger.Info("Pipe: Ready to connect.");
-                RawPipe.WaitForConnection();
-                AliveTest();
-                Logger.Info("Pipe: Client connected.");
-            });
+            Logger.Info("mConsole: Creating memory console...");
+            try
+            {
+                mConsole = MemoryMappedFile.CreateNew("ImmediateAccessConsole", 5 * 1024 * 1024);  //Create 5MB Memory File.
+                mConsoleStream = mConsole.CreateViewStream();
+                Writer = new StreamWriter(mConsoleStream);
+            }
+            catch (IOException e)
+            {
+                Logger.Warning("mConsole: Failed to create memory console: " + e.Message);
+            }
         }
         /// <summary>
         /// This method re-starts the Pipe.
         /// </summary>
-        public static void Reset()
+        /*public static void Reset()
         {
             RawPipe.Disconnect();
             RawPipe.Dispose();
             Setup();
-        }
+        }*/
         /// <summary>
         /// This method will start a loop in a new thread that periodically sends data to the Pipe to check if the Pipe is still functional.
         /// If therer is an Exception, the method will re-start the Pipe.
         /// </summary>
-        public static void AliveTest()
+        /*public static void AliveTest()
         {
             Task.Run(() => {
                 try
@@ -55,24 +61,22 @@ namespace ImmediateAccess
                     Reset();
                 }
             });
-        }
+        }*/
         /// <summary>
         /// This method will write text to the Pipe stream.
         /// </summary>
         /// <param name="Text">String: Text to send.</param>
         public static void Write(string Text)
         {
+            if (Writer == null) return;
             try
             {
-                if (RawPipe != null && RawPipe.IsConnected)
-                {
-                    Writer.Write(Text);
-                    Writer.Flush();
-                }
+                Writer.Write(Text);
+                Writer.Flush();
             }
             catch (IOException)
             {
-                Reset();
+                //Reset();
             }
         }
         /// <summary>
