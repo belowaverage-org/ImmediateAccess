@@ -24,6 +24,8 @@ namespace ImmediateAccessTray
         private MemoryMappedViewStream mConsoleStream;
         private StreamReader mConsoleReader;
         private ServiceController IAS;
+        private byte[] mConsoleBuffer;
+        private byte[] mConsoleCompareBuffer;
         public Tray()
         {
             InitializeComponent();
@@ -70,6 +72,7 @@ namespace ImmediateAccessTray
             Task.Run(() => {
                 mConsole = MemoryMappedFile.OpenExisting("ImmediateAccessConsole");
                 mConsoleStream = mConsole.CreateViewStream();
+                mConsoleBuffer = new byte[mConsoleStream.Length];
                 mConsoleReader = new StreamReader(mConsoleStream);
             });
         }
@@ -83,12 +86,18 @@ namespace ImmediateAccessTray
                     //mConsoleStream = mConsole.CreateViewStream(0, 0);
                     //mConsoleReader = new StreamReader(mConsoleStream);
                     mConsoleStream.Position = 0;
-                    string log = mConsoleReader.ReadToEnd();
+                    mConsoleStream.Read(mConsoleBuffer, 0, (int)mConsoleStream.Length);
+
+                    //mConsoleBuffer.
+
+                    //string log = mConsoleReader.ReadToEnd();
+                    /*
                     Invoke(new Action(() => {
                         rtbLogs.Text = log;
                         rtbLogs.Select(rtbLogs.Text.Length, 0);
                         rtbLogs.ScrollToCaret();
                     }));
+                    */
                 }
             });
         }

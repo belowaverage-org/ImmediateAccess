@@ -22,7 +22,7 @@ namespace ImmediateAccess
             Logger.Info("mConsole: Creating memory console...");
             try
             {
-                mConsole = MemoryMappedFile.CreateNew("ImmediateAccessConsole", 5 * 1024 * 1024);  //Create 5MB Memory File.
+                mConsole = MemoryMappedFile.CreateOrOpen("ImmediateAccessConsole", 5 * 1024 * 1024);  //Create 5MB Memory File.
                 mConsoleStream = mConsole.CreateViewStream();
                 Writer = new StreamWriter(mConsoleStream);
             }

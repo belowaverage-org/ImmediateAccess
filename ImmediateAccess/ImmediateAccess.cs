@@ -31,7 +31,7 @@ namespace ImmediateAccess
             NetEventCoolTimer.Elapsed += NetEventCoolTimer_Elapsed;
             NetworkChange.NetworkAvailabilityChanged += NetworkChange_NetworkAvailabilityChanged;
             NetworkChange.NetworkAddressChanged += NetworkChange_NetworkAddressChanged;
-            Logger.Info("Service is ready.", ConsoleColor.Green);
+            Logger.Info("Service: Started.", ConsoleColor.Green);
             _ = EnsureConnectionToIntranet();
         }
         /// <summary>
@@ -41,9 +41,10 @@ namespace ImmediateAccess
         /// <returns>Task: To allow this method to run asyncronously.</returns>
         public static async Task Stop()
         {
-            Logger.Info("Service is stopping...");
+            Logger.Info("Service: Stopping...");
             HealthCheckTimer.Enabled = NetEventCoolTimer.Enabled = false;
             await VpnControl.Disconnect();
+            Logger.Info("Service: Stopped.");
         }
         /// <summary>
         /// This method contains the main logic for the Immediate Access service. In a nutshell, this method tests if the probe is available, and if it is not,

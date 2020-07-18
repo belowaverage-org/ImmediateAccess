@@ -13,7 +13,7 @@ namespace ImmediateAccess
         static void Main(string[] args)
         {
             Logger.Info(Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyTitleAttribute>().Title + ": v" + Assembly.GetExecutingAssembly().GetName().Version.ToString(), ConsoleColor.Yellow);
-            Logger.Info("Starting Service...");
+            Logger.Info("Service: Starting...");
             if (args.Length != 0)
             {
                 if (args.Contains("/debug"))
