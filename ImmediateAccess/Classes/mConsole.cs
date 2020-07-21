@@ -10,6 +10,7 @@ namespace ImmediateAccess
     class Pipe
     {
         //public static NamedPipeServerStream RawPipe;
+        private static int mConsoleSize = 5 * 1024 * 1024;
         private static StreamWriter Writer;
         private static MemoryMappedFile mConsole;
         private static MemoryMappedViewStream mConsoleStream;
@@ -22,8 +23,10 @@ namespace ImmediateAccess
             Logger.Info("mConsole: Creating memory console...");
             try
             {
-                mConsole = MemoryMappedFile.CreateOrOpen("ImmediateAccessConsole", 5 * 1024 * 1024);  //Create 5MB Memory File.
+                mConsole = MemoryMappedFile.CreateOrOpen("ImmediateAccessConsole", mConsoleSize);  //Create 5MB Memory File.
                 mConsoleStream = mConsole.CreateViewStream();
+                mConsoleStream.Write(new byte[mConsoleSize], 0, mConsoleSize);
+                mConsoleStream.Position = 0;
                 Writer = new StreamWriter(mConsoleStream);
             }
             catch (IOException e)
@@ -71,6 +74,11 @@ namespace ImmediateAccess
             if (Writer == null) return;
             try
             {
+                long position = mConsoleStream.Position;
+                if (position < 16) position = 16;
+                mConsoleStream.Position = 0;
+                mConsoleStream.Write(Guid.NewGuid().ToByteArray(), 0, 15);
+                mConsoleStream.Position = position;
                 Writer.Write(Text);
                 Writer.Flush();
             }

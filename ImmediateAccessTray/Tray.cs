@@ -1,17 +1,11 @@
 ﻿using ImmediateAccessTray.Properties;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Windows.Forms;
 using System.ServiceProcess;
-using System.IO.Pipes;
 using System.IO;
 using System.IO.MemoryMappedFiles;
 using System.Threading;
@@ -24,8 +18,9 @@ namespace ImmediateAccessTray
         private MemoryMappedViewStream mConsoleStream;
         private StreamReader mConsoleReader;
         private ServiceController IAS;
-        private byte[] mConsoleBuffer;
-        private byte[] mConsoleCompareBuffer;
+        private byte[] mConsoleTimestamp;
+        private byte[] mConsoleTimestampCompare;
+        private CancellationTokenSource conReadLoopCTS;
         public Tray()
         {
             InitializeComponent();
@@ -65,15 +60,26 @@ namespace ImmediateAccessTray
             lblWebsite.Text = selfAssem.GetCustomAttribute<AssemblyMetadataAttribute>().Value;
             tbDescription.Text = selfAssem.GetCustomAttribute<AssemblyDescriptionAttribute>().Description;
             RefreshServiceStatus();
-            _ = mConsoleReadLoop();
         }
         private void SetupMConsole()
         {
             Task.Run(() => {
-                mConsole = MemoryMappedFile.OpenExisting("ImmediateAccessConsole");
-                mConsoleStream = mConsole.CreateViewStream();
-                mConsoleBuffer = new byte[mConsoleStream.Length];
-                mConsoleReader = new StreamReader(mConsoleStream);
+                try
+                {
+                    mConsole = MemoryMappedFile.OpenExisting("ImmediateAccessConsole");
+                    mConsoleStream = mConsole.CreateViewStream();
+                    mConsoleReader = new StreamReader(mConsoleStream);
+                    mConsoleTimestamp = new byte[16];
+                    mConsoleTimestampCompare = new byte[16];
+                    conReadLoopCTS = new CancellationTokenSource();
+                    _ = mConsoleReadLoop();
+                }
+                catch (IOException)
+                {
+                    Invoke(new Action(() => {
+                        MessageBox.Show(this, "The Immediate Access service may not be running, there was no virtual console present to read from.", "Error reading logs.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    }));
+                }
             });
         }
         private Task mConsoleReadLoop()
@@ -82,24 +88,24 @@ namespace ImmediateAccessTray
                 while(true)
                 {
                     Thread.Sleep(100);
+                    if (conReadLoopCTS.IsCancellationRequested) break;
                     if (mConsoleReader == null) continue;
-                    //mConsoleStream = mConsole.CreateViewStream(0, 0);
-                    //mConsoleReader = new StreamReader(mConsoleStream);
                     mConsoleStream.Position = 0;
-                    mConsoleStream.Read(mConsoleBuffer, 0, (int)mConsoleStream.Length);
-
-                    //mConsoleBuffer.
-
-                    //string log = mConsoleReader.ReadToEnd();
-                    /*
-                    Invoke(new Action(() => {
-                        rtbLogs.Text = log;
-                        rtbLogs.Select(rtbLogs.Text.Length, 0);
-                        rtbLogs.ScrollToCaret();
-                    }));
-                    */
+                    mConsoleStream.Read(mConsoleTimestamp, 0, 16);
+                    if (mConsoleTimestamp.ByteCompare128(mConsoleTimestampCompare)) continue;
+                    mConsoleTimestampCompare = (byte[])mConsoleTimestamp.Clone();
+                    mConsoleStream.Position = 16;
+                    UpdateLogRTF(mConsoleReader.ReadToEnd());
                 }
             });
+        }
+        private void UpdateLogRTF(string log)
+        {
+            Invoke(new Action(() => {
+                rtbLogs.Text = log;
+                rtbLogs.Select(rtbLogs.Text.Length, 0);
+                rtbLogs.ScrollToCaret();
+            }));
         }
         private Action DelegateRefreshServiceStatus = new Action(() =>
         {
@@ -146,8 +152,24 @@ namespace ImmediateAccessTray
             }
             else
             {
-                
+                conReadLoopCTS.Cancel();
             }
+        }
+    }
+    public static class Extensions
+    {
+        public static bool ByteCompare128(this byte[] self, byte[] compare)
+        {
+            bool equal = true;
+            for (int i = 0; i < 16; i++)
+            {
+                if (self[i] != compare[i])
+                {
+                    equal = false;
+                    break;
+                }
+            }
+            return equal;
         }
     }
 }
