@@ -21,6 +21,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "en-US", "en-US", "{1F5F6FDA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImmediateAccessTray", "ImmediateAccessTray\ImmediateAccessTray.csproj", "{ADA0536E-04C3-471E-B822-1A68F203F4F7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GlobalParameters", "GlobalParameters", "{7D844DB7-D433-44A5-9885-CCAB50D8D90C}"
+	ProjectSection(SolutionItems) = preProject
+		GlobalParameters\GlobalAssemblyInfo.cs = GlobalParameters\GlobalAssemblyInfo.cs
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

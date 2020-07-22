@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace ImmediateAccess
 {
-    class VpnControl
+    public class VpnControl
     {
         public static RasDialProcess RasDialProcess = null;
         private static string RasDialExe = "rasdial.exe";
@@ -120,7 +120,7 @@ namespace ImmediateAccess
             Logger.Info("RasDial: " + e.Data, ConsoleColor.DarkCyan);
         }
     }
-    class VpnStatus
+    public class VpnStatus
     {
         /// <summary>
         /// This method returns a management object of the VPN client.
@@ -158,7 +158,7 @@ namespace ImmediateAccess
     /// <summary>
     /// An extension of the Process class to add an additional property.
     /// </summary>
-    class RasDialProcess : Process
+    public class RasDialProcess : Process
     {
         public bool SuccessFromRasDial = false;
     }

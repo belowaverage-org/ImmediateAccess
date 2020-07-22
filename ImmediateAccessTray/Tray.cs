@@ -1,4 +1,5 @@
 ﻿using ImmediateAccessTray.Properties;
+using ImmediateAccess;
 using System;
 using System.Drawing;
 using System.Reflection;
@@ -9,6 +10,7 @@ using System.ServiceProcess;
 using System.IO;
 using System.IO.MemoryMappedFiles;
 using System.Threading;
+using System.Security.Principal;
 
 namespace ImmediateAccessTray
 {
@@ -25,6 +27,7 @@ namespace ImmediateAccessTray
         {
             InitializeComponent();
             Icon = Resources.Icon;
+            if (!IsElevated()) pbShieldIcon.Image = new Icon(SystemIcons.Shield, 16, 16).ToBitmap();
         }
         private void lblWebsite_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
@@ -32,6 +35,11 @@ namespace ImmediateAccessTray
         }
         private async void btnToggleService_Click(object sender, EventArgs e)
         {
+            if (!IsElevated())
+            {
+                RunAsAdmin();
+                return;
+            }
             btnToggleService.Enabled = false;
             await Task.Run(() => {
                 RefreshServiceStatus();
@@ -51,6 +59,22 @@ namespace ImmediateAccessTray
             });
             btnToggleService.Enabled = true;
         }
+        private void RunAsAdmin()
+        {
+            try
+            {
+                ProcessStartInfo psi = new ProcessStartInfo();
+                psi.FileName = Application.ExecutablePath;
+                psi.Verb = "RunAs";
+                Process.Start(psi);
+                Close();
+            }
+            catch (Exception)
+            {
+                DialogResult result = MessageBox.Show(this, "Cannot start or stop the Immediate Access service, access was denied.", "User Account Control", MessageBoxButtons.RetryCancel, MessageBoxIcon.Information);
+                if (result == DialogResult.Retry) RunAsAdmin();
+            }
+        }
         private void Tray_Load(object sender, EventArgs e)
         {
             IAS = new ServiceController("ImmediateAccess");
@@ -59,7 +83,7 @@ namespace ImmediateAccessTray
             lblAuthor.Text = selfAssem.GetCustomAttribute<AssemblyCompanyAttribute>().Company;
             lblWebsite.Text = selfAssem.GetCustomAttribute<AssemblyMetadataAttribute>().Value;
             tbDescription.Text = selfAssem.GetCustomAttribute<AssemblyDescriptionAttribute>().Description;
-            RefreshServiceStatus();
+            RefreshAllStatus();
         }
         private void SetupMConsole()
         {
@@ -81,6 +105,25 @@ namespace ImmediateAccessTray
                     }));
                 }
             });
+        }
+        private void RefreshAllStatus()
+        {
+            RefreshServiceStatus();
+            RefreshPolicyStatus();
+        }
+        private void RefreshPolicyStatus()
+        {
+            PolicyReader.ReadPolicies();
+            if (PolicyReader.IsServiceEnabled())
+            {
+                lblServicePolicy.ForeColor = Color.DarkGreen;
+                lblServicePolicy.Text = "Active";
+            }
+            else
+            {
+                lblServicePolicy.ForeColor = Color.Red;
+                lblServicePolicy.Text = "De-Activated";
+            }
         }
         private Task mConsoleReadLoop()
         {
@@ -152,8 +195,12 @@ namespace ImmediateAccessTray
             }
             else
             {
-                conReadLoopCTS.Cancel();
+                if (conReadLoopCTS != null) conReadLoopCTS.Cancel();
             }
+        }
+        private bool IsElevated()
+        {
+            return WindowsIdentity.GetCurrent().Groups.Contains(new SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, null));
         }
     }
     public static class Extensions

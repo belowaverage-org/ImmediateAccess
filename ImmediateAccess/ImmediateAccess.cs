@@ -23,7 +23,7 @@ namespace ImmediateAccess
         public static void Start(string[] args)
         {
             IsDebugMode = args.Contains("/debug");
-            Pipe.Setup();
+            mConsole.Setup();
             Logger.Info("Observing network state...");
             IsNetworkAvailable = NetworkInterface.GetIsNetworkAvailable();
             Logger.Info("Registering event listeners...");
@@ -55,7 +55,8 @@ namespace ImmediateAccess
         {
             try
             {
-                if (IsCurrentlyEnsuring || !IsNetworkAvailable || !IsServiceEnabled()) return;
+                UpdatePolicy();
+                if (IsCurrentlyEnsuring || !IsNetworkAvailable || !PolicyReader.IsServiceEnabled()) return;
                 EnsuranceCancel = new CancellationTokenSource();
                 IsCurrentlyEnsuring = true;
                 if (await TestNetwork.IsProbeAvailable())
@@ -108,23 +109,6 @@ namespace ImmediateAccess
             HealthCheckTimer.Start();
             NetEventCoolTimer.Interval = (int)PolicyReader.Policies["NetEventCooldownS"] * 1000;
             NetEventCoolTimer.Stop();
-        }
-        /// <summary>
-        /// This method determines if the GPO to enable Immediate Access is defined.
-        /// </summary>
-        /// <returns>Boolean: True if service should be enabled, and false if not.</returns>
-        private static bool IsServiceEnabled()
-        {
-            UpdatePolicy();
-            string probeConf = (string)PolicyReader.Policies["InternalProbe"];
-            string[] profiConf = (string[])PolicyReader.Policies["VpnProfileList"];
-            if (
-                probeConf == null ||
-                profiConf == null ||
-                probeConf == "" ||
-                profiConf.Length == 0
-            ) return false;
-            return true;
         }
         /// <summary>
         /// This event fires whenever an IP address changes on any system network adapter.

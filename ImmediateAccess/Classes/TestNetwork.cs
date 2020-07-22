@@ -10,7 +10,7 @@ using System.Threading;
 
 namespace ImmediateAccess
 {
-    class TestNetwork
+    public class TestNetwork
     {
         /// <summary>
         /// This method checks if an Internal Probe is defined in GPO before testing the probe.

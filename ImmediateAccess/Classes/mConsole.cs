@@ -1,18 +1,15 @@
 ﻿using System;
 using System.IO;
-using System.IO.Pipes;
 using System.IO.MemoryMappedFiles;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ImmediateAccess
 {
-    class Pipe
+    class mConsole
     {
         //public static NamedPipeServerStream RawPipe;
         private static int mConsoleSize = 5 * 1024 * 1024;
         private static StreamWriter Writer;
-        private static MemoryMappedFile mConsole;
+        private static MemoryMappedFile mConsoleFile;
         private static MemoryMappedViewStream mConsoleStream;
         private static ConsoleColor cc = ConsoleColor.White;
         /// <summary>
@@ -23,8 +20,8 @@ namespace ImmediateAccess
             Logger.Info("mConsole: Creating memory console...");
             try
             {
-                mConsole = MemoryMappedFile.CreateOrOpen("ImmediateAccessConsole", mConsoleSize);  //Create 5MB Memory File.
-                mConsoleStream = mConsole.CreateViewStream();
+                mConsoleFile = MemoryMappedFile.CreateOrOpen("ImmediateAccessConsole", mConsoleSize);  //Create 5MB Memory File.
+                mConsoleStream = mConsoleFile.CreateViewStream();
                 mConsoleStream.Write(new byte[mConsoleSize], 0, mConsoleSize);
                 mConsoleStream.Position = 0;
                 Writer = new StreamWriter(mConsoleStream);

@@ -4,7 +4,7 @@ using Microsoft.Win32;
 
 namespace ImmediateAccess
 {
-    class PolicyReader
+    public class PolicyReader
     {
         /// <summary>
         /// A dictionary containing default GPO policy settings. Immediate Access will fall-back
@@ -63,6 +63,22 @@ namespace ImmediateAccess
             }
             if (iak != null) iak.Dispose();
             Logger.Info("GPO: Done!", ConsoleColor.Magenta);
+        }
+        /// <summary>
+        /// This method determines if the GPO to enable Immediate Access is defined.
+        /// </summary>
+        /// <returns>Boolean: True if service should be enabled, and false if not.</returns>
+        public static bool IsServiceEnabled()
+        {
+            string probeConf = (string)Policies["InternalProbe"];
+            string[] profiConf = (string[])Policies["VpnProfileList"];
+            if (
+                probeConf == null ||
+                profiConf == null ||
+                probeConf == "" ||
+                profiConf.Length == 0
+            ) return false;
+            return true;
         }
     }
 }
