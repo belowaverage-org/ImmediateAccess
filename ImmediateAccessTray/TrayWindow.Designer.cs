@@ -1,6 +1,6 @@
 ﻿namespace ImmediateAccessTray
 {
-    partial class Tray
+    partial class TrayWindow
     {
         /// <summary>
         /// Required designer variable.
@@ -491,7 +491,7 @@
             this.lblTitle.Text = "Immediate Access";
             this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // Tray
+            // TrayWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
@@ -507,7 +507,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(260, 260);
-            this.Name = "Tray";
+            this.Name = "TrayWindow";
             this.Padding = new System.Windows.Forms.Padding(5);
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Immediate Access - VPN Service";

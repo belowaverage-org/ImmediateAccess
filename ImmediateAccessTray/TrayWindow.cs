@@ -11,10 +11,11 @@ using System.IO;
 using System.IO.MemoryMappedFiles;
 using System.Threading;
 using System.Security.Principal;
+using System.Linq;
 
 namespace ImmediateAccessTray
 {
-    public partial class Tray : Form
+    public partial class TrayWindow : Form
     {
         private MemoryMappedFile mConsole;
         private MemoryMappedViewStream mConsoleStream;
@@ -23,7 +24,7 @@ namespace ImmediateAccessTray
         private byte[] mConsoleTimestamp;
         private byte[] mConsoleTimestampCompare;
         private CancellationTokenSource conReadLoopCTS;
-        public Tray()
+        public TrayWindow()
         {
             InitializeComponent();
             Icon = Resources.Icon;
@@ -64,10 +65,11 @@ namespace ImmediateAccessTray
             try
             {
                 ProcessStartInfo psi = new ProcessStartInfo();
+                psi.Arguments = Program.Arguments.ToSpaceDelimitedString() + " ElevatedStartStopService";
                 psi.FileName = Application.ExecutablePath;
                 psi.Verb = "RunAs";
                 Process.Start(psi);
-                Close();
+                Program.TrayIcon.ExitThread();
             }
             catch (Exception)
             {
@@ -84,6 +86,7 @@ namespace ImmediateAccessTray
             lblWebsite.Text = selfAssem.GetCustomAttribute<AssemblyMetadataAttribute>().Value;
             tbDescription.Text = selfAssem.GetCustomAttribute<AssemblyDescriptionAttribute>().Description;
             RefreshAllStatus();
+            if (Program.Arguments.Contains("ElevatedStartStopService")) btnToggleService_Click(null, null);
         }
         private void SetupMConsole()
         {
@@ -152,8 +155,8 @@ namespace ImmediateAccessTray
         }
         private Action DelegateRefreshServiceStatus = new Action(() =>
         {
-            ServiceController IAS = Program.Tray.IAS;
-            Label lblServiceStatus = Program.Tray.lblServiceStatus;
+            ServiceController IAS = Program.TrayWindow.IAS;
+            Label lblServiceStatus = Program.TrayWindow.lblServiceStatus;
             IAS.Refresh();
             if (IAS.Status == ServiceControllerStatus.Running)
             {
@@ -217,6 +220,15 @@ namespace ImmediateAccessTray
                 }
             }
             return equal;
+        }
+        public static string ToSpaceDelimitedString(this string[] self)
+        {
+            string result = "";
+            foreach (string element in self)
+            {
+                result += " " + element;
+            }
+            return result;
         }
     }
 }
