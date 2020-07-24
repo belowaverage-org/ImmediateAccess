@@ -81,5 +81,8 @@
       <Name>ImmediateAccess</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Properties\ImmediateAccessTray.VisualElementsManifest.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

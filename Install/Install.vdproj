@@ -15,6 +15,12 @@
     {
         "Entry"
         {
+        "MsmKey" = "8:_0086E5811ACE466D9EE9ED28A95C21A1"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_07E42A51681C4466AE1CE5477AAB5FEB"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -27,7 +33,19 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_1D877752773C47FFBA271C073C2C6EC9"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_41FBA64A98654061BC58ED31DF1DA036"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_4B7380CD8B4B4CD6901C608C1A1D9AB9"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -220,6 +238,26 @@
         }
         "File"
         {
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0086E5811ACE466D9EE9ED28A95C21A1"
+            {
+            "SourcePath" = "8:..\\ImmediateAccessAssets\\startmenu_70.png"
+            "TargetName" = "8:startmenu_70.png"
+            "Tag" = "8:"
+            "Folder" = "8:_6020230A5F3E4ECDBE49BF95C999A848"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_186433F2EB12DC6F27CCB4752AF69DB2"
             {
             "AssemblyRegister" = "3:1"
@@ -251,12 +289,52 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1D877752773C47FFBA271C073C2C6EC9"
+            {
+            "SourcePath" = "8:..\\ImmediateAccessAssets\\startmenu_150.png"
+            "TargetName" = "8:startmenu_150.png"
+            "Tag" = "8:"
+            "Folder" = "8:_6020230A5F3E4ECDBE49BF95C999A848"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_41FBA64A98654061BC58ED31DF1DA036"
             {
             "SourcePath" = "8:..\\GroupPolicy\\PolicyDefinitions\\en-US\\ImmediateAccess.adml"
             "TargetName" = "8:ImmediateAccess.adml"
             "Tag" = "8:"
             "Folder" = "8:_BF0AD531915D49A4BF5FFED29C04ACDC"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4B7380CD8B4B4CD6901C608C1A1D9AB9"
+            {
+            "SourcePath" = "8:..\\ImmediateAccessTray\\Properties\\ImmediateAccessTray.VisualElementsManifest.xml"
+            "TargetName" = "8:ImmediateAccessTray.VisualElementsManifest.xml"
+            "Tag" = "8:"
+            "Folder" = "8:_C5E061F36C26430F83F0893936388B8F"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -328,6 +406,28 @@
         }
         "Folder"
         {
+            "{1525181F-901A-416C-8A58-119130FE478E}:_9BBF259537BA4ABD9104CD5263DB1529"
+            {
+            "Name" = "8:#1919"
+            "AlwaysCreate" = "11:FALSE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Property" = "8:ProgramMenuFolder"
+                "Folders"
+                {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_E516272E8ECC4243ACEE7D6545D067F3"
+                    {
+                    "Name" = "8:Below Average"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_30919772933E4AD89D8343427FDC38E7"
+                        "Folders"
+                        {
+                        }
+                    }
+                }
+            }
             "{1525181F-901A-416C-8A58-119130FE478E}:_C26AB852F2AD46AEAE24482CBBFAF53B"
             {
             "Name" = "8:#1924"
@@ -371,6 +471,28 @@
             "Property" = "8:TARGETDIR"
                 "Folders"
                 {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_6020230A5F3E4ECDBE49BF95C999A848"
+                    {
+                    "Name" = "8:Assets"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_69FDEC043A3A438C804E5317DBA08B8E"
+                        "Folders"
+                        {
+                        }
+                    }
+                }
+            }
+            "{1525181F-901A-416C-8A58-119130FE478E}:_D912377975F246E5AE890B1E90E55728"
+            {
+            "Name" = "8:#1928"
+            "AlwaysCreate" = "11:FALSE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Property" = "8:StartupFolder"
+                "Folders"
+                {
                 }
             }
         }
@@ -390,7 +512,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Immediate Access"
         "ProductCode" = "8:{E91AEC08-2BA6-4494-96E2-B8EDCAB9DA37}"
-        "PackageCode" = "8:{8DA26D6F-EB5D-4AF2-9CD3-240193A1BF64}"
+        "PackageCode" = "8:{B517EA51-D8BE-4245-93F7-225AE3150961}"
         "UpgradeCode" = "8:{369529A5-9F12-47D6-9E8F-3046CE27FA9D}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -454,6 +576,34 @@
         }
         "Shortcut"
         {
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_09DDFA2E08B548E9995ABA5505266969"
+            {
+            "Name" = "8:Immediate Access - Tray"
+            "Arguments" = "8:"
+            "Description" = "8:Immediate Access - Always On VPN"
+            "ShowCmd" = "3:7"
+            "IconIndex" = "3:32512"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_07E42A51681C4466AE1CE5477AAB5FEB"
+            "Folder" = "8:_D912377975F246E5AE890B1E90E55728"
+            "WorkingFolder" = "8:_C5E061F36C26430F83F0893936388B8F"
+            "Icon" = "8:_07E42A51681C4466AE1CE5477AAB5FEB"
+            "Feature" = "8:"
+            }
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_0A6330CD804F4429B9672F858637A2F7"
+            {
+            "Name" = "8:Immediate Access"
+            "Arguments" = "8:NoTray"
+            "Description" = "8:Immediate Access - Always On VPN"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:32512"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_07E42A51681C4466AE1CE5477AAB5FEB"
+            "Folder" = "8:_E516272E8ECC4243ACEE7D6545D067F3"
+            "WorkingFolder" = "8:_C5E061F36C26430F83F0893936388B8F"
+            "Icon" = "8:_07E42A51681C4466AE1CE5477AAB5FEB"
+            "Feature" = "8:"
+            }
         }
         "UserInterface"
         {
