@@ -59,6 +59,7 @@
             this.pbLogo = new System.Windows.Forms.PictureBox();
             this.lblTitle = new System.Windows.Forms.Label();
             this.HelpProvider = new System.Windows.Forms.HelpProvider();
+            this.btnRefresh = new System.Windows.Forms.Button();
             this.tabControl.SuspendLayout();
             this.tpStatus.SuspendLayout();
             this.tlpStatus.SuspendLayout();
@@ -89,6 +90,7 @@
             // tpStatus
             // 
             this.tpStatus.AutoScroll = true;
+            this.tpStatus.Controls.Add(this.btnRefresh);
             this.tpStatus.Controls.Add(this.tlpStatus);
             this.tpStatus.Location = new System.Drawing.Point(4, 26);
             this.tpStatus.Margin = new System.Windows.Forms.Padding(0);
@@ -491,6 +493,24 @@
             this.lblTitle.Text = "Immediate Access";
             this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // btnRefresh
+            // 
+            this.btnRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnRefresh.FlatAppearance.BorderSize = 0;
+            this.btnRefresh.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Silver;
+            this.btnRefresh.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Gainsboro;
+            this.btnRefresh.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRefresh.Font = new System.Drawing.Font("Segoe UI Symbol", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.HelpProvider.SetHelpString(this.btnRefresh, "Refreshes the status page.");
+            this.btnRefresh.Location = new System.Drawing.Point(550, 233);
+            this.btnRefresh.Name = "btnRefresh";
+            this.HelpProvider.SetShowHelp(this.btnRefresh, true);
+            this.btnRefresh.Size = new System.Drawing.Size(26, 26);
+            this.btnRefresh.TabIndex = 1;
+            this.btnRefresh.Text = "";
+            this.btnRefresh.UseVisualStyleBackColor = true;
+            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
+            // 
             // TrayWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -558,6 +578,7 @@
         private System.Windows.Forms.Label lblServiceToggle;
         private System.Windows.Forms.HelpProvider HelpProvider;
         private System.Windows.Forms.Label lblServicePolicy;
+        private System.Windows.Forms.Button btnRefresh;
     }
 }
 

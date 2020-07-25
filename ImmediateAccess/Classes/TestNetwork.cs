@@ -13,13 +13,14 @@ namespace ImmediateAccess
     public class TestNetwork
     {
         /// <summary>
-        /// This method checks if an Internal Probe is defined in GPO before testing the probe.
+        /// This method checks if an Internal Probe is defined and then tests the probe.
         /// </summary>
+        /// <param name="IncludeGpoVpnProfiles">Bool: Should this be executed from network adapters associated with GPO defined VPN profiles?</param>
         /// <returns>Task: Bool: Returns true if the probe is available.</returns>
-        public static async Task<bool> IsProbeAvailable()
+        public static async Task<bool> IsProbeAvailable(bool IncludeGpoVpnProfiles = false)
         {
             if (PolicyReader.Policies["InternalProbe"] == null) return false;
-            return await TestProbeFrom(GetAllIPAddresses());
+            return await TestProbeFrom(GetAllIPAddresses(IncludeGpoVpnProfiles));
         }
         /// <summary>
         /// This method pings all GPO defined VPN profiles, and selects -- in GPO defined order -- the first profile to respond to a ping.

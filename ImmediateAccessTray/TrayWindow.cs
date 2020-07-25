@@ -12,6 +12,7 @@ using System.IO.MemoryMappedFiles;
 using System.Threading;
 using System.Security.Principal;
 using System.Linq;
+using System.Net.NetworkInformation;
 
 namespace ImmediateAccessTray
 {
@@ -24,6 +25,7 @@ namespace ImmediateAccessTray
         private byte[] mConsoleTimestamp;
         private byte[] mConsoleTimestampCompare;
         private CancellationTokenSource conReadLoopCTS;
+        private bool CurrentlyUpdatingStatuses = false;
         public TrayWindow()
         {
             InitializeComponent();
@@ -85,8 +87,13 @@ namespace ImmediateAccessTray
             lblAuthor.Text = selfAssem.GetCustomAttribute<AssemblyCompanyAttribute>().Company;
             lblWebsite.Text = selfAssem.GetCustomAttribute<AssemblyMetadataAttribute>().Value;
             tbDescription.Text = selfAssem.GetCustomAttribute<AssemblyDescriptionAttribute>().Description;
+            NetworkChange.NetworkAddressChanged += NetworkChange_NetworkAddressChanged;
             RefreshAllStatus();
             if (Program.Arguments.Contains("ElevatedStartStopService")) btnToggleService_Click(null, null);
+        }
+        private void NetworkChange_NetworkAddressChanged(object sender, EventArgs e)
+        {
+            RefreshAllStatus();
         }
         private void SetupMConsole()
         {
@@ -111,27 +118,101 @@ namespace ImmediateAccessTray
         }
         private void RefreshAllStatus()
         {
-            RefreshServiceStatus();
-            RefreshPolicyStatus();
+            Task.Run(() => {
+                if (CurrentlyUpdatingStatuses) return;
+                CurrentlyUpdatingStatuses = true;
+                Invoke(new Action(() => {
+                    lblNetLocation.ForeColor =
+                    lblNetStatus.ForeColor =
+                    lblVpnStatus.ForeColor =
+                    lblServicePolicy.ForeColor =
+                    lblServiceStatus.ForeColor =
+                    Color.Orange;
+                    lblNetLocation.Text =
+                    lblNetStatus.Text =
+                    lblVpnStatus.Text =
+                    lblServicePolicy.Text =
+                    lblServiceStatus.Text =
+                    "Refreshing...";
+                }));
+                RefreshServiceStatus();
+                RefreshPolicyStatus();
+                RefreshVPNStatus();
+                RefreshNetworkStatus();
+                RefreshNetworkLocation();
+                CurrentlyUpdatingStatuses = false;
+            });
+        }
+        private async void RefreshNetworkLocation()
+        {
+            bool result = await TestNetwork.IsProbeAvailable();
+            Invoke(new Action(() =>
+            {
+                lblNetLocation.ForeColor = Color.Black;
+                if (result)
+                {
+                    lblNetLocation.Text = "Internal";
+                }
+                else
+                {
+                    lblNetLocation.Text = "External";
+                }
+            }));
+        }
+        private async void RefreshNetworkStatus()
+        {
+            bool result = await TestNetwork.IsProbeAvailable(true);
+            Invoke(new Action(() =>
+            {
+                if (result)
+                {
+                    lblNetStatus.ForeColor = Color.DarkGreen;
+                    lblNetStatus.Text = "Connected";
+                }
+                else
+                {
+                    lblNetStatus.ForeColor = Color.DarkRed;
+                    lblNetStatus.Text = "Not Connected";
+                }
+            }));
+        }
+        private async void RefreshVPNStatus()
+        {
+            string profile = await VpnControl.IsConnected();
+            Invoke(new Action(() =>
+            {
+                lblVpnStatus.ForeColor = Color.Black;
+                if (profile == null)
+                {
+                    lblVpnStatus.Text = "Not Connected";
+                }
+                else
+                {
+                    lblVpnStatus.Text = "Connected";
+                }
+            }));
         }
         private void RefreshPolicyStatus()
         {
             PolicyReader.ReadPolicies();
-            if (PolicyReader.IsServiceEnabled())
-            {
-                lblServicePolicy.ForeColor = Color.DarkGreen;
-                lblServicePolicy.Text = "Active";
-            }
-            else
-            {
-                lblServicePolicy.ForeColor = Color.Red;
-                lblServicePolicy.Text = "De-Activated";
-            }
+            bool result = PolicyReader.IsServiceEnabled();
+            Invoke(new Action(() => {
+                if (result)
+                {
+                    lblServicePolicy.ForeColor = Color.DarkGreen;
+                    lblServicePolicy.Text = "Active";
+                }
+                else
+                {
+                    lblServicePolicy.ForeColor = Color.Red;
+                    lblServicePolicy.Text = "De-Activated";
+                }
+            }));
         }
         private Task mConsoleReadLoop()
         {
             return Task.Run(() => {
-                while(true)
+                while (true)
                 {
                     Thread.Sleep(100);
                     if (conReadLoopCTS.IsCancellationRequested) break;
@@ -204,6 +285,10 @@ namespace ImmediateAccessTray
         private bool IsElevated()
         {
             return WindowsIdentity.GetCurrent().Groups.Contains(new SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, null));
+        }
+        private void btnRefresh_Click(object sender, EventArgs e)
+        {
+            RefreshAllStatus();
         }
     }
     public static class Extensions
