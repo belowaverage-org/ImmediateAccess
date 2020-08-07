@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using System.Timers;
 using System.Threading.Tasks;
 
 namespace ImmediateAccess
@@ -14,22 +15,28 @@ namespace ImmediateAccess
         private static string buffer = "";
         private static Queue<string> logs = new Queue<string>();
         private static ConsoleColor cc = ConsoleColor.White;
+        private static Timer tcpKeepAlive;
         private static int logLineLimit = 10000;
+        private static int tcpKeepAliveIntervalMS = 5000;
+        private static int tcpPort = 7362;
         /// <summary>
         /// This method sets up the net console.
         /// </summary>
         public static void Setup()
         {
-            Logger.Info("nConsole: Creating net console...");
+            Logger.Info("nConsole: Creating net console server on port " + tcpPort + "...");
             try
             {
-                server = new TcpListener(IPAddress.Parse("127.0.0.1"), 7362);
+                tcpKeepAlive = new Timer(tcpKeepAliveIntervalMS);
+                tcpKeepAlive.Elapsed += TcpKeepAlive_Elapsed;
+                tcpKeepAlive.Start();
+                server = new TcpListener(IPAddress.Parse("127.0.0.1"), tcpPort);
                 server.Start();
                 _ = ConnectLoop();
             }
             catch (IOException e)
             {
-                Logger.Warning("nConsole: Failed to create net console: " + e.Message);
+                Logger.Warning("nConsole: Failed to create net console server: " + e.Message);
             }
         }
         /// <summary>
@@ -46,12 +53,13 @@ namespace ImmediateAccess
         /// <param name="Text">String: The line of text to send.</param>
         public static void WriteLine(string Text)
         {
-            logs.Enqueue(Text);
+            logs.Enqueue(buffer + Text);
             if (logs.Count > logLineLimit)
             {
                 logs.Dequeue();
             }
-            SendAll(Text + "\r\n").Wait();
+            SendAll(buffer + Text + "\r\n");
+            buffer = "";
         }
         /// <summary>
         /// This method will set the color back to white. (Used for compatibility with Console methods).
@@ -75,38 +83,56 @@ namespace ImmediateAccess
                 Write("<#" + value.ToString() + "#>");
             }
         }
-        private static async Task SendAll(string Text)
+        private static void TcpKeepAlive_Elapsed(object sender, ElapsedEventArgs e)
         {
-            foreach (nConsoleConnection client in clients)
+            SendAll("\0");
+        }
+        private static void SendAll(string Text)
+        {
+            foreach (nConsoleConnection client in clients.ToArray())
             {
-                await client.SendText(Text);
+                client.SendText(Text);
             }
         }
-        private static async Task SendQueue(this nConsoleConnection client)
+        private static void SendQueue(this nConsoleConnection client)
         {
-            foreach(string log in logs)
+            foreach(string log in logs.ToArray())
             {
-                await client.SendText(log + "\r\n");
+                client.SendText(log + "\r\n");
             }
         }
-        private static async Task SendText(this nConsoleConnection client, string Text)
+        private static void SendText(this nConsoleConnection client, string Text)
         {
-            await client.StreamWriter.WriteAsync(Text);
-            await client.StreamWriter.FlushAsync();
+            try
+            {
+                client.StreamWriter.Write(Text);
+                client.StreamWriter.Flush();
+            }
+            catch (IOException)
+            {
+                clients.Remove(client);
+                string conName = client.ConnectionName;
+                client.Dispose();
+                Task.Run(() => {
+                    Logger.Info("nConsole: Client at " + conName + " lost connection.");
+                });
+            }
         }
         private static Task ConnectLoop()
         {
-            return Task.Run(async () => {
+            return Task.Run(() => {
                 while (true)
                 {
                     TcpClient tcpClient = server.AcceptTcpClient();
                     StreamWriter sw = new StreamWriter(tcpClient.GetStream());
                     nConsoleConnection client = new nConsoleConnection()
                     {
+                        ConnectionName = tcpClient.Client.RemoteEndPoint.ToString(),
                         TcpClient = tcpClient,
                         StreamWriter = sw
                     };
-                    await client.SendQueue();
+                    Logger.Info("nConsole: Client connected at " + client.ConnectionName + ".");
+                    client.SendQueue();
                     clients.Add(client);
                 }
             });
@@ -114,7 +140,14 @@ namespace ImmediateAccess
     }
     class nConsoleConnection
     {
+        public string ConnectionName;
         public TcpClient TcpClient;
         public StreamWriter StreamWriter;
+        public void Dispose()
+        {
+            StreamWriter.Dispose();
+            TcpClient.Dispose();
+            ConnectionName = null;
+        }
     }
 }

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.IO;
-using System.IO.Pipes;
 using System.Threading;
 
 namespace ImmediateAccess
@@ -38,7 +36,6 @@ namespace ImmediateAccess
         /// <param name="Message">String: The message to print, ConsoleColor: The color the print the line in.</param>
         public static void Info(string Message, ConsoleColor Color)
         {
-            if (!ImmediateAccess.IsDebugMode) return;
             ss.Wait();
             Console.ForegroundColor = ConsoleColor.DarkGray;
             string head = DateTime.Now.ToString() + "> ";
