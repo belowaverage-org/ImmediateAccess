@@ -30,6 +30,7 @@
         {
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tpStatus = new System.Windows.Forms.TabPage();
+            this.btnRefresh = new System.Windows.Forms.Button();
             this.tlpStatus = new System.Windows.Forms.TableLayoutPanel();
             this.lblServicePolicy = new System.Windows.Forms.Label();
             this.lblServicePolicyTitle = new System.Windows.Forms.Label();
@@ -59,7 +60,6 @@
             this.pbLogo = new System.Windows.Forms.PictureBox();
             this.lblTitle = new System.Windows.Forms.Label();
             this.HelpProvider = new System.Windows.Forms.HelpProvider();
-            this.btnRefresh = new System.Windows.Forms.Button();
             this.tabControl.SuspendLayout();
             this.tpStatus.SuspendLayout();
             this.tlpStatus.SuspendLayout();
@@ -100,6 +100,24 @@
             this.tpStatus.TabIndex = 0;
             this.tpStatus.Text = "Status";
             this.tpStatus.UseVisualStyleBackColor = true;
+            // 
+            // btnRefresh
+            // 
+            this.btnRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnRefresh.FlatAppearance.BorderSize = 0;
+            this.btnRefresh.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Silver;
+            this.btnRefresh.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Gainsboro;
+            this.btnRefresh.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRefresh.Font = new System.Drawing.Font("Segoe UI Symbol", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.HelpProvider.SetHelpString(this.btnRefresh, "Refreshes the status page.");
+            this.btnRefresh.Location = new System.Drawing.Point(550, 233);
+            this.btnRefresh.Name = "btnRefresh";
+            this.HelpProvider.SetShowHelp(this.btnRefresh, true);
+            this.btnRefresh.Size = new System.Drawing.Size(26, 26);
+            this.btnRefresh.TabIndex = 1;
+            this.btnRefresh.Text = "";
+            this.btnRefresh.UseVisualStyleBackColor = true;
+            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
             // 
             // tlpStatus
             // 
@@ -479,6 +497,7 @@
             this.pbLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbLogo.TabIndex = 1;
             this.pbLogo.TabStop = false;
+            this.pbLogo.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.pbLogo_HelpRequested);
             // 
             // lblTitle
             // 
@@ -492,24 +511,6 @@
             this.lblTitle.TabIndex = 2;
             this.lblTitle.Text = "Immediate Access";
             this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // btnRefresh
-            // 
-            this.btnRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRefresh.FlatAppearance.BorderSize = 0;
-            this.btnRefresh.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Silver;
-            this.btnRefresh.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Gainsboro;
-            this.btnRefresh.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRefresh.Font = new System.Drawing.Font("Segoe UI Symbol", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.HelpProvider.SetHelpString(this.btnRefresh, "Refreshes the status page.");
-            this.btnRefresh.Location = new System.Drawing.Point(550, 233);
-            this.btnRefresh.Name = "btnRefresh";
-            this.HelpProvider.SetShowHelp(this.btnRefresh, true);
-            this.btnRefresh.Size = new System.Drawing.Size(26, 26);
-            this.btnRefresh.TabIndex = 1;
-            this.btnRefresh.Text = "";
-            this.btnRefresh.UseVisualStyleBackColor = true;
-            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
             // 
             // TrayWindow
             // 

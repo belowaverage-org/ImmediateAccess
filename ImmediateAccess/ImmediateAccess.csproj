@@ -70,7 +70,7 @@
     <Compile Include="..\GlobalParameters\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Classes\mConsole.cs" />
+    <Compile Include="Classes\nConsole.cs" />
     <Compile Include="ImmediateAccess.cs" />
     <Compile Include="Classes\Logger.cs" />
     <Compile Include="Main.cs">

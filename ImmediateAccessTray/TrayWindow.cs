@@ -100,7 +100,7 @@ namespace ImmediateAccessTray
             Task.Run(() => {
                 try
                 {
-                    mConsole = MemoryMappedFile.OpenExisting("ImmediateAccessConsole");
+                    mConsole = MemoryMappedFile.OpenExisting("Global\\ImmediateAccessConsole");
                     mConsoleStream = mConsole.CreateViewStream();
                     mConsoleReader = new StreamReader(mConsoleStream);
                     mConsoleTimestamp = new byte[16];
@@ -136,10 +136,21 @@ namespace ImmediateAccessTray
                     "Refreshing...";
                 }));
                 RefreshServiceStatus();
-                RefreshPolicyStatus();
-                RefreshVPNStatus();
-                RefreshNetworkStatus();
-                RefreshNetworkLocation();
+                if (RefreshPolicyStatus())
+                {
+                    RefreshVPNStatus();
+                    RefreshNetworkStatus();
+                    RefreshNetworkLocation();
+                }
+                else
+                {
+                    Invoke(new Action(() => {
+                        lblVpnStatus.Text =
+                        lblNetStatus.Text =
+                        lblNetLocation.Text =
+                        "Unknown";
+                    }));
+                }
                 CurrentlyUpdatingStatuses = false;
             });
         }
@@ -192,7 +203,7 @@ namespace ImmediateAccessTray
                 }
             }));
         }
-        private void RefreshPolicyStatus()
+        private bool RefreshPolicyStatus()
         {
             PolicyReader.ReadPolicies();
             bool result = PolicyReader.IsServiceEnabled();
@@ -208,6 +219,7 @@ namespace ImmediateAccessTray
                     lblServicePolicy.Text = "De-Activated";
                 }
             }));
+            return result;
         }
         private Task mConsoleReadLoop()
         {
@@ -236,28 +248,36 @@ namespace ImmediateAccessTray
         }
         private Action DelegateRefreshServiceStatus = new Action(() =>
         {
-            ServiceController IAS = Program.TrayWindow.IAS;
             Label lblServiceStatus = Program.TrayWindow.lblServiceStatus;
-            IAS.Refresh();
-            if (IAS.Status == ServiceControllerStatus.Running)
+            try
             {
-                lblServiceStatus.ForeColor = Color.DarkGreen;
-                lblServiceStatus.Text = "Running";
+                ServiceController IAS = Program.TrayWindow.IAS;
+                IAS.Refresh();
+                if (IAS.Status == ServiceControllerStatus.Running)
+                {
+                    lblServiceStatus.ForeColor = Color.DarkGreen;
+                    lblServiceStatus.Text = "Running";
+                }
+                if (IAS.Status == ServiceControllerStatus.Stopped)
+                {
+                    lblServiceStatus.ForeColor = Color.Red;
+                    lblServiceStatus.Text = "Stopped";
+                }
+                if (IAS.Status == ServiceControllerStatus.StartPending)
+                {
+                    lblServiceStatus.ForeColor = Color.DarkOrange;
+                    lblServiceStatus.Text = "Starting...";
+                }
+                if (IAS.Status == ServiceControllerStatus.StopPending)
+                {
+                    lblServiceStatus.ForeColor = Color.DarkOrange;
+                    lblServiceStatus.Text = "Stopping...";
+                }
             }
-            if (IAS.Status == ServiceControllerStatus.Stopped)
+            catch (Exception)
             {
                 lblServiceStatus.ForeColor = Color.Red;
-                lblServiceStatus.Text = "Stopped";
-            }
-            if (IAS.Status == ServiceControllerStatus.StartPending)
-            {
-                lblServiceStatus.ForeColor = Color.DarkOrange;
-                lblServiceStatus.Text = "Starting...";
-            }
-            if (IAS.Status == ServiceControllerStatus.StopPending)
-            {
-                lblServiceStatus.ForeColor = Color.DarkOrange;
-                lblServiceStatus.Text = "Stopping...";
+                lblServiceStatus.Text = "Not Installed";
             }
         });
         private void RefreshServiceStatus()
@@ -289,6 +309,10 @@ namespace ImmediateAccessTray
         private void btnRefresh_Click(object sender, EventArgs e)
         {
             RefreshAllStatus();
+        }
+        private void pbLogo_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            Application.Exit();
         }
     }
     public static class Extensions

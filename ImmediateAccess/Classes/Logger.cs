@@ -43,13 +43,13 @@ namespace ImmediateAccess
             Console.ForegroundColor = ConsoleColor.DarkGray;
             string head = DateTime.Now.ToString() + "> ";
             Console.Write(head);
-            mConsole.Write(head);
+            nConsole.Write(head);
             Console.ForegroundColor = Color;
-            mConsole.ForegroundColor = Color;
+            nConsole.ForegroundColor = Color;
             Console.WriteLine(Message);
-            mConsole.WriteLine(Message);
+            nConsole.WriteLine(Message);
             Console.ResetColor();
-            mConsole.ResetColor();
+            nConsole.ResetColor();
             ss.Release();
         }
     }
