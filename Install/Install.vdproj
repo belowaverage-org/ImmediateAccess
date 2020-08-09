@@ -115,7 +115,7 @@
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
-        "Compression" = "3:3"
+        "Compression" = "3:1"
         "SignOutput" = "11:FALSE"
         "CertificateFile" = "8:"
         "PrivateKeyFile" = "8:"
@@ -262,7 +262,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ImmediateAccess, Version=0.0.0.1, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:ImmediateAccess, Version=0.0.0.1, Culture=neutral, processorArchitecture=AMD64"
                 "ScatterAssemblies"
                 {
                     "_186433F2EB12DC6F27CCB4752AF69DB2"
@@ -512,7 +512,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Immediate Access"
         "ProductCode" = "8:{E91AEC08-2BA6-4494-96E2-B8EDCAB9DA37}"
-        "PackageCode" = "8:{B517EA51-D8BE-4245-93F7-225AE3150961}"
+        "PackageCode" = "8:{1CEB26A4-9BC0-4242-818C-627A1CE1FF9E}"
         "UpgradeCode" = "8:{369529A5-9F12-47D6-9E8F-3046CE27FA9D}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -681,7 +681,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_07E42A51681C4466AE1CE5477AAB5FEB"
             {
-            "SourcePath" = "8:..\\ImmediateAccessTray\\obj\\Debug\\ImmediateAccessTray.exe"
+            "SourcePath" = "8:..\\ImmediateAccessTray\\obj\\x64\\Debug\\ImmediateAccessTray.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C5E061F36C26430F83F0893936388B8F"
@@ -709,7 +709,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_B3A6E4E5DACC44F58249BCD591006FC4"
             {
-            "SourcePath" = "8:..\\ImmediateAccess\\obj\\Debug\\ImmediateAccess.exe"
+            "SourcePath" = "8:..\\ImmediateAccess\\obj\\x64\\Debug\\ImmediateAccess.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C5E061F36C26430F83F0893936388B8F"
@@ -737,7 +737,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_CF0BF7B4FB194341A2DFD8DDB683E129"
             {
-            "SourcePath" = "8:..\\RasManRepair\\obj\\Debug\\RasManRepair.exe"
+            "SourcePath" = "8:..\\RasManRepair\\obj\\x64\\Debug\\RasManRepair.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C5E061F36C26430F83F0893936388B8F"
