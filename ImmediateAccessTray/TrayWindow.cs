@@ -7,24 +7,20 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Windows.Forms;
 using System.ServiceProcess;
-using System.IO;
-using System.IO.MemoryMappedFiles;
-using System.Threading;
 using System.Security.Principal;
 using System.Linq;
 using System.Net.NetworkInformation;
+using System.Net.Sockets;
+using System.IO;
+using System.Collections.Generic;
 
 namespace ImmediateAccessTray
 {
     public partial class TrayWindow : Form
     {
-        private MemoryMappedFile mConsole;
-        private MemoryMappedViewStream mConsoleStream;
-        private StreamReader mConsoleReader;
+        private TcpClient nConsole;
+        private StreamReader nConsoleReader;
         private ServiceController IAS;
-        private byte[] mConsoleTimestamp;
-        private byte[] mConsoleTimestampCompare;
-        private CancellationTokenSource conReadLoopCTS;
         private bool CurrentlyUpdatingStatuses = false;
         public TrayWindow()
         {
@@ -94,27 +90,6 @@ namespace ImmediateAccessTray
         private void NetworkChange_NetworkAddressChanged(object sender, EventArgs e)
         {
             RefreshAllStatus();
-        }
-        private void SetupMConsole()
-        {
-            Task.Run(() => {
-                try
-                {
-                    mConsole = MemoryMappedFile.OpenExisting("Global\\ImmediateAccessConsole");
-                    mConsoleStream = mConsole.CreateViewStream();
-                    mConsoleReader = new StreamReader(mConsoleStream);
-                    mConsoleTimestamp = new byte[16];
-                    mConsoleTimestampCompare = new byte[16];
-                    conReadLoopCTS = new CancellationTokenSource();
-                    _ = mConsoleReadLoop();
-                }
-                catch (IOException)
-                {
-                    Invoke(new Action(() => {
-                        MessageBox.Show(this, "The Immediate Access service may not be running, there was no virtual console present to read from.", "Error reading logs.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    }));
-                }
-            });
         }
         private void RefreshAllStatus()
         {
@@ -221,27 +196,61 @@ namespace ImmediateAccessTray
             }));
             return result;
         }
+        private void SetupMConsole()
+        {
+            rtbLogs.Text = "";
+            Task.Run(() => {
+                try
+                {
+                    nConsole = new TcpClient("127.0.0.1", 7362);
+                    nConsoleReader = new StreamReader(nConsole.GetStream());
+                    _ = mConsoleReadLoop();
+                }
+                catch (Exception)
+                {
+                    Invoke(new Action(() => {
+                        MessageBox.Show(this, "Cannot connect to the Immediate Access net console, the service might not be running.", "Immediate Access", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }));
+                }
+            });
+        }
         private Task mConsoleReadLoop()
         {
             return Task.Run(() => {
                 while (true)
                 {
-                    Thread.Sleep(100);
-                    if (conReadLoopCTS.IsCancellationRequested) break;
-                    if (mConsoleReader == null) continue;
-                    mConsoleStream.Position = 0;
-                    mConsoleStream.Read(mConsoleTimestamp, 0, 16);
-                    if (mConsoleTimestamp.ByteCompare128(mConsoleTimestampCompare)) continue;
-                    mConsoleTimestampCompare = (byte[])mConsoleTimestamp.Clone();
-                    mConsoleStream.Position = 16;
-                    UpdateLogRTF(mConsoleReader.ReadToEnd());
+                    try
+                    {
+                        UpdateLogRTF(nConsoleReader.ReadLine() + "\r\n");
+                    }
+                    catch (Exception)
+                    {
+                        return;
+                    }
                 }
             });
         }
         private void UpdateLogRTF(string log)
         {
+            Color color = Color.White;
+            string[] logParts = log.Split(new string[] { "<", ">" }, StringSplitOptions.None);
+            foreach (string logPart in logParts)
+            {
+                if (ConsoleColorConversion.ContainsKey(logPart))
+                {
+                    color = ConsoleColorConversion[logPart];
+                }
+                else
+                {
+                    UpdateLogColor(logPart, color);
+                }
+            }
+        }
+        private void UpdateLogColor(string log, Color color)
+        {
             Invoke(new Action(() => {
-                rtbLogs.Text = log;
+                rtbLogs.SelectionColor = color;
+                rtbLogs.AppendText(log);
                 rtbLogs.Select(rtbLogs.Text.Length, 0);
                 rtbLogs.ScrollToCaret();
             }));
@@ -299,7 +308,7 @@ namespace ImmediateAccessTray
             }
             else
             {
-                if (conReadLoopCTS != null) conReadLoopCTS.Cancel();
+                if (nConsoleReader != null) nConsoleReader.Close();
             }
         }
         private bool IsElevated()
@@ -314,6 +323,25 @@ namespace ImmediateAccessTray
         {
             Application.Exit();
         }
+        private Dictionary<string, Color> ConsoleColorConversion = new Dictionary<string, Color>()
+        {
+            { "#Black#", Color.Black },
+            { "#Blue#", Color.Blue },
+            { "#Cyan#", Color.Cyan },
+            { "#DarkBlue#", Color.DarkBlue },
+            { "#DarkCyan#", Color.DarkCyan },
+            { "#DarkGray#", Color.DarkGray },
+            { "#DarkGreen#", Color.DarkGreen },
+            { "#DarkMagenta#", Color.DarkMagenta },
+            { "#DarkRed#", Color.DarkRed },
+            { "#DarkYellow#", Color.Gold },
+            { "#Gray#", Color.Gray },
+            { "#Green#", Color.Green },
+            { "#Magenta#", Color.Magenta },
+            { "#Red#", Color.Red },
+            { "#White#", Color.White },
+            { "#Yellow#", Color.Yellow }
+        };
     }
     public static class Extensions
     {

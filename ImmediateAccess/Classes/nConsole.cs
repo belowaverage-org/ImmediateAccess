@@ -34,7 +34,7 @@ namespace ImmediateAccess
                 server.Start();
                 _ = ConnectLoop();
             }
-            catch (IOException e)
+            catch (Exception e)
             {
                 Logger.Warning("nConsole: Failed to create net console server: " + e.Message);
             }
