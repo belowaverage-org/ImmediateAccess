@@ -264,7 +264,7 @@ namespace ImmediateAccessTray
                 FileName = nConPath,
                 WindowStyle = ProcessWindowStyle.Minimized
             };
-            nConsoleProc.Start();
+            nConsoleProc.Start(); // PROCESS NEEDS TO MONITOR PARENT OR SOMETHING 
             while (nConsoleProc.MainWindowHandle.ToInt32() == 0x0) Thread.Sleep(10);
             User32.SetParent(nConsoleProc.MainWindowHandle, tpLogs.Handle);
             User32.SetWindowLong(nConsoleProc.MainWindowHandle, User32.WindowLongIndexFlags.GWL_STYLE, User32.SetWindowLongFlags.WS_VISIBLE);
@@ -292,6 +292,10 @@ namespace ImmediateAccessTray
                     User32.SetWindowPosFlags.SWP_NOMOVE
                 );
             }
+        }
+        private void TrayWindow_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (nConsoleProc != null && !nConsoleProc.HasExited) nConsoleProc.Kill();
         }
     }
     public static class Extensions

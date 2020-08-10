@@ -38,18 +38,6 @@ namespace ImmediateAccess
             {
                 Logger.Warning("nConsole: Failed to create net console server: " + e.Message);
             }
-
-
-            Task.Run(() =>
-            {
-                while (true)
-                {
-                    System.Threading.Thread.Sleep(10);
-                    Logger.Info("Test");
-                }
-            });
-
-
         }
         /// <summary>
         /// This method will write text to the Pipe stream.
