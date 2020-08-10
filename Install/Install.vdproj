@@ -27,12 +27,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_186433F2EB12DC6F27CCB4752AF69DB2"
-        "OwnerKey" = "8:_07E42A51681C4466AE1CE5477AAB5FEB"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_1D877752773C47FFBA271C073C2C6EC9"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -57,8 +51,26 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_593F712E6CE2B334E4151B1630780415"
+        "OwnerKey" = "8:_07E42A51681C4466AE1CE5477AAB5FEB"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_595F37730CC5A36BA928E99BAE63A7D5"
         "OwnerKey" = "8:_B3A6E4E5DACC44F58249BCD591006FC4"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_595F37730CC5A36BA928E99BAE63A7D5"
+        "OwnerKey" = "8:_88FFFA1B232348ECA70BE66C05A3D7D1"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_88FFFA1B232348ECA70BE66C05A3D7D1"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -82,6 +94,18 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_88FFFA1B232348ECA70BE66C05A3D7D1"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_593F712E6CE2B334E4151B1630780415"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_CF0BF7B4FB194341A2DFD8DDB683E129"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -95,12 +119,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_07E42A51681C4466AE1CE5477AAB5FEB"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_186433F2EB12DC6F27CCB4752AF69DB2"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -258,37 +276,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_186433F2EB12DC6F27CCB4752AF69DB2"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ImmediateAccess, Version=0.0.0.1, Culture=neutral, processorArchitecture=AMD64"
-                "ScatterAssemblies"
-                {
-                    "_186433F2EB12DC6F27CCB4752AF69DB2"
-                    {
-                    "Name" = "8:ImmediateAccess.exe"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:ImmediateAccess.exe"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_C5E061F36C26430F83F0893936388B8F"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:TRUE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1D877752773C47FFBA271C073C2C6EC9"
             {
             "SourcePath" = "8:..\\ImmediateAccessAssets\\startmenu_150.png"
@@ -367,6 +354,37 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_593F712E6CE2B334E4151B1630780415"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:ImmediateAccess, Version=0.0.0.1, Culture=neutral, processorArchitecture=AMD64"
+                "ScatterAssemblies"
+                {
+                    "_593F712E6CE2B334E4151B1630780415"
+                    {
+                    "Name" = "8:ImmediateAccess.exe"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:ImmediateAccess.exe"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_C5E061F36C26430F83F0893936388B8F"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:TRUE"
+            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_595F37730CC5A36BA928E99BAE63A7D5"
@@ -512,7 +530,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Immediate Access"
         "ProductCode" = "8:{E91AEC08-2BA6-4494-96E2-B8EDCAB9DA37}"
-        "PackageCode" = "8:{1CEB26A4-9BC0-4242-818C-627A1CE1FF9E}"
+        "PackageCode" = "8:{B91C704A-F902-4F1D-8A55-08C883466260}"
         "UpgradeCode" = "8:{369529A5-9F12-47D6-9E8F-3046CE27FA9D}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -702,6 +720,34 @@
             "OutputConfiguration" = "8:"
             "OutputGroupCanonicalName" = "8:Built"
             "OutputProjectGuid" = "8:{ADA0536E-04C3-471E-B822-1A68F203F4F7}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_88FFFA1B232348ECA70BE66C05A3D7D1"
+            {
+            "SourcePath" = "8:..\\ImmediateAccessNConsole\\obj\\x64\\Debug\\ImmediateAccessNConsole.exe"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_C5E061F36C26430F83F0893936388B8F"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:"
+            "OutputGroupCanonicalName" = "8:Built"
+            "OutputProjectGuid" = "8:{A7EDA13F-98D1-4916-A1EF-BDDA3BA63CB6}"
             "ShowKeyOutput" = "11:TRUE"
                 "ExcludeFilters"
                 {

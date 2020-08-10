@@ -47,7 +47,6 @@
             this.pbShieldIcon = new System.Windows.Forms.PictureBox();
             this.pnlLine1 = new System.Windows.Forms.Panel();
             this.tpLogs = new System.Windows.Forms.TabPage();
-            this.rtbLogs = new System.Windows.Forms.RichTextBox();
             this.tpAbout = new System.Windows.Forms.TabPage();
             this.tlpAbout = new System.Windows.Forms.TableLayoutPanel();
             this.lblVersionTitle = new System.Windows.Forms.Label();
@@ -64,7 +63,6 @@
             this.tpStatus.SuspendLayout();
             this.tlpStatus.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbShieldIcon)).BeginInit();
-            this.tpLogs.SuspendLayout();
             this.tpAbout.SuspendLayout();
             this.tlpAbout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbLogo)).BeginInit();
@@ -351,7 +349,7 @@
             // 
             // tpLogs
             // 
-            this.tpLogs.Controls.Add(this.rtbLogs);
+            this.tpLogs.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(12)))), ((int)(((byte)(12)))));
             this.tpLogs.Location = new System.Drawing.Point(4, 26);
             this.tpLogs.Margin = new System.Windows.Forms.Padding(4);
             this.tpLogs.Name = "tpLogs";
@@ -359,20 +357,7 @@
             this.tpLogs.Size = new System.Drawing.Size(580, 262);
             this.tpLogs.TabIndex = 1;
             this.tpLogs.Text = "Logs";
-            this.tpLogs.UseVisualStyleBackColor = true;
-            // 
-            // rtbLogs
-            // 
-            this.rtbLogs.BackColor = System.Drawing.Color.Black;
-            this.rtbLogs.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.rtbLogs.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rtbLogs.ForeColor = System.Drawing.Color.White;
-            this.rtbLogs.Location = new System.Drawing.Point(4, 4);
-            this.rtbLogs.Margin = new System.Windows.Forms.Padding(2);
-            this.rtbLogs.Name = "rtbLogs";
-            this.rtbLogs.Size = new System.Drawing.Size(572, 254);
-            this.rtbLogs.TabIndex = 0;
-            this.rtbLogs.Text = "";
+            this.tpLogs.Resize += new System.EventHandler(this.tpLogs_Resize);
             // 
             // tpAbout
             // 
@@ -537,7 +522,6 @@
             this.tpStatus.ResumeLayout(false);
             this.tlpStatus.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbShieldIcon)).EndInit();
-            this.tpLogs.ResumeLayout(false);
             this.tpAbout.ResumeLayout(false);
             this.tlpAbout.ResumeLayout(false);
             this.tlpAbout.PerformLayout();
@@ -565,7 +549,6 @@
         private System.Windows.Forms.Label lblAuthor;
         private System.Windows.Forms.Label lblAuthorTitle;
         private System.Windows.Forms.TableLayoutPanel tlpAbout;
-        private System.Windows.Forms.RichTextBox rtbLogs;
         private System.Windows.Forms.Label lblServiceStatus;
         private System.Windows.Forms.PictureBox pbShieldIcon;
         private System.Windows.Forms.Panel pnlLine1;

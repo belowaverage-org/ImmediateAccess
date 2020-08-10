@@ -10,16 +10,15 @@ using System.ServiceProcess;
 using System.Security.Principal;
 using System.Linq;
 using System.Net.NetworkInformation;
-using System.Net.Sockets;
+using PInvoke;
 using System.IO;
-using System.Collections.Generic;
+using System.Threading;
 
 namespace ImmediateAccessTray
 {
     public partial class TrayWindow : Form
     {
-        private TcpClient nConsole;
-        private StreamReader nConsoleReader;
+        private Process nConsoleProc;
         private ServiceController IAS;
         private bool CurrentlyUpdatingStatuses = false;
         public TrayWindow()
@@ -196,65 +195,6 @@ namespace ImmediateAccessTray
             }));
             return result;
         }
-        private void SetupMConsole()
-        {
-            rtbLogs.Text = "";
-            Task.Run(() => {
-                try
-                {
-                    nConsole = new TcpClient("127.0.0.1", 7362);
-                    nConsoleReader = new StreamReader(nConsole.GetStream());
-                    _ = mConsoleReadLoop();
-                }
-                catch (Exception)
-                {
-                    Invoke(new Action(() => {
-                        MessageBox.Show(this, "Cannot connect to the Immediate Access net console, the service might not be running.", "Immediate Access", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }));
-                }
-            });
-        }
-        private Task mConsoleReadLoop()
-        {
-            return Task.Run(() => {
-                while (true)
-                {
-                    try
-                    {
-                        UpdateLogRTF(nConsoleReader.ReadLine() + "\r\n");
-                    }
-                    catch (Exception)
-                    {
-                        return;
-                    }
-                }
-            });
-        }
-        private void UpdateLogRTF(string log)
-        {
-            Color color = Color.White;
-            string[] logParts = log.Split(new string[] { "<", ">" }, StringSplitOptions.None);
-            foreach (string logPart in logParts)
-            {
-                if (ConsoleColorConversion.ContainsKey(logPart))
-                {
-                    color = ConsoleColorConversion[logPart];
-                }
-                else
-                {
-                    UpdateLogColor(logPart, color);
-                }
-            }
-        }
-        private void UpdateLogColor(string log, Color color)
-        {
-            Invoke(new Action(() => {
-                rtbLogs.SelectionColor = color;
-                rtbLogs.AppendText(log);
-                rtbLogs.Select(rtbLogs.Text.Length, 0);
-                rtbLogs.ScrollToCaret();
-            }));
-        }
         private Action DelegateRefreshServiceStatus = new Action(() =>
         {
             Label lblServiceStatus = Program.TrayWindow.lblServiceStatus;
@@ -308,8 +248,28 @@ namespace ImmediateAccessTray
             }
             else
             {
-                if (nConsoleReader != null) nConsoleReader.Close();
+                if (nConsoleProc != null && !nConsoleProc.HasExited) nConsoleProc.Kill();
             }
+        }
+        private void SetupMConsole()
+        {
+            tpLogs.Hide();
+            Process proc = Process.GetCurrentProcess();
+            string name = proc.MainModule.ModuleName;
+            string path = proc.MainModule.FileName.Replace(name, "");
+            string nConPath = Path.Combine(path, "ImmediateAccessNConsole.exe");
+            nConsoleProc = new Process();
+            nConsoleProc.StartInfo = new ProcessStartInfo()
+            {
+                FileName = nConPath,
+                WindowStyle = ProcessWindowStyle.Minimized
+            };
+            nConsoleProc.Start();
+            while (nConsoleProc.MainWindowHandle.ToInt32() == 0x0) Thread.Sleep(10);
+            User32.SetParent(nConsoleProc.MainWindowHandle, tpLogs.Handle);
+            User32.SetWindowLong(nConsoleProc.MainWindowHandle, User32.WindowLongIndexFlags.GWL_STYLE, User32.SetWindowLongFlags.WS_VISIBLE);
+            User32.SetWindowPos(nConsoleProc.MainWindowHandle, IntPtr.Zero, 0, 0, tpLogs.Width, tpLogs.Height, User32.SetWindowPosFlags.SWP_NOACTIVATE);
+            tpLogs.Show();
         }
         private bool IsElevated()
         {
@@ -323,25 +283,16 @@ namespace ImmediateAccessTray
         {
             Application.Exit();
         }
-        private Dictionary<string, Color> ConsoleColorConversion = new Dictionary<string, Color>()
+        private void tpLogs_Resize(object sender, EventArgs e)
         {
-            { "#Black#", Color.Black },
-            { "#Blue#", Color.Blue },
-            { "#Cyan#", Color.Cyan },
-            { "#DarkBlue#", Color.DarkBlue },
-            { "#DarkCyan#", Color.DarkCyan },
-            { "#DarkGray#", Color.DarkGray },
-            { "#DarkGreen#", Color.DarkGreen },
-            { "#DarkMagenta#", Color.DarkMagenta },
-            { "#DarkRed#", Color.DarkRed },
-            { "#DarkYellow#", Color.Gold },
-            { "#Gray#", Color.Gray },
-            { "#Green#", Color.Green },
-            { "#Magenta#", Color.Magenta },
-            { "#Red#", Color.Red },
-            { "#White#", Color.White },
-            { "#Yellow#", Color.Yellow }
-        };
+            if (nConsoleProc != null && !nConsoleProc.HasExited)
+            {
+                User32.SetWindowPos(nConsoleProc.MainWindowHandle, IntPtr.Zero, 0, 0, tpLogs.Width, tpLogs.Height,
+                    User32.SetWindowPosFlags.SWP_NOACTIVATE |
+                    User32.SetWindowPosFlags.SWP_NOMOVE
+                );
+            }
+        }
     }
     public static class Extensions
     {
