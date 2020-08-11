@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ImmediateAccessNConsole
@@ -10,13 +11,15 @@ namespace ImmediateAccessNConsole
     {
         private static TcpClient nConsole;
         private static StreamReader nConsoleReader;
+        private static ConsoleColor color;
         static void Main(string[] args)
         {
             SetupNConsole();
-            Console.ReadLine();
+            Thread.Sleep(-1);
         }
         private static void SetupNConsole()
         {
+            Console.WriteLine("Connecting to the Immediate Access service...");
             Task.Run(() => {
                 try
                 {
@@ -26,7 +29,15 @@ namespace ImmediateAccessNConsole
                 }
                 catch (Exception)
                 {
-                    
+                    Console.Clear();
+                    Console.Write(
+                        "Failed to connect to the Immediate Access service's console.\r\n\r\n" +
+                        "Check that the Immediate Access service is actually running.\r\n\r\n" +
+                        "Retrying in 5 seconds"
+                    );
+                    WaitOutLoud(5);
+                    Console.Clear();
+                    SetupNConsole();
                 }
             });
         }
@@ -41,6 +52,14 @@ namespace ImmediateAccessNConsole
                     }
                     catch (Exception)
                     {
+                        Console.Clear();
+                        Console.Write(
+                           "Connection to Immediate Access service lost!\r\n\r\n" +
+                           "Attempting to re-connect in 5 seconds"
+                       );
+                        WaitOutLoud(5);
+                        Console.Clear();
+                        SetupNConsole();
                         return;
                     }
                 }
@@ -48,8 +67,7 @@ namespace ImmediateAccessNConsole
         }
         private static void UpdateLogRTF(string log)
         {
-            ConsoleColor color = ConsoleColor.White;
-            string[] logParts = log.Split(new string[] { "<", ">" }, StringSplitOptions.None);
+            string[] logParts = log.Split(new string[] { "<#", "#>" }, StringSplitOptions.None);
             foreach (string logPart in logParts)
             {
                 if (ConsoleColorConversion.ContainsKey(logPart))
@@ -67,24 +85,33 @@ namespace ImmediateAccessNConsole
             Console.ForegroundColor = color;
             Console.Write(log);
         }
+        private static void WaitOutLoud(int seconds)
+        {
+            for(int count = 0; count < seconds; count++)
+            {
+                Thread.Sleep(1000);
+                Console.Write(".");
+            }
+            Console.Write("\r\n");
+        }
         private static Dictionary<string, ConsoleColor> ConsoleColorConversion = new Dictionary<string, ConsoleColor>()
         {
-            { "#Black#", ConsoleColor.Black },
-            { "#Blue#", ConsoleColor.Blue },
-            { "#Cyan#", ConsoleColor.Cyan },
-            { "#DarkBlue#", ConsoleColor.DarkBlue },
-            { "#DarkCyan#", ConsoleColor.DarkCyan },
-            { "#DarkGray#", ConsoleColor.DarkGray },
-            { "#DarkGreen#", ConsoleColor.DarkGreen },
-            { "#DarkMagenta#", ConsoleColor.DarkMagenta },
-            { "#DarkRed#", ConsoleColor.DarkRed },
-            { "#DarkYellow#", ConsoleColor.DarkYellow },
-            { "#Gray#", ConsoleColor.Gray },
-            { "#Green#", ConsoleColor.Green },
-            { "#Magenta#", ConsoleColor.Magenta },
-            { "#Red#", ConsoleColor.Red },
-            { "#White#", ConsoleColor.White },
-            { "#Yellow#", ConsoleColor.Yellow }
+            { "Black", ConsoleColor.Black },
+            { "Blue", ConsoleColor.Blue },
+            { "Cyan", ConsoleColor.Cyan },
+            { "DarkBlue", ConsoleColor.DarkBlue },
+            { "DarkCyan", ConsoleColor.DarkCyan },
+            { "DarkGray", ConsoleColor.DarkGray },
+            { "DarkGreen", ConsoleColor.DarkGreen },
+            { "DarkMagenta", ConsoleColor.DarkMagenta },
+            { "DarkRed", ConsoleColor.DarkRed },
+            { "DarkYellow", ConsoleColor.DarkYellow },
+            { "Gray", ConsoleColor.Gray },
+            { "Green", ConsoleColor.Green },
+            { "Magenta", ConsoleColor.Magenta },
+            { "Red", ConsoleColor.Red },
+            { "White", ConsoleColor.White },
+            { "Yellow", ConsoleColor.Yellow }
         };
     }
 }

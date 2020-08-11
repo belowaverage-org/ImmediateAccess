@@ -40,17 +40,17 @@ namespace ImmediateAccess
             }
         }
         /// <summary>
-        /// This method will write text to the Pipe stream.
+        /// This method will write text to the nConsole.
         /// </summary>
-        /// <param name="Text">String: Text to send.</param>
+        /// <param name="Text">String: Text to write.</param>
         public static void Write(string Text)
         {
             buffer = buffer + Text;
         }
         /// <summary>
-        /// This method will send a line of text to the Pipe client.
+        /// This method will write a line of text to the nConsole.
         /// </summary>
-        /// <param name="Text">String: The line of text to send.</param>
+        /// <param name="Text">String: The line of text to write.</param>
         public static void WriteLine(string Text)
         {
             logs.Enqueue(buffer + Text);
@@ -66,7 +66,7 @@ namespace ImmediateAccess
         /// </summary>
         public static void ResetColor()
         {
-            ForegroundColor = ConsoleColor.White;
+            ForegroundColor = ConsoleColor.Gray;
         }
         /// <summary>
         /// This getter / setter will send the color that should be set to the Pipe client.
@@ -83,10 +83,17 @@ namespace ImmediateAccess
                 Write("<#" + value.ToString() + "#>");
             }
         }
+        /// <summary>
+        /// This method is triggered on the TCP Keep Alive timer event.
+        /// </summary>
         private static void TcpKeepAlive_Elapsed(object sender, ElapsedEventArgs e)
         {
             SendAll("\0");
         }
+        /// <summary>
+        /// This method sends text to all nConsole clients.
+        /// </summary>
+        /// <param name="Text">String: The text to send to all the clients.</param>
         private static void SendAll(string Text)
         {
             foreach (nConsoleConnection client in clients.ToArray())
@@ -94,6 +101,10 @@ namespace ImmediateAccess
                 client.SendText(Text);
             }
         }
+        /// <summary>
+        /// This method sends all the cached logs to a specified nConsole client.
+        /// </summary>
+        /// <param name="client">nConsoleConnection: The client to send the cached logs too.</param>
         private static void SendQueue(this nConsoleConnection client)
         {
             foreach(string log in logs.ToArray())
@@ -101,6 +112,11 @@ namespace ImmediateAccess
                 client.SendText(log + "\r\n");
             }
         }
+        /// <summary>
+        /// This method sends text to a specified nConsole client.
+        /// </summary>
+        /// <param name="client">nConsoleConnection: The nConsole client to send the text too.</param>
+        /// <param name="Text">String: The text to send.</param>
         private static void SendText(this nConsoleConnection client, string Text)
         {
             try
@@ -118,6 +134,10 @@ namespace ImmediateAccess
                 });
             }
         }
+        /// <summary>
+        /// This method starts the connection loop thread that awaits new connections to the nConsole.
+        /// </summary>
+        /// <returns>Task: A task to await on.</returns>
         private static Task ConnectLoop()
         {
             return Task.Run(() => {
@@ -138,6 +158,9 @@ namespace ImmediateAccess
             });
         }
     }
+    /// <summary>
+    /// nConsoleConnection class represents a TCP Client along with an attached Stream Writer.
+    /// </summary>
     class nConsoleConnection
     {
         public string ConnectionName;
