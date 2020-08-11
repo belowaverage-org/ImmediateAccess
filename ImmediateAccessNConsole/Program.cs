@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace ImmediateAccessNConsole
 {
@@ -14,6 +16,21 @@ namespace ImmediateAccessNConsole
         private static ConsoleColor color;
         static void Main(string[] args)
         {
+            if (args.Length == 2 && args[0] == "WatchPID")
+            {
+                int pid;
+                if (int.TryParse(args[1], out pid))
+                {
+                    Task.Run(() =>
+                    {
+                        Process watch = Process.GetProcessById(pid);
+                        watch.EnableRaisingEvents = true;
+                        watch.WaitForExit();
+                        Process.GetCurrentProcess().Kill();
+                    });
+                }
+            }
+            Console.WriteLine(Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyTitleAttribute>().Title + ": v" + Assembly.GetExecutingAssembly().GetName().Version.ToString());
             SetupNConsole();
             Thread.Sleep(-1);
         }

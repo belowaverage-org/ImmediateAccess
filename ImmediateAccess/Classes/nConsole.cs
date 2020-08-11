@@ -15,9 +15,7 @@ namespace ImmediateAccess
         private static string buffer = "";
         private static Queue<string> logs = new Queue<string>();
         private static ConsoleColor cc = ConsoleColor.White;
-        private static Timer tcpKeepAlive;
         private static int logLineLimit = 10000;
-        private static int tcpKeepAliveIntervalMS = 5000;
         private static int tcpPort = 7362;
         /// <summary>
         /// This method sets up the net console.
@@ -27,9 +25,6 @@ namespace ImmediateAccess
             Logger.Info("nConsole: Creating net console server on port " + tcpPort + "...");
             try
             {
-                tcpKeepAlive = new Timer(tcpKeepAliveIntervalMS);
-                tcpKeepAlive.Elapsed += TcpKeepAlive_Elapsed;
-                tcpKeepAlive.Start();
                 server = new TcpListener(IPAddress.Parse("127.0.0.1"), tcpPort);
                 server.Start();
                 _ = ConnectLoop();
@@ -82,13 +77,6 @@ namespace ImmediateAccess
                 cc = value;
                 Write("<#" + value.ToString() + "#>");
             }
-        }
-        /// <summary>
-        /// This method is triggered on the TCP Keep Alive timer event.
-        /// </summary>
-        private static void TcpKeepAlive_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            SendAll("\0");
         }
         /// <summary>
         /// This method sends text to all nConsole clients.

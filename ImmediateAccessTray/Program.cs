@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace ImmediateAccessTray
@@ -11,13 +13,33 @@ namespace ImmediateAccessTray
         [STAThread]
         static void Main(string[] args)
         {
+            bool isDuplicateProcess = false;
+            Process thisProc = Process.GetCurrentProcess();
+            Process[] processes = Process.GetProcessesByName(thisProc.ProcessName);
+            foreach (Process proc in processes)
+            {
+                if (proc.Id != thisProc.Id && proc.SessionId == thisProc.SessionId)
+                {
+                    isDuplicateProcess = true;
+                    break;
+                }
+            }
             Arguments = args;
+            if (Arguments.Contains("ForceTray")) isDuplicateProcess = false;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
             Application.ThreadException += Application_ThreadException;
-            TrayIcon = new TrayIcon();
-            Application.Run(TrayIcon);
+            if (isDuplicateProcess)
+            {
+                TrayWindow = new TrayWindow();
+                Application.Run(TrayWindow);
+            }
+            else
+            {
+                TrayIcon = new TrayIcon();
+                Application.Run(TrayIcon);
+            }
         }
         public static string[] Arguments = new string[0];
         public static TrayIcon TrayIcon = null;

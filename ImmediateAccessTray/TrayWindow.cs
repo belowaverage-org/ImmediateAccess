@@ -62,11 +62,20 @@ namespace ImmediateAccessTray
             try
             {
                 ProcessStartInfo psi = new ProcessStartInfo();
-                psi.Arguments = Program.Arguments.ToSpaceDelimitedString() + " ElevatedStartStopService";
+                string trayArgument = " ForceTray";
+                if (Program.TrayIcon == null) trayArgument = "";
+                psi.Arguments = "ElevatedStartStopService" + trayArgument;
                 psi.FileName = Application.ExecutablePath;
                 psi.Verb = "RunAs";
                 Process.Start(psi);
-                Program.TrayIcon.ExitThread();
+                if (Program.TrayIcon == null)
+                {
+                    Program.TrayWindow.Close();
+                }
+                else
+                {
+                    Program.TrayIcon.ExitThread();
+                }
             }
             catch (Exception)
             {
@@ -262,9 +271,10 @@ namespace ImmediateAccessTray
             nConsoleProc.StartInfo = new ProcessStartInfo()
             {
                 FileName = nConPath,
-                WindowStyle = ProcessWindowStyle.Minimized
+                WindowStyle = ProcessWindowStyle.Minimized,
+                Arguments = "WatchPID " + Process.GetCurrentProcess().Id
             };
-            nConsoleProc.Start(); // PROCESS NEEDS TO MONITOR PARENT OR SOMETHING 
+            nConsoleProc.Start();
             while (nConsoleProc.MainWindowHandle.ToInt32() == 0x0) Thread.Sleep(10);
             User32.SetParent(nConsoleProc.MainWindowHandle, tpLogs.Handle);
             User32.SetWindowLong(nConsoleProc.MainWindowHandle, User32.WindowLongIndexFlags.GWL_STYLE, User32.SetWindowLongFlags.WS_VISIBLE);
