@@ -7,6 +7,9 @@ namespace ImmediateAccessTray
 {
     static class Program
     {
+        public static string[] Arguments = new string[0];
+        public static TrayIcon TrayIcon = null;
+        public static TrayWindow TrayWindow = null;
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -41,9 +44,9 @@ namespace ImmediateAccessTray
                 Application.Run(TrayIcon);
             }
         }
-        public static string[] Arguments = new string[0];
-        public static TrayIcon TrayIcon = null;
-        public static TrayWindow TrayWindow = null;
+        /// <summary>
+        /// This event fires whenever the app context encounters an unexpected error.
+        /// </summary>
         private static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
         {
             if (e.Exception.StackTrace != null)

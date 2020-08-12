@@ -18,6 +18,9 @@ namespace ImmediateAccessTray
             if (!Program.Arguments.Contains("Minimized")) Icon_Click(null, null);
             if (Program.Arguments.Contains("ElevatedStartStopService")) Program.Arguments = new string[0];
         }
+        /// <summary>
+        /// This event fires whenever the tray icon is pressed, triggering the main form to open.
+        /// </summary>
         private void Icon_Click(object sender, MouseEventArgs e)
         {
             if (Program.TrayWindow == null || Program.TrayWindow.IsDisposed)
@@ -30,6 +33,9 @@ namespace ImmediateAccessTray
                 Program.TrayWindow.Activate();
             }
         }
+        /// <summary>
+        /// This event fires whenever the App Context thread exits, and hides the icon before the process ends.
+        /// </summary>
         private void TrayIcon_ThreadExit(object sender, System.EventArgs e)
         {
             Icon.Visible = false;
