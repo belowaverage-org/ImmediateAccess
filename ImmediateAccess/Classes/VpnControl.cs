@@ -59,8 +59,9 @@ namespace ImmediateAccess
             Logger.Info("Checking if connected to VPN already...");
             foreach (string vpnProfile in (string[])PolicyReader.Policies["VpnProfileList"])
             {
-                ManagementObject mo = await VpnStatus.Get(vpnProfile);
-                string status = (string)mo.GetPropertyValue("ConnectionStatus");
+                ManagementObject vpnStatus = await VpnStatus.Get(vpnProfile);
+                if (vpnStatus == null) continue;
+                string status = (string)vpnStatus.GetPropertyValue("ConnectionStatus");
                 if (status == "Connected")
                 {
                     Logger.Info("Already connected to VPN.");

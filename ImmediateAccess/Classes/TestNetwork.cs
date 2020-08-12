@@ -32,6 +32,7 @@ namespace ImmediateAccess
             foreach (string vpnProfile in (string[])PolicyReader.Policies["VpnProfileList"])
             {
                 ManagementObject vpnStatus = await VpnStatus.Get(vpnProfile);
+                if (vpnStatus == null) continue;
                 Task<bool> ping = VpnServerPing((string)vpnStatus.GetPropertyValue("ServerAddress"));
                 bool finished = ping.Wait((int)PolicyReader.Policies["VpnServerPingTimeoutMS"]);
                 if (finished && await ping)
