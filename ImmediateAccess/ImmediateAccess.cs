@@ -92,6 +92,7 @@ namespace ImmediateAccess
                         await Task.Delay(5000);
                     }
                 }
+                IsCurrentlyEnsuring = false;
             }
             catch (OperationCanceledException)
             {

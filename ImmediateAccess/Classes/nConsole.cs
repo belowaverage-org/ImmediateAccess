@@ -60,7 +60,7 @@ namespace ImmediateAccess
         /// </summary>
         public static void ResetColor()
         {
-            ForegroundColor = ConsoleColor.Gray;
+            ForegroundColor = ConsoleColor.DarkGray;
         }
         /// <summary>
         /// This getter / setter will send the color that should be set to the Pipe client.
