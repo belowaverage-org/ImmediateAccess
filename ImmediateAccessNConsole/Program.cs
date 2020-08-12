@@ -34,6 +34,9 @@ namespace ImmediateAccessNConsole
             SetupNConsole();
             Thread.Sleep(-1);
         }
+        /// <summary>
+        /// This method connects to the nConsole.
+        /// </summary>
         private static void SetupNConsole()
         {
             Console.WriteLine("Connecting to the Immediate Access service...");
@@ -58,6 +61,10 @@ namespace ImmediateAccessNConsole
                 }
             });
         }
+        /// <summary>
+        /// This method runs a thread that waits for text from the TCP client.
+        /// </summary>
+        /// <returns>Task: Task to await on if desired.</returns>
         private static Task mConsoleReadLoop()
         {
             return Task.Run(() => {
@@ -73,7 +80,7 @@ namespace ImmediateAccessNConsole
                         Console.Write(
                            "Connection to Immediate Access service lost!\r\n\r\n" +
                            "Attempting to re-connect in 5 seconds"
-                       );
+                        );
                         WaitOutLoud(5);
                         Console.Clear();
                         SetupNConsole();
@@ -82,6 +89,10 @@ namespace ImmediateAccessNConsole
                 }
             });
         }
+        /// <summary>
+        /// This method coverts the color tags into actual colors and writes the input to the console.
+        /// </summary>
+        /// <param name="log">string: Input text.</param>
         private static void UpdateLogRTF(string log)
         {
             string[] logParts = log.Split(new string[] { "<#", "#>" }, StringSplitOptions.None);
@@ -97,11 +108,20 @@ namespace ImmediateAccessNConsole
                 }
             }
         }
+        /// <summary>
+        /// This method writes a string to the console with the specified color.
+        /// </summary>
+        /// <param name="log">string: The string to write.</param>
+        /// <param name="color">ConsoleColor: The color the string should appear in.</param>
         private static void UpdateLogColor(string log, ConsoleColor color)
         {
             Console.ForegroundColor = color;
             Console.Write(log);
         }
+        /// <summary>
+        /// This method waits for the specified ammount of settings, and adds a period every second to the console.
+        /// </summary>
+        /// <param name="seconds">int: The number of seconds to wait.</param>
         private static void WaitOutLoud(int seconds)
         {
             for(int count = 0; count < seconds; count++)
@@ -111,6 +131,9 @@ namespace ImmediateAccessNConsole
             }
             Console.Write("\r\n");
         }
+        /// <summary>
+        /// This dictionary converts the string form of a console color to the enumaration of console color.
+        /// </summary>
         private static Dictionary<string, ConsoleColor> ConsoleColorConversion = new Dictionary<string, ConsoleColor>()
         {
             { "Black", ConsoleColor.Black },
