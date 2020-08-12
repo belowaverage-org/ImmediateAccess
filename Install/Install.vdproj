@@ -39,6 +39,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_076C22AE3A63A74E41B2FA40FABDFCD7"
+        "OwnerKey" = "8:_07E42A51681C4466AE1CE5477AAB5FEB"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_07E42A51681C4466AE1CE5477AAB5FEB"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -47,12 +53,6 @@
         {
         "MsmKey" = "8:_1D877752773C47FFBA271C073C2C6EC9"
         "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_1E9A9BD3584E1FE2B7FC3DC95B342F59"
-        "OwnerKey" = "8:_07E42A51681C4466AE1CE5477AAB5FEB"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -87,14 +87,8 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_595F37730CC5A36BA928E99BAE63A7D5"
-        "OwnerKey" = "8:_88FFFA1B232348ECA70BE66C05A3D7D1"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_595F37730CC5A36BA928E99BAE63A7D5"
-        "OwnerKey" = "8:_B3A6E4E5DACC44F58249BCD591006FC4"
+        "MsmKey" = "8:_593F712E6CE2B334E4151B1630780415"
+        "OwnerKey" = "8:_07E42A51681C4466AE1CE5477AAB5FEB"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -141,14 +135,20 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_F08DBECFF71A87C853467259DBDE63C1"
-        "OwnerKey" = "8:_07E42A51681C4466AE1CE5477AAB5FEB"
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_B3A6E4E5DACC44F58249BCD591006FC4"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_B3A6E4E5DACC44F58249BCD591006FC4"
+        "OwnerKey" = "8:_593F712E6CE2B334E4151B1630780415"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_076C22AE3A63A74E41B2FA40FABDFCD7"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -166,25 +166,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_595F37730CC5A36BA928E99BAE63A7D5"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_07E42A51681C4466AE1CE5477AAB5FEB"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_1E9A9BD3584E1FE2B7FC3DC95B342F59"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_F08DBECFF71A87C853467259DBDE63C1"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -220,16 +202,48 @@
     }
     "Configurations"
     {
-        "Debug"
+        "Debug 64"
         {
-        "DisplayName" = "8:Debug"
-        "IsDebugOnly" = "11:TRUE"
+        "DisplayName" = "8:Debug 64"
+        "IsDebugOnly" = "11:FALSE"
         "IsReleaseOnly" = "11:FALSE"
-        "OutputFilename" = "8:Debug\\ImmediateAccess.msi"
+        "OutputFilename" = "8:Debug 64\\ImmediateAccessX64.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
-        "Compression" = "3:1"
+        "Compression" = "3:2"
+        "SignOutput" = "11:FALSE"
+        "CertificateFile" = "8:"
+        "PrivateKeyFile" = "8:"
+        "TimeStampServer" = "8:"
+        "InstallerBootstrapper" = "3:2"
+        }
+        "Debug 86"
+        {
+        "DisplayName" = "8:Debug 86"
+        "IsDebugOnly" = "11:FALSE"
+        "IsReleaseOnly" = "11:FALSE"
+        "OutputFilename" = "8:Debug 86\\ImmediateAccessX86.msi"
+        "PackageFilesAs" = "3:2"
+        "PackageFileSize" = "3:-2147483648"
+        "CabType" = "3:1"
+        "Compression" = "3:2"
+        "SignOutput" = "11:FALSE"
+        "CertificateFile" = "8:"
+        "PrivateKeyFile" = "8:"
+        "TimeStampServer" = "8:"
+        "InstallerBootstrapper" = "3:2"
+        }
+        "Release 64"
+        {
+        "DisplayName" = "8:Release 64"
+        "IsDebugOnly" = "11:FALSE"
+        "IsReleaseOnly" = "11:FALSE"
+        "OutputFilename" = "8:Release 64\\ImmediateAccessX64.msi"
+        "PackageFilesAs" = "3:2"
+        "PackageFileSize" = "3:-2147483648"
+        "CabType" = "3:1"
+        "Compression" = "3:2"
         "SignOutput" = "11:FALSE"
         "CertificateFile" = "8:"
         "PrivateKeyFile" = "8:"
@@ -244,19 +258,24 @@
             "ComponentsUrl" = "8:"
                 "Items"
                 {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
                 }
             }
         }
-        "Release"
+        "Release 86"
         {
-        "DisplayName" = "8:Release"
+        "DisplayName" = "8:Release 86"
         "IsDebugOnly" = "11:FALSE"
-        "IsReleaseOnly" = "11:TRUE"
-        "OutputFilename" = "8:Release\\ImmediateAccess.msi"
+        "IsReleaseOnly" = "11:FALSE"
+        "OutputFilename" = "8:Release 86\\ImmediateAccessX86.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
-        "Compression" = "3:3"
+        "Compression" = "3:2"
         "SignOutput" = "11:FALSE"
         "CertificateFile" = "8:"
         "PrivateKeyFile" = "8:"
@@ -403,6 +422,37 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_076C22AE3A63A74E41B2FA40FABDFCD7"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:ImmediateAccessNConsole, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64"
+                "ScatterAssemblies"
+                {
+                    "_076C22AE3A63A74E41B2FA40FABDFCD7"
+                    {
+                    "Name" = "8:ImmediateAccessNConsole.exe"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:ImmediateAccessNConsole.exe"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_C5E061F36C26430F83F0893936388B8F"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1D877752773C47FFBA271C073C2C6EC9"
             {
             "SourcePath" = "8:..\\ImmediateAccessAssets\\startmenu_150.png"
@@ -421,37 +471,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_1E9A9BD3584E1FE2B7FC3DC95B342F59"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ImmediateAccess, Version=0.1.0.0, Culture=neutral, processorArchitecture=AMD64"
-                "ScatterAssemblies"
-                {
-                    "_1E9A9BD3584E1FE2B7FC3DC95B342F59"
-                    {
-                    "Name" = "8:ImmediateAccess.exe"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:ImmediateAccess.exe"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_C5E061F36C26430F83F0893936388B8F"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:TRUE"
-            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_41FBA64A98654061BC58ED31DF1DA036"
@@ -545,20 +564,20 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_595F37730CC5A36BA928E99BAE63A7D5"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_593F712E6CE2B334E4151B1630780415"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:System.Net.Http, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
+            "AssemblyAsmDisplayName" = "8:ImmediateAccess, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64"
                 "ScatterAssemblies"
                 {
-                    "_595F37730CC5A36BA928E99BAE63A7D5"
+                    "_593F712E6CE2B334E4151B1630780415"
                     {
-                    "Name" = "8:System.Net.Http.dll"
+                    "Name" = "8:ImmediateAccess.exe"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:System.Net.Http.dll"
+            "SourcePath" = "8:ImmediateAccess.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C5E061F36C26430F83F0893936388B8F"
@@ -652,37 +671,6 @@
                     }
                 }
             "SourcePath" = "8:PInvoke.Windows.ShellScalingApi.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_C5E061F36C26430F83F0893936388B8F"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_F08DBECFF71A87C853467259DBDE63C1"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ImmediateAccessNConsole, Version=0.1.0.0, Culture=neutral, processorArchitecture=AMD64"
-                "ScatterAssemblies"
-                {
-                    "_F08DBECFF71A87C853467259DBDE63C1"
-                    {
-                    "Name" = "8:ImmediateAccessNConsole.exe"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:ImmediateAccessNConsole.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C5E061F36C26430F83F0893936388B8F"
@@ -812,7 +800,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Immediate Access"
         "ProductCode" = "8:{4CEB3A08-E0B1-47A1-88D7-CB6E8091CF79}"
-        "PackageCode" = "8:{AD7F1817-4836-471A-9473-55417BCFE0BC}"
+        "PackageCode" = "8:{E7C12B6A-087B-4F28-91ED-EE38DB0DD586}"
         "UpgradeCode" = "8:{369529A5-9F12-47D6-9E8F-3046CE27FA9D}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -881,7 +869,7 @@
             "Name" = "8:Immediate Access - Tray"
             "Arguments" = "8:Minimized"
             "Description" = "8:Immediate Access - Always On VPN"
-            "ShowCmd" = "3:7"
+            "ShowCmd" = "3:1"
             "IconIndex" = "3:32512"
             "Transitive" = "11:FALSE"
             "Target" = "8:_07E42A51681C4466AE1CE5477AAB5FEB"
@@ -981,7 +969,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_07E42A51681C4466AE1CE5477AAB5FEB"
             {
-            "SourcePath" = "8:..\\ImmediateAccessTray\\obj\\x64\\Debug\\ImmediateAccessTray.exe"
+            "SourcePath" = "8:..\\ImmediateAccessTray\\obj\\x64\\Release\\ImmediateAccessTray.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C5E061F36C26430F83F0893936388B8F"
@@ -1009,7 +997,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_88FFFA1B232348ECA70BE66C05A3D7D1"
             {
-            "SourcePath" = "8:..\\ImmediateAccessNConsole\\obj\\x64\\Debug\\ImmediateAccessNConsole.exe"
+            "SourcePath" = "8:..\\ImmediateAccessNConsole\\obj\\x64\\Release\\ImmediateAccessNConsole.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C5E061F36C26430F83F0893936388B8F"
@@ -1037,7 +1025,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_B3A6E4E5DACC44F58249BCD591006FC4"
             {
-            "SourcePath" = "8:..\\ImmediateAccess\\obj\\x64\\Debug\\ImmediateAccess.exe"
+            "SourcePath" = "8:..\\ImmediateAccess\\obj\\x64\\Release\\ImmediateAccess.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C5E061F36C26430F83F0893936388B8F"
@@ -1065,7 +1053,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_CF0BF7B4FB194341A2DFD8DDB683E129"
             {
-            "SourcePath" = "8:..\\RasManRepair\\obj\\x64\\Debug\\RasManRepair.exe"
+            "SourcePath" = "8:..\\RasManRepair\\obj\\x64\\Release\\RasManRepair.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C5E061F36C26430F83F0893936388B8F"
