@@ -84,7 +84,8 @@ namespace ImmediateAccess
         /// <returns>Task: Bool: Returns true if successful.</returns>
         private static async Task<bool> TestProbe(IPAddress Bind = null, CancellationToken Cancellation = new CancellationToken())
         {
-            return await HttpRequest(new Uri((string)PolicyReader.Policies["InternalProbe"]), Bind, Cancellation);
+            if (!Uri.TryCreate((string)PolicyReader.Policies["InternalProbe"], UriKind.Absolute, out Uri URI)) return false;
+            return await HttpRequest(URI, Bind, Cancellation);
         }
         /// <summary>
         /// This method sends an HTTP(S) request to the internal probe, and if the certificates are trusted and up to snuff, returns true.

@@ -74,8 +74,8 @@ namespace ImmediateAccess
             string[] profiConf = (string[])Policies["VpnProfileList"];
             if (
                 probeConf == null ||
+                !Uri.TryCreate(probeConf, UriKind.Absolute, out Uri _) ||
                 profiConf == null ||
-                probeConf == "" ||
                 profiConf.Length == 0
             ) return false;
             return true;
