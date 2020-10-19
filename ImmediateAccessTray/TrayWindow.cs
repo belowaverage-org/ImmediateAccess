@@ -61,46 +61,58 @@ namespace ImmediateAccessTray
         /// </summary>
         private void RefreshAllStatus()
         {
-            Task.Run(() => {
-                if (CurrentlyUpdatingStatuses) return;
-                CurrentlyUpdatingStatuses = true;
-                Invoke(new Action(() => {
-                    lblNetLocation.ForeColor =
-                    lblNetStatus.ForeColor =
-                    lblVpnStatus.ForeColor =
-                    lblServicePolicy.ForeColor =
-                    lblServiceStatus.ForeColor =
-                    Color.Orange;
-                    lblNetLocation.Text =
-                    lblNetStatus.Text =
-                    lblVpnStatus.Text =
-                    lblServicePolicy.Text =
-                    lblServiceStatus.Text =
-                    "Refreshing...";
-                }));
-                RefreshServiceStatus();
-                if (RefreshPolicyStatus())
+            Task.Run(() =>
+            {
+                try
                 {
-                    RefreshVPNStatus();
-                    RefreshNetworkStatus();
-                    RefreshNetworkLocation();
-                }
-                else
-                {
-                    Invoke(new Action(() => {
-                        lblVpnStatus.Text =
-                        lblNetStatus.Text =
+                    if (CurrentlyUpdatingStatuses) return;
+                    CurrentlyUpdatingStatuses = true;
+                    Invoke(new Action(() =>
+                    {
+                        lblNetLocation.ForeColor =
+                        lblNetStatus.ForeColor =
+                        lblVpnStatus.ForeColor =
+                        lblServicePolicy.ForeColor =
+                        lblServiceStatus.ForeColor =
+                        Color.Orange;
                         lblNetLocation.Text =
-                        "Unknown";
+                        lblNetStatus.Text =
+                        lblVpnStatus.Text =
+                        lblServicePolicy.Text =
+                        lblServiceStatus.Text =
+                        "Refreshing...";
                     }));
+                    RefreshServiceStatus();
+                    if (RefreshPolicyStatus())
+                    {
+                        Task[] tasks = new Task[3];
+                        tasks[0] = RefreshVPNStatus();
+                        tasks[1] = RefreshNetworkStatus();
+                        tasks[2] = RefreshNetworkLocation();
+                        Task.WaitAll(tasks);
+                    }
+                    else
+                    {
+                        Invoke(new Action(() =>
+                        {
+                            lblVpnStatus.Text =
+                            lblNetStatus.Text =
+                            lblNetLocation.Text =
+                            "Unknown";
+                        }));
+                    }
+                    CurrentlyUpdatingStatuses = false;
                 }
-                CurrentlyUpdatingStatuses = false;
+                catch (Exception)
+                {
+                    CurrentlyUpdatingStatuses = false;
+                }
             });
         }
         /// <summary>
         /// This method refreshes the network location label.
         /// </summary>
-        private async void RefreshNetworkLocation()
+        private async Task RefreshNetworkLocation()
         {
             bool result = await TestNetwork.IsProbeAvailable();
             Invoke(new Action(() =>
@@ -119,7 +131,7 @@ namespace ImmediateAccessTray
         /// <summary>
         /// This method refreshes the network status label.
         /// </summary>
-        private async void RefreshNetworkStatus()
+        private async Task RefreshNetworkStatus()
         {
             bool result = await TestNetwork.IsProbeAvailable(true);
             Invoke(new Action(() =>
@@ -139,7 +151,7 @@ namespace ImmediateAccessTray
         /// <summary>
         /// This method refreshes the VPN status label.
         /// </summary>
-        private async void RefreshVPNStatus()
+        private async Task RefreshVPNStatus()
         {
             string profile = await VpnControl.IsConnected();
             Invoke(new Action(() =>

@@ -9,5 +9,5 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyMetadata("Website", "https://github.com/belowaverage-org/ImmediateAccess")]
 [assembly: ComVisible(false)]
 [assembly: Guid("0ec7da0d-b034-4f5a-9490-8242a0685090")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("1.0.0.1")]
+[assembly: AssemblyFileVersion("1.0.0.1")]
