@@ -340,3 +340,4 @@ ASALocalRun/
 healthchecksdb
 /Install/Release 64
 /Install/Debug 64
+/Install/Release 86/ImmediateAccessX86.msi
