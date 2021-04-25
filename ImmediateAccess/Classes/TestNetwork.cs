@@ -33,7 +33,8 @@ namespace ImmediateAccess
             {
                 ManagementObject vpnStatus = await VpnStatus.Get(vpnProfile);
                 if (vpnStatus == null) continue;
-                Task<bool> ping = VpnServerPing((string)vpnStatus.GetPropertyValue("ServerAddress"));
+                string[] host = ((string)vpnStatus.GetPropertyValue("ServerAddress")).Split(':'); //Remove port number.
+                Task<bool> ping = VpnServerPing(host[0]);
                 bool finished = ping.Wait((int)PolicyReader.Policies["VpnServerPingTimeoutMS"]);
                 if (finished && await ping)
                 {
