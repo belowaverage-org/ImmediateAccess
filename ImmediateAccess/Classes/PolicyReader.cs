@@ -13,6 +13,8 @@ namespace ImmediateAccess
         private static Dictionary<string, object> DefaultPolicies = new Dictionary<string, object>()
         {
             { "InternalProbe", null },
+            { "RegistrationOU", null },
+            { "RegistrationSecurityGroup", null },
             { "VpnProfileList", null },
             { "ProbeTimeoutS", 10 },
             { "NetEventCooldownS", 3 },
