@@ -474,7 +474,6 @@
             // pbLogo
             // 
             this.pbLogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.pbLogo.Image = global::ImmediateAccessTray.Properties.Resources.Logo;
             this.pbLogo.Location = new System.Drawing.Point(533, 5);
             this.pbLogo.Margin = new System.Windows.Forms.Padding(0);
             this.pbLogo.Name = "pbLogo";

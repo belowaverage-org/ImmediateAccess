@@ -1,8 +1,0 @@
-﻿<Application xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
-  <VisualElements
-      ShowNameOnSquare150x150Logo='on'
-      Square150x150Logo='Assets\startmenu_150.png'
-      Square70x70Logo='Assets\startmenu_70.png'
-      ForegroundText='light'
-      BackgroundColor='#360051'/>
-</Application>

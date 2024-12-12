@@ -1,5 +1,4 @@
-﻿using ImmediateAccessTray.Properties;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows.Forms;
 
 namespace ImmediateAccessTray
@@ -11,7 +10,6 @@ namespace ImmediateAccessTray
         {
             ThreadExit += TrayIcon_ThreadExit;
             Icon = new NotifyIcon();
-            Icon.Icon = Resources.Icon;
             Icon.Text = "Immediate Access\nAlways On VPN Service";
             Icon.MouseClick += Icon_Click;
             Icon.Visible = true;

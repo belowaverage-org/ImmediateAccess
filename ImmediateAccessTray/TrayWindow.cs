@@ -1,5 +1,4 @@
-﻿using ImmediateAccessTray.Properties;
-using ImmediateAccess;
+﻿using ImmediateAccess;
 using System;
 using System.Drawing;
 using System.Reflection;
@@ -24,7 +23,6 @@ namespace ImmediateAccessTray
         public TrayWindow()
         {
             InitializeComponent();
-            Icon = Resources.Icon;
             if (!IsElevated()) pbShieldIcon.Image = new Icon(SystemIcons.Shield, 16, 16).ToBitmap();
         }
         /// <summary>
