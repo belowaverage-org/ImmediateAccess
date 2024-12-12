@@ -1,59 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- (c) 2025 below average Org -->
 <policyDefinitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" revision="1.0" schemaVersion="1.0" xmlns="http://schemas.microsoft.com/GroupPolicy/2006/07/PolicyDefinitions">
-  <policyNamespaces>
-    <target prefix="immediateaccess" namespace="BelowAverage.Policies.ImmediateAccess" />
-    <using prefix="windows" namespace="Microsoft.Policies.Windows" />
-  </policyNamespaces>
-  <resources minRequiredRevision="1.0" />
-  <categories>
-    <category name="ImmediateAccess" displayName="$(string.ImmediateAccess)">
-      <parentCategory ref="windows:Network" />
-    </category>
-  </categories>
-  <policies>
-    <policy name="ImmediateAccess" class="Machine" displayName="$(string.ImmediateAccess)" explainText="$(string.ImmediateAccessExplain)" presentation="$(presentation.ImmediateAccess)" key="Software\Policies\Below Average\Immediate Access">
-      <parentCategory ref="ImmediateAccess" />
-      <supportedOn ref="windows:SUPPORTED_Windows_10_0_NOSERVER" />
-      <elements>
-        <text id="InternalProbe" valueName="InternalProbe" required="true" />
-        <multiText id="VpnProfileList" valueName="VpnProfileList" required="true" />
-      </elements>
-    </policy>
-    <policy name="ProbeTimeoutS" class="Machine" displayName="$(string.ProbeTimeoutS)" explainText="$(string.ProbeTimeoutSExplain)" presentation="$(presentation.ProbeTimeoutS)" key="Software\Policies\Below Average\Immediate Access">
-      <parentCategory ref="ImmediateAccess" />
-      <supportedOn ref="windows:SUPPORTED_Windows_10_0_NOSERVER" />
-      <elements>
-        <decimal id="ProbeTimeoutS" valueName="ProbeTimeoutS" maxValue="60" required="true" />
-      </elements>
-    </policy>
-    <policy name="NetEventCooldownS" class="Machine" displayName="$(string.NetEventCooldownS)" explainText="$(string.NetEventCooldownSExplain)" presentation="$(presentation.NetEventCooldownS)" key="Software\Policies\Below Average\Immediate Access">
-      <parentCategory ref="ImmediateAccess" />
-      <supportedOn ref="windows:SUPPORTED_Windows_10_0_NOSERVER" />
-      <elements>
-        <decimal id="NetEventCooldownS" valueName="NetEventCooldownS" maxValue="30" required="true" />
-      </elements>
-    </policy>
-    <policy name="HealthCheckIntervalS" class="Machine" displayName="$(string.HealthCheckIntervalS)" explainText="$(string.HealthCheckIntervalSExplain)" presentation="$(presentation.HealthCheckIntervalS)" key="Software\Policies\Below Average\Immediate Access">
-      <parentCategory ref="ImmediateAccess" />
-      <supportedOn ref="windows:SUPPORTED_Windows_10_0_NOSERVER" />
-      <elements>
-        <decimal id="HealthCheckIntervalS" valueName="HealthCheckIntervalS" required="true" />
-      </elements>
-    </policy>
-    <policy name="VpnServerPingTimeoutMS" class="Machine" displayName="$(string.VpnServerPingTimeoutMS)" explainText="$(string.VpnServerPingTimeoutMSExplain)" presentation="$(presentation.VpnServerPingTimeoutMS)" key="Software\Policies\Below Average\Immediate Access">
-      <parentCategory ref="ImmediateAccess" />
-      <supportedOn ref="windows:SUPPORTED_Windows_10_0_NOSERVER" />
-      <elements>
-        <decimal id="VpnServerPingTimeoutMS" valueName="VpnServerPingTimeoutMS" required="true" />
-      </elements>
-    </policy>
-    <policy name="VpnServerConnectAttempts" class="Machine" displayName="$(string.VpnServerConnectAttempts)" explainText="$(string.VpnServerConnectAttemptsExplain)" presentation="$(presentation.VpnServerConnectAttempts)" key="Software\Policies\Below Average\Immediate Access">
-      <parentCategory ref="ImmediateAccess" />
-      <supportedOn ref="windows:SUPPORTED_Windows_10_0_NOSERVER" />
-      <elements>
-        <decimal id="VpnServerConnectAttempts" valueName="VpnServerConnectAttempts" required="true" />
-      </elements>
-    </policy>
-  </policies>
+    <policyNamespaces>
+        <target prefix="immediateaccess" namespace="BelowAverage.Policies.ImmediateAccess" />
+        <using prefix="windows" namespace="Microsoft.Policies.Windows" />
+    </policyNamespaces>
+    <resources minRequiredRevision="1.0" />
+    <categories>
+        <category name="ImmediateAccess" displayName="$(string.ImmediateAccess)">
+            <parentCategory ref="windows:Network" />
+        </category>
+    </categories>
+    <policies>
+        <policy name="ImmediateAccess" class="Machine" displayName="$(string.ImmediateAccess)" explainText="$(string.ImmediateAccessExplain)" presentation="$(presentation.ImmediateAccess)" key="Software\Policies\Below Average\Immediate Access">
+            <parentCategory ref="ImmediateAccess" />
+            <supportedOn ref="windows:SUPPORTED_Windows_10_0_NOSERVER" />
+            <elements>
+                <text id="InternalProbe" valueName="InternalProbe" required="true" />
+                <text id="RegistrationOU" valueName="RegistrationOU" required="true" />
+                <text id="RegistrationSecurityGroup" valueName="RegistrationSecurityGroup" required="true" />
+                <multiText id="VpnProfileList" valueName="VpnProfileList" required="true" />
+            </elements>
+        </policy>
+        <policy name="ProbeTimeoutS" class="Machine" displayName="$(string.ProbeTimeoutS)" explainText="$(string.ProbeTimeoutSExplain)" presentation="$(presentation.ProbeTimeoutS)" key="Software\Policies\Below Average\Immediate Access">
+            <parentCategory ref="ImmediateAccess" />
+            <supportedOn ref="windows:SUPPORTED_Windows_10_0_NOSERVER" />
+            <elements>
+                <decimal id="ProbeTimeoutS" valueName="ProbeTimeoutS" maxValue="60" required="true" />
+            </elements>
+        </policy>
+        <policy name="NetEventCooldownS" class="Machine" displayName="$(string.NetEventCooldownS)" explainText="$(string.NetEventCooldownSExplain)" presentation="$(presentation.NetEventCooldownS)" key="Software\Policies\Below Average\Immediate Access">
+            <parentCategory ref="ImmediateAccess" />
+            <supportedOn ref="windows:SUPPORTED_Windows_10_0_NOSERVER" />
+            <elements>
+                <decimal id="NetEventCooldownS" valueName="NetEventCooldownS" maxValue="30" required="true" />
+            </elements>
+        </policy>
+        <policy name="HealthCheckIntervalS" class="Machine" displayName="$(string.HealthCheckIntervalS)" explainText="$(string.HealthCheckIntervalSExplain)" presentation="$(presentation.HealthCheckIntervalS)" key="Software\Policies\Below Average\Immediate Access">
+            <parentCategory ref="ImmediateAccess" />
+            <supportedOn ref="windows:SUPPORTED_Windows_10_0_NOSERVER" />
+            <elements>
+                <decimal id="HealthCheckIntervalS" valueName="HealthCheckIntervalS" required="true" />
+            </elements>
+        </policy>
+        <policy name="VpnServerPingTimeoutMS" class="Machine" displayName="$(string.VpnServerPingTimeoutMS)" explainText="$(string.VpnServerPingTimeoutMSExplain)" presentation="$(presentation.VpnServerPingTimeoutMS)" key="Software\Policies\Below Average\Immediate Access">
+            <parentCategory ref="ImmediateAccess" />
+            <supportedOn ref="windows:SUPPORTED_Windows_10_0_NOSERVER" />
+            <elements>
+                <decimal id="VpnServerPingTimeoutMS" valueName="VpnServerPingTimeoutMS" required="true" />
+            </elements>
+        </policy>
+        <policy name="VpnServerConnectAttempts" class="Machine" displayName="$(string.VpnServerConnectAttempts)" explainText="$(string.VpnServerConnectAttemptsExplain)" presentation="$(presentation.VpnServerConnectAttempts)" key="Software\Policies\Below Average\Immediate Access">
+            <parentCategory ref="ImmediateAccess" />
+            <supportedOn ref="windows:SUPPORTED_Windows_10_0_NOSERVER" />
+            <elements>
+                <decimal id="VpnServerConnectAttempts" valueName="VpnServerConnectAttempts" required="true" />
+            </elements>
+        </policy>
+    </policies>
 </policyDefinitions>

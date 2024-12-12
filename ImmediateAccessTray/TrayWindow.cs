@@ -329,8 +329,8 @@ namespace ImmediateAccessTray
             Assembly selfAssem = Assembly.GetExecutingAssembly();
             lblVersion.Text = selfAssem.GetCustomAttribute<AssemblyFileVersionAttribute>().Version;
             lblAuthor.Text = selfAssem.GetCustomAttribute<AssemblyCompanyAttribute>().Company;
-            lblWebsite.Text = selfAssem.GetCustomAttribute<AssemblyMetadataAttribute>().Value;
-            tbDescription.Text = selfAssem.GetCustomAttribute<AssemblyDescriptionAttribute>().Description;
+            //lblWebsite.Text = selfAssem.GetCustomAttribute<AssemblyMetadataAttribute>().Value;
+            //tbDescription.Text = selfAssem.GetCustomAttribute<AssemblyDescriptionAttribute>().Description;
             NetworkChange.NetworkAddressChanged += NetworkChange_NetworkAddressChanged;
             RefreshAllStatus();
             if (Program.Arguments.Contains("ElevatedStartStopService")) btnToggleService_Click(null, null);

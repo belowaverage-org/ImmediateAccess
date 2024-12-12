@@ -1,19 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--  Copyright (C) below average 2025 - All rights reserved.  -->
 <policyDefinitionResources xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" revision="1.0" schemaVersion="1.0" xmlns="http://schemas.microsoft.com/GroupPolicy/2006/07/PolicyDefinitions">
-  <!-- displayName and description are not used. Not supported by current Group Policy tools. -->
-  <displayName>Immediate Access - VPN Service</displayName> 
-  <description>Immediate Access - VPN Service</description>
-  <resources>
-    <stringTable>
-      <string id="ImmediateAccess">Immediate Access</string>
-      <string id="ImmediateAccessVPN">Immediate Access</string>
-      <string id="ImmediateAccessExplain">
+    <!-- displayName and description are not used. Not supported by current Group Policy tools. -->
+    <displayName>Immediate Access - VPN Service</displayName>
+    <description>Immediate Access - VPN Service</description>
+    <resources>
+        <stringTable>
+            <string id="ImmediateAccess">Immediate Access</string>
+            <string id="ImmediateAccessVPN">Immediate Access</string>
+            <string id="ImmediateAccessExplain">
 Internal Probe:
 ---------------
 Enter the HTTPS enabled URL that the Immediate Access VPN service will use to determine if the comptuer is currently connected to the corporate network. The probe must only be accessible within the corporate network and have a valid certificate.
 
 E.g: ( https://probe.ad.contoso.com/ )
+
+Registration OU:
+----------------
+Enter the distinguished name of the OU where Immediate Access will register a user account to use when signing into the VPN.
+Make sure that the computer account that Immediate Access is installed on has access to create users in this OU.
+
+E.g: ( OU=Immediate Access Devices,OU=Users,DC=ad,DC=contoso,DC=com )
+
+Registration Security Group:
+----------------------------
+Enter the distinguished name of the security group that the registered user will be added into.
+Make sure that the computer account that Immediate Access is installed on has access to add users to this security group.
+
+E.g: ( CN=Immediate Access Devices,OU=Groups,DC=ad,DC=contoso,DC=com )
 
 VPN Profile List:
 -----------------
@@ -22,62 +36,68 @@ Enter a list of VPN profiles that Immediate Access VPN service will dial when th
 E.g: ( PhilidalphiaPA - VPN )
 
 If "Not Configured" or "Disabled", the Immediate Access service will shutdown and not run.
-      </string>
-      <string id="ProbeTimeoutS">Probe Timeout</string>
-      <string id="ProbeTimeoutSExplain">
+            </string>
+            <string id="ProbeTimeoutS">Probe Timeout</string>
+            <string id="ProbeTimeoutSExplain">
 Enter a time in seconds that the Immediate Access service will timeout when trying to reach the internal probe.
 
 If "Not Configured" or "Disabled", the value will be 10.
-      </string>
-      <string id="NetEventCooldownS">Network Event Cooldown Timer</string>
-      <string id="NetEventCooldownSExplain">
+            </string>
+            <string id="NetEventCooldownS">Network Event Cooldown Timer</string>
+            <string id="NetEventCooldownSExplain">
 Enter a time in seconds that the Immediate Access service will wait after the last network change event. (E.G: IP Address changed)
 After a network event, Immediate Access will start testing the network to see if the Internal Probe is available.
 This option will create a delay between when Immediate Access will start the probe test, and the last network change event.
 
 If "Not Configured" or "Disabled", the value will be 3.
-      </string>
-      <string id="HealthCheckIntervalS">Health Check Interval</string>
-      <string id="HealthCheckIntervalSExplain">
+            </string>
+            <string id="HealthCheckIntervalS">Health Check Interval</string>
+            <string id="HealthCheckIntervalSExplain">
 Enter a time in seconds that the Immediate Access service will test for the Internal Probe on an interval.
 
 If "Not Configured" or "Disabled", the value will be 300.
-      </string>
-      <string id="VpnServerPingTimeoutMS">Vpn Server Ping Timeout</string>
-      <string id="VpnServerPingTimeoutMSExplain">
+            </string>
+            <string id="VpnServerPingTimeoutMS">Vpn Server Ping Timeout</string>
+            <string id="VpnServerPingTimeoutMSExplain">
 Enter a timeout in milliseconds for when Immediate Access pings a VPN server.
 
 If "Not Configured" or "Disabled", the value will be 1500.
-      </string>
-      <string id="VpnServerConnectAttempts">Vpn Server Connect Attempts</string>
-      <string id="VpnServerConnectAttemptsExplain">
+            </string>
+            <string id="VpnServerConnectAttempts">Vpn Server Connect Attempts</string>
+            <string id="VpnServerConnectAttemptsExplain">
 Enter the ammount of attempts Immediate Access will make to connect to a VPN profile.
 
 If "Not Configured" or "Disabled", the value will be 3.
-      </string>
-    </stringTable>
-    <presentationTable>
-      <presentation id="ImmediateAccess">
-        <textBox refId="InternalProbe">
-          <label>Internal Probe (Hostname, URL, IP Address):</label>
-        </textBox>
-        <multiTextBox refId="VpnProfileList">VPN Profile List:</multiTextBox>
-      </presentation>
-      <presentation id="ProbeTimeoutS">
-        <decimalTextBox refId="ProbeTimeoutS" defaultValue="10">Seconds:</decimalTextBox>
-      </presentation>
-      <presentation id="NetEventCooldownS">
-        <decimalTextBox refId="NetEventCooldownS" defaultValue="3">Seconds:</decimalTextBox>
-      </presentation>
-      <presentation id="HealthCheckIntervalS">
-        <decimalTextBox refId="HealthCheckIntervalS" defaultValue="300">Seconds:</decimalTextBox>
-      </presentation>
-      <presentation id="VpnServerPingTimeoutMS">
-        <decimalTextBox refId="VpnServerPingTimeoutMS" defaultValue="1500">Milliseconds:</decimalTextBox>
-      </presentation>
-      <presentation id="VpnServerConnectAttempts">
-        <decimalTextBox refId="VpnServerConnectAttempts" defaultValue="3">Attempts:</decimalTextBox>
-      </presentation>
-    </presentationTable>
-  </resources>
+            </string>
+        </stringTable>
+        <presentationTable>
+            <presentation id="ImmediateAccess">
+                <textBox refId="InternalProbe">
+                    <label>Internal Probe (Hostname, URL, IP Address):</label>
+                </textBox>
+                <textBox refId="RegistrationOU">
+                    <label>Registration OU:</label>
+                </textBox>
+                <textBox refId="RegistrationSecurityGroup">
+                    <label>Registration Security Group:</label>
+                </textBox>
+                <multiTextBox refId="VpnProfileList">VPN Profile List:</multiTextBox>
+            </presentation>
+            <presentation id="ProbeTimeoutS">
+                <decimalTextBox refId="ProbeTimeoutS" defaultValue="10">Seconds:</decimalTextBox>
+            </presentation>
+            <presentation id="NetEventCooldownS">
+                <decimalTextBox refId="NetEventCooldownS" defaultValue="3">Seconds:</decimalTextBox>
+            </presentation>
+            <presentation id="HealthCheckIntervalS">
+                <decimalTextBox refId="HealthCheckIntervalS" defaultValue="300">Seconds:</decimalTextBox>
+            </presentation>
+            <presentation id="VpnServerPingTimeoutMS">
+                <decimalTextBox refId="VpnServerPingTimeoutMS" defaultValue="1500">Milliseconds:</decimalTextBox>
+            </presentation>
+            <presentation id="VpnServerConnectAttempts">
+                <decimalTextBox refId="VpnServerConnectAttempts" defaultValue="3">Attempts:</decimalTextBox>
+            </presentation>
+        </presentationTable>
+    </resources>
 </policyDefinitionResources>
