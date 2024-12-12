@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ImmediateAccess": {
+      "commandName": "Project",
+      "commandLineArgs": "/debug"
+    }
+  }
+}
